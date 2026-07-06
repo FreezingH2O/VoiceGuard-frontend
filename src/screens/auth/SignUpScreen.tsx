@@ -105,14 +105,14 @@ export function SignUpScreen() {
               <Field label={t({ en: 'Full name', th: 'ชื่อ-นามสกุล' })} error={signupForm.formState.errors.name}>
                 <input
                   {...signupForm.register('name', { required: t({ en: 'Full name is required', th: 'กรุณากรอกชื่อ' }) })}
-                  placeholder="Airada J."
+                  placeholder="Your name"
                   className="w-full bg-transparent text-body-sm text-white placeholder:text-mist-500 focus:outline-none"
                 />
               </Field>
               <Field label={t({ en: 'Phone number', th: 'เบอร์โทรศัพท์' })} error={signupForm.formState.errors.phone}>
                 <input
                   {...signupForm.register('phone', { required: t({ en: 'Phone number is required', th: 'กรุณากรอกเบอร์โทร' }) })}
-                  placeholder="+66 8x xxx xxxx"
+                  placeholder="+66 xx xxx xxxx"
                   className="w-full bg-transparent text-body-sm text-white placeholder:text-mist-500 focus:outline-none"
                 />
               </Field>
