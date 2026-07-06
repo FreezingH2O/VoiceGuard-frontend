@@ -1,0 +1,6 @@
+export type Verdict = 'safe' | 'suspicious' | 'scam'
+export type Role = 'elder' | 'guardian'
+export type Sensitivity = 'low' | 'balanced' | 'high'
+export type AlertLevel = 'suspicious' | 'scam'
+export type CallState = 'monitoring' | 'suspicious' | 'alerted'
+export type ConnectionState = 'connecting' | 'open' | 'reconnecting' | 'closed'

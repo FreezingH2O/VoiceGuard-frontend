@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Lenis smooth-scroll base (marketing/live pages only — class toggled on <html>). */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Visible focus ring. Blue by default (light app); coral on dark surfaces. */
+:focus-visible {
+  outline: 2px solid #2b3a9f;
+  outline-offset: 2px;
+}
+.on-dark :focus-visible,
+.on-dark:focus-visible {
+  outline-color: #eb7449;
+}
+
+/* Live-recording waveform bars in the detector workspace (decorative). */
+@keyframes waveform {
+  from {
+    transform: scaleY(0.35);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* Reduced motion: kill choreography, keep content instantly visible. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
