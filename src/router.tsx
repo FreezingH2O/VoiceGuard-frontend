@@ -6,7 +6,6 @@ import { PreviewLayout } from '@/app/PreviewLayout'
 import { RequireAuth, RequireConsent, RedirectIfAuthed } from '@/app/RouteGuards'
 
 import { LandingScreen } from '@/screens/landing/LandingScreen'
-import { HowItWorksScreen } from '@/screens/marketing/HowItWorksScreen'
 import { WebHomeScreen } from '@/screens/home/WebHomeScreen'
 import { SignUpScreen } from '@/screens/auth/SignUpScreen'
 import { OnboardingScreen } from '@/screens/onboarding/OnboardingScreen'
@@ -40,7 +39,6 @@ export const router = createBrowserRouter([
         element: <WebLayout />,
         children: [
           { path: '/', element: <LandingScreen /> },
-          { path: '/how-it-works', element: <HowItWorksScreen /> },
           { path: '/demo/live-test', element: <LiveDetectorTestScreen /> },
           {
             path: '/home',

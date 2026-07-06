@@ -60,7 +60,8 @@ export function WebHomeScreen() {
   const firstName = user?.name?.split(' ')[0] ?? t({ en: 'there', th: 'คุณ' })
 
   return (
-    <div className="mx-auto w-full max-w-content px-6 py-12 sm:px-8">
+    <div className="relative z-10 -mb-6 rounded-b-[32px] bg-ink-950 shadow-[0_36px_70px_-24px_rgba(0,0,0,0.6)] lg:-mb-8 lg:rounded-b-[48px]">
+      <div className="mx-auto w-full max-w-content px-6 py-12 sm:px-8">
       <Reveal>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -117,9 +118,10 @@ export function WebHomeScreen() {
       </section>
 
       <div className="mt-12 text-center">
-        <Link to="/how-it-works" className="text-body-sm font-medium text-mist-300 underline underline-offset-4 transition hover:text-white">
+        <Link to="/#how-it-works" className="text-body-sm font-medium text-mist-300 underline underline-offset-4 transition hover:text-white">
           {t({ en: 'How VoiceGuard works', th: 'VoiceGuard ทำงานอย่างไร' })}
         </Link>
+      </div>
       </div>
     </div>
   )

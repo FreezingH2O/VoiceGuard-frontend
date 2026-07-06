@@ -10,8 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fontsource/inter": "^5.2.8",
+    "@fontsource/fraunces": "^5.2.9",
+    "@fontsource/kanit": "^5.2.8",
+    "@fontsource/prompt": "^5.2.8",
     "@fontsource/space-grotesk": "^5.2.10",
+    "@fontsource/space-mono": "^5.2.9",
     "@tanstack/react-query": "^5.101.2",
     "clsx": "^2.1.1",
     "framer-motion": "^12.42.2",

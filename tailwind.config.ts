@@ -5,10 +5,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        // ── Dark marketing/live surface (design.md §2 dark palette) ──
+        // ── Dark marketing/live surface (design.md §3 dark palette) ──
         ink: {
-          950: '#080B1C', // page canvas — near-black navy
-          900: '#0E1230', // raised sections / bands
+          950: '#050505', // page canvas — true near-black, per design.md
+          900: '#0A0A0A', // raised sections / bands
+          navy: '#0F0B1E', // optional deep-navy tint sections
         },
         surface: {
           800: '#161B3D', // cards on dark
@@ -47,9 +48,11 @@ export default {
         card: '#121f5a',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['"Space Grotesk"', 'Inter', 'system-ui', 'sans-serif'],
-        thai: ['"Noto Sans Thai"', 'Inter', 'sans-serif'],
+        // Resolve to CSS vars set in index.css — swap with the lang toggle
+        // (html[lang] selector), since Latin faces have no Thai glyphs.
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'var(--font-sans)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
       },
       fontSize: {
         // dark web display scale (design.md §3)
@@ -121,11 +124,16 @@ export default {
           '33%': { transform: 'translate(4%, -3%) scale(1.08)' },
           '66%': { transform: 'translate(-3%, 4%) scale(0.96)' },
         },
+        shimmer: {
+          '0%': { backgroundPosition: '200% 0' },
+          '100%': { backgroundPosition: '-200% 0' },
+        },
       },
       animation: {
         marquee: 'marquee 30s linear infinite',
         float: 'float 6s ease-in-out infinite',
         drift: 'drift 24s ease-in-out infinite',
+        shimmer: 'shimmer 5s linear infinite',
       },
     },
   },

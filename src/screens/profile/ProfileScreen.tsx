@@ -98,7 +98,7 @@ export function ProfileScreen() {
       </Card>
 
       <Card padding="md" className="flex flex-col divide-y divide-slate-200/10">
-        <Link to="/how-it-works" className="flex min-h-tap items-center justify-between py-3 text-body-sm">
+        <Link to="/#how-it-works" className="flex min-h-tap items-center justify-between py-3 text-body-sm">
           How VoiceGuard works
           <ChevronRight className="h-5 w-5 text-slate-400" aria-hidden="true" />
         </Link>

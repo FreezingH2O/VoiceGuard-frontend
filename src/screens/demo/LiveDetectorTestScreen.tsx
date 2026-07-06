@@ -56,7 +56,7 @@ export function LiveDetectorTestScreen() {
   const isRateLimited = mutation.isError && mutation.error instanceof ApiError && mutation.error.status === 429
 
   return (
-    <div className="w-full">
+    <div className="relative z-10 -mb-6 w-full overflow-hidden rounded-b-[32px] bg-ink-950 shadow-[0_36px_70px_-24px_rgba(0,0,0,0.6)] lg:-mb-8 lg:rounded-b-[48px]">
       {/* LIVE bar — prominent, honesty mechanism */}
       <div className="flex items-center justify-center gap-2 bg-blue-600 py-2.5 text-center text-body-sm font-semibold text-white">
         <span className="relative flex h-2 w-2" aria-hidden="true">
@@ -297,12 +297,12 @@ function Results({ data, full }: { data: LiveTestResponse; full: boolean }) {
       {full ? (
         <>
           <div className="rounded-card bg-ink-950/60 p-4">
-            <p className="text-micro uppercase tracking-wide text-mist-500">{t({ en: 'Transcript (ASR)', th: 'ถอดเสียง (ASR)' })}</p>
+            <p className="font-mono text-micro uppercase tracking-wide text-mist-500">{t({ en: 'Transcript (ASR)', th: 'ถอดเสียง (ASR)' })}</p>
             <p className="mt-1 text-small text-white">“{data.transcript}”</p>
           </div>
 
           <div className="rounded-card bg-ink-950/60 p-4">
-            <p className="text-micro uppercase tracking-wide text-mist-500">{t({ en: 'Context (LLM)', th: 'บริบท (LLM)' })}</p>
+            <p className="font-mono text-micro uppercase tracking-wide text-mist-500">{t({ en: 'Context (LLM)', th: 'บริบท (LLM)' })}</p>
             <p className="mt-1 text-small text-mist-300">{data.summary}</p>
             <div className="mt-2">
               <IntentPillRow intents={data.intents} />

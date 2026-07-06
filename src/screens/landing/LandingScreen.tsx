@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import {
   Mic,
@@ -13,7 +13,6 @@ import {
   Lightbulb,
   Lock,
   Check,
-  TriangleAlert,
   type LucideIcon,
 } from 'lucide-react'
 import { Button } from '@/components/Button'
@@ -22,6 +21,9 @@ import { AmbientBackground } from '@/components/motion/AmbientBackground'
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal'
 import { HeroReveal, HeroFollow } from '@/components/motion/HeroReveal'
 import { Marquee } from '@/components/motion/Marquee'
+import { ScrollLine } from '@/components/motion/ScrollLine'
+import { SectionPanel, SectionGlow } from '@/components/landing/SectionPanel'
+import { WaveformShieldVisual } from '@/components/landing/WaveformShieldVisual'
 import { LandingPhoneDemo } from '@/screens/landing/LandingPhoneDemo'
 import { useLang, type Localized } from '@/i18n/LangProvider'
 import { useCountUp } from '@/hooks/useCountUp'
@@ -59,33 +61,21 @@ export function LandingScreen() {
 
 /* ─────────────────────────── shared bits ─────────────────────────── */
 
-function Section({
-  id,
-  bg = 'ink-950',
-  className,
-  children,
-}: {
-  id?: string
-  bg?: 'ink-950' | 'ink-900'
-  className?: string
-  children: ReactNode
-}) {
+function Eyebrow({ children, light = false }: { children: ReactNode; light?: boolean }) {
   return (
-    <section
-      id={id}
-      className={cn('relative scroll-mt-20 px-6 py-24 sm:px-8 lg:py-32', bg === 'ink-900' ? 'bg-ink-900' : 'bg-ink-950', className)}
+    <p
+      className={cn(
+        'font-mono text-web-caption font-semibold uppercase tracking-[0.18em]',
+        light ? 'text-blue-600' : 'text-coral-400',
+      )}
     >
-      <div className="mx-auto max-w-content">{children}</div>
-    </section>
+      {children}
+    </p>
   )
 }
 
-function Eyebrow({ children }: { children: ReactNode }) {
-  return <p className="text-web-caption font-semibold uppercase tracking-[0.18em] text-coral-400">{children}</p>
-}
-
-function SectionTitle({ children, className }: { children: ReactNode; className?: string }) {
-  return <h2 className={cn('font-display text-web-section text-white', className)}>{children}</h2>
+function SectionTitle({ children, className, light = false }: { children: ReactNode; className?: string; light?: boolean }) {
+  return <h2 className={cn('font-display text-web-section', light ? 'text-slate-900' : 'text-white', className)}>{children}</h2>
 }
 
 /* ─────────────────────────── 1. Hero ─────────────────────────── */
@@ -106,14 +96,18 @@ function Hero() {
           { text: 'if' },
           { text: 'the' },
           { text: 'voice' },
+          { text: 'on' },
+          { text: 'the' },
+          { text: 'line' },
           { text: 'is' },
-          { text: 'real', className: 'text-coral-500' },
+          { text: 'real.', className: 'text-coral-500' },
         ]
 
   return (
-    <section className="relative flex min-h-[88vh] items-center overflow-hidden px-6 pb-16 pt-12 sm:px-8">
+    <section className="relative z-10 -mb-6 flex min-h-[88vh] items-center overflow-hidden rounded-b-[32px] bg-ink-900 px-6 pb-16 pt-12 sm:px-8 lg:-mb-8 lg:rounded-b-[48px]">
       <AmbientBackground variant="hero" />
-      <div className="relative mx-auto grid w-full max-w-content items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+      <SectionGlow position="bottom" color="coral-blue" drift />
+      <div className="relative z-[1] mx-auto grid w-full max-w-content items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
         <div className="flex flex-col items-start gap-6">
           <HeroFollow delay={0}>
             <StatusBadge kind="live">
@@ -126,8 +120,8 @@ function Hero() {
           <HeroFollow delay={0.5}>
             <p className="max-w-[54ch] text-web-sub text-mist-300">
               {t({
-                en: 'VoiceGuard listens for AI-cloned voices and scam patterns while a call is happening — and warns you before anyone sends money or shares a code.',
-                th: 'VoiceGuard ฟังหาเสียงที่ถูกโคลนด้วย AI และรูปแบบการหลอกลวงระหว่างการโทร — และเตือนคุณก่อนที่ใครจะโอนเงินหรือบอกรหัส',
+                en: 'VoiceGuard detects AI-cloned voices and reads scam intent in real time — built to understand Thai voices, accent by accent.',
+                th: 'VoiceGuard ตรวจจับเสียงที่ถูกโคลนด้วย AI และอ่านเจตนาหลอกลวงแบบเรียลไทม์ — สร้างมาเพื่อเข้าใจเสียงคนไทยในทุกสำเนียง',
               })}
             </p>
           </HeroFollow>
@@ -139,11 +133,9 @@ function Hero() {
                   {t({ en: 'Try live detection', th: 'ทดลองตรวจจับสด' })}
                 </Button>
               </Link>
-              <button type="button" onClick={() => scrollToAnchor('how-it-works')}>
-                <Button variant="outline-light" className="px-6">
-                  {t({ en: 'See how it works', th: 'ดูวิธีการทำงาน' })}
-                </Button>
-              </button>
+              <Button variant="outline-light" className="px-6" onClick={() => scrollToAnchor('how-it-works')}>
+                {t({ en: 'See how it works', th: 'ดูวิธีการทำงาน' })}
+              </Button>
             </div>
           </HeroFollow>
 
@@ -156,7 +148,7 @@ function Hero() {
         </div>
 
         <HeroFollow delay={0.4}>
-          <HeroVisual />
+          <WaveformShieldVisual />
         </HeroFollow>
       </div>
 
@@ -164,7 +156,7 @@ function Hero() {
         type="button"
         aria-label="Scroll down"
         onClick={() => scrollToAnchor('how-it-works')}
-        className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 text-mist-500 transition hover:text-white lg:block"
+        className="absolute bottom-6 left-1/2 z-[1] hidden -translate-x-1/2 text-mist-500 transition hover:text-white lg:block"
       >
         <ArrowDown className="h-5 w-5 animate-float" aria-hidden="true" />
       </button>
@@ -172,45 +164,6 @@ function Hero() {
   )
 }
 
-function HeroVisual() {
-  const { t } = useLang()
-  return (
-    <div className="relative mx-auto w-full max-w-[420px]">
-      <div className="animate-float rounded-web-card border border-white/10 bg-surface-800/80 p-6 shadow-glow-soft backdrop-blur">
-        <div className="flex items-center gap-3 rounded-card bg-danger-500/15 p-3 ring-1 ring-danger-500/30">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-danger-500 text-white">
-            <TriangleAlert className="h-5 w-5" aria-hidden="true" />
-          </span>
-          <div>
-            <p className="text-body-sm font-bold text-white">{t({ en: 'Likely scam', th: 'น่าจะเป็นสแกม' })}</p>
-            <p className="text-caption text-mist-300">{t({ en: 'AI voice · asking for an OTP', th: 'เสียง AI · กำลังขอ OTP' })}</p>
-          </div>
-        </div>
-
-        <div className="mt-5 flex items-center justify-around">
-          <HeroRing pct={91} tone="danger" label={t({ en: 'Fake voice', th: 'เสียงปลอม' })} />
-          <span className="text-2xl text-mist-500" aria-hidden="true">+</span>
-          <HeroRing pct={87} tone="danger" label={t({ en: 'Scam intent', th: 'เจตนาหลอก' })} />
-        </div>
-
-        <div className="mt-5 rounded-card bg-ink-950/60 p-3">
-          <p className="text-tag uppercase tracking-wide text-mist-500">{t({ en: 'Transcript', th: 'ถอดเสียง' })}</p>
-          <p className="mt-1 text-small text-mist-300">
-            {t({ en: '“…confirm the code we just texted you.”', th: '“…ยืนยันรหัสที่เราเพิ่งส่งไปให้หน่อย”' })}
-          </p>
-        </div>
-      </div>
-
-      <div
-        className="absolute -bottom-5 -left-4 flex animate-float items-center gap-2 rounded-pill bg-ink-900 px-4 py-2 shadow-glow-teal ring-1 ring-teal-400/30"
-        style={{ animationDelay: '-3s' }}
-      >
-        <Check className="h-4 w-4 text-teal-400" aria-hidden="true" />
-        <span className="text-caption font-semibold text-teal-400">{t({ en: 'Real voice verified', th: 'ยืนยันเสียงจริง' })}</span>
-      </div>
-    </div>
-  )
-}
 
 function HeroRing({ pct, tone, label }: { pct: number; tone: 'danger' | 'teal'; label: string }) {
   const color = tone === 'danger' ? '#F5455C' : '#34D6C4'
@@ -225,7 +178,7 @@ function HeroRing({ pct, tone, label }: { pct: number; tone: 'danger' | 'teal'; 
         </svg>
         <span className="absolute inset-0 flex items-center justify-center text-body-sm font-bold tabular-nums text-white">{pct}%</span>
       </div>
-      <span className="text-tag uppercase tracking-wide text-mist-500">{label}</span>
+      <span className="font-mono text-tag uppercase tracking-wide text-mist-500">{label}</span>
     </div>
   )
 }
@@ -242,10 +195,10 @@ function TrustMarquee() {
     { en: 'Privacy first', th: 'ความเป็นส่วนตัวมาก่อน' },
   ]
   return (
-    <div className="border-y border-white/10 bg-ink-900 py-5">
+    <div className="relative bg-slate-50 py-14 sm:py-16">
       <Marquee itemClassName="px-8">
         {items.map((it, i) => (
-          <span key={i} className="flex items-center gap-3 text-body-medium text-mist-300">
+          <span key={i} className="flex items-center gap-3 text-body-medium text-slate-600">
             <span className="h-1.5 w-1.5 rounded-full bg-coral-500" aria-hidden="true" />
             {t(it)}
           </span>
@@ -283,7 +236,7 @@ function ProblemSection() {
     },
   ]
   return (
-    <Section id="problem" bg="ink-900">
+    <SectionPanel id="problem" mode="dark" tone="raised" roundedTop glowTop="blue-teal">
       <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
         <Reveal>
           <Eyebrow>{t({ en: 'The problem', th: 'ปัญหา' })}</Eyebrow>
@@ -304,7 +257,7 @@ function ProblemSection() {
           ))}
         </RevealGroup>
       </div>
-    </Section>
+    </SectionPanel>
   )
 }
 
@@ -336,7 +289,7 @@ function StatCounter() {
 function KeyFeatureSection() {
   const { t } = useLang()
   return (
-    <Section id="key-feature">
+    <SectionPanel id="key-feature" mode="dark" tone="base" roundedBottom glowBottom="teal">
       <div className="grid items-center gap-14 lg:grid-cols-2">
         <Reveal>
           <Eyebrow>{t({ en: 'The core idea', th: 'แนวคิดหลัก' })}</Eyebrow>
@@ -358,13 +311,19 @@ function KeyFeatureSection() {
               })}
             </p>
           </div>
+          <p className="mt-4 font-mono text-web-caption font-medium text-coral-400">
+            {t({
+              en: 'And we understand Thai the way it’s really spoken — Central Thai, Isan, and more — where foreign models fail.',
+              th: 'และเราเข้าใจภาษาไทยแบบที่คนไทยพูดจริง — ภาษาไทยกลาง อีสาน และอื่น ๆ — จุดที่โมเดลต่างชาติทำไม่ได้',
+            })}
+          </p>
         </Reveal>
 
         <Reveal delay={0.1}>
           <SignalMergeVisual />
         </Reveal>
       </div>
-    </Section>
+    </SectionPanel>
   )
 }
 
@@ -436,10 +395,10 @@ const PIPELINE: { icon: LucideIcon; title: Localized; line: Localized }[] = [
 function HowItWorksSection() {
   const { t } = useLang()
   return (
-    <Section id="how-it-works" bg="ink-900">
+    <SectionPanel id="how-it-works" mode="light">
       <Reveal className="max-w-2xl">
-        <Eyebrow>{t({ en: 'How it works', th: 'วิธีการทำงาน' })}</Eyebrow>
-        <SectionTitle className="mt-3">
+        <Eyebrow light>{t({ en: 'How it works', th: 'วิธีการทำงาน' })}</Eyebrow>
+        <SectionTitle light className="mt-3">
           {t({ en: 'Four stages run on the live call audio.', th: 'สี่ขั้นตอนทำงานบนเสียงสายที่กำลังโทร' })}
         </SectionTitle>
       </Reveal>
@@ -447,31 +406,33 @@ function HowItWorksSection() {
       <RevealGroup className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {PIPELINE.map((step, i) => (
           <RevealItem key={i}>
-            <div className="group relative h-full rounded-web-card border border-white/10 bg-surface-800 p-6 transition hover:-translate-y-1 hover:border-coral-500/40 hover:shadow-glow-coral">
+            <div className="group relative h-full rounded-web-card border border-slate-200 bg-white p-6 shadow-card transition hover:-translate-y-1 hover:border-coral-500/40">
               {i < PIPELINE.length - 1 && (
-                <ArrowRight aria-hidden="true" className="absolute -right-[18px] top-11 z-10 hidden h-5 w-5 text-mist-500 lg:block" />
+                <ArrowRight aria-hidden="true" className="absolute -right-[18px] top-11 z-10 hidden h-5 w-5 text-slate-400 lg:block" />
               )}
               <span className="flex h-11 w-11 items-center justify-center rounded-button bg-glow-grad text-white">
                 <step.icon className="h-5 w-5" aria-hidden="true" />
               </span>
-              <p className="mt-4 text-tag font-semibold uppercase tracking-wide text-coral-400">
+              <p className="mt-4 text-tag font-semibold uppercase tracking-wide text-blue-600">
                 {t({ en: `Stage ${i + 1}`, th: `ขั้นที่ ${i + 1}` })}
               </p>
-              <p className="mt-1 text-h2 font-semibold text-white">{t(step.title)}</p>
-              <p className="mt-2 text-web-caption text-mist-300">{t(step.line)}</p>
+              <p className="mt-1 text-h2 font-semibold text-slate-900">{t(step.title)}</p>
+              <p className="mt-2 text-web-caption text-slate-600">{t(step.line)}</p>
             </div>
           </RevealItem>
         ))}
       </RevealGroup>
 
       <Reveal delay={0.1}>
-        <div className="mt-8">
-          <Link to="/how-it-works" className="inline-flex items-center gap-1.5 text-body-medium font-medium text-coral-400 hover:text-coral-500">
-            {t({ en: 'See the full breakdown', th: 'ดูรายละเอียดทั้งหมด' })} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        <div className="mt-12 flex justify-center">
+          <Link to="/demo">
+            <Button variant="primary" className="px-7" leftIcon={<ShieldAlert className="h-5 w-5" aria-hidden="true" />}>
+              {t({ en: 'Experience a scam call', th: 'ลองประสบการณ์สายหลอกลวง' })} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Button>
           </Link>
         </div>
       </Reveal>
-    </Section>
+    </SectionPanel>
   )
 }
 
@@ -481,38 +442,59 @@ const SERVICES: {
   icon: LucideIcon
   name: Localized
   status: StatusKind
+  whatItIs: Localized
   line: Localized
   anchor: string
+  primaryLabel: Localized
+  primaryTo?: string
   dimmed?: boolean
 }[] = [
   {
     icon: Globe,
     name: { en: 'Web App', th: 'เว็บแอป' },
     status: 'live',
-    line: { en: 'Try our real detection engine in your browser now.', th: 'ทดลองเครื่องมือตรวจจับจริงในเบราว์เซอร์ได้เลย' },
+    whatItIs: { en: 'Analyze any voice recording, right in your browser.', th: 'วิเคราะห์คลิปเสียงใดก็ได้ ผ่านเบราว์เซอร์ของคุณ' },
+    line: {
+      en: 'Upload or record a clip — get a fake-voice score free, or sign in for the full transcript, scam analysis, and verdict.',
+      th: 'อัปโหลดหรืออัดคลิป — รับคะแนนเสียงปลอมฟรี หรือเข้าสู่ระบบเพื่อดูถอดเสียง วิเคราะห์สแกม และคำตัดสินเต็มรูปแบบ',
+    },
     anchor: 'web-app',
+    primaryLabel: { en: 'Try live detection', th: 'ทดลองตรวจจับสด' },
+    primaryTo: '/demo/live-test',
   },
   {
     icon: Smartphone,
     name: { en: 'Phone App', th: 'แอปมือถือ' },
     status: 'coming-soon',
-    line: { en: 'Automatic protection during real calls, on your phone.', th: 'การป้องกันอัตโนมัติระหว่างสายจริง บนมือถือของคุณ' },
+    whatItIs: { en: 'Automatic protection during real phone calls.', th: 'การป้องกันอัตโนมัติระหว่างสายโทรศัพท์จริง' },
+    line: {
+      en: 'VoiceGuard listens in the background and alerts you — and your family — the instant a call looks like a scam.',
+      th: 'VoiceGuard ฟังอยู่เบื้องหลังและแจ้งเตือนคุณ — และครอบครัว — ทันทีที่สายดูเหมือนหลอกลวง',
+    },
     anchor: 'phone-app',
+    primaryLabel: { en: 'Preview the app', th: 'พรีวิวแอป' },
+    primaryTo: '/app-preview',
     dimmed: true,
   },
   {
     icon: Code2,
     name: { en: 'API', th: 'เอพีไอ' },
     status: 'available',
-    line: { en: 'Build voice-scam detection into your own product.', th: 'นำระบบตรวจจับไปใส่ในผลิตภัณฑ์ของคุณเอง' },
+    whatItIs: { en: 'Build voice-scam detection into your own product.', th: 'นำระบบตรวจจับเสียงหลอกลวงไปใส่ในผลิตภัณฑ์ของคุณ' },
+    line: {
+      en: 'The same anti-spoof, transcription, and scam-analysis engine, as an API for your app or project.',
+      th: 'เครื่องมือป้องกันเสียงปลอม ถอดเสียง และวิเคราะห์สแกมชุดเดียวกัน พร้อมใช้เป็น API สำหรับแอปหรือโปรเจกต์ของคุณ',
+    },
     anchor: 'api',
+    primaryLabel: { en: 'Get an API key', th: 'ขอรับ API key' },
   },
 ]
 
 function ServiceCardsSection() {
   const { t } = useLang()
+  const { showToast } = useToast()
   return (
-    <Section id="services">
+    <SectionPanel id="services" mode="dark" tone="base" roundedTop glowTop="blue-teal">
       <Reveal className="max-w-2xl">
         <Eyebrow>{t({ en: 'Three ways to use it', th: 'สามวิธีในการใช้งาน' })}</Eyebrow>
         <SectionTitle className="mt-3">{t({ en: 'Pick the one that fits you.', th: 'เลือกแบบที่เหมาะกับคุณ' })}</SectionTitle>
@@ -521,14 +503,12 @@ function ServiceCardsSection() {
       <RevealGroup className="mt-14 grid gap-6 lg:grid-cols-3">
         {SERVICES.map((s) => (
           <RevealItem key={s.anchor}>
-            <button
-              type="button"
-              onClick={() => scrollToAnchor(s.anchor)}
+            <div
               className={cn(
-                'group flex h-full w-full flex-col items-start rounded-web-card border p-7 text-left transition',
+                'flex h-full flex-col items-start rounded-web-card border p-7 text-left transition',
                 s.dimmed
-                  ? 'border-dashed border-white/15 bg-surface-800/50 hover:border-coral-500/40'
-                  : 'border-white/10 bg-surface-800 hover:-translate-y-1 hover:border-white/20 hover:shadow-glow-soft',
+                  ? 'border-dashed border-white/15 bg-surface-800/50'
+                  : 'border-white/10 bg-surface-800 hover:border-white/20 hover:shadow-glow-soft',
               )}
             >
               <div className="flex w-full items-center justify-between">
@@ -543,15 +523,47 @@ function ServiceCardsSection() {
                 <StatusBadge kind={s.status} />
               </div>
               <p className="mt-5 font-display text-h1 font-bold text-white">{t(s.name)}</p>
-              <p className="mt-2 flex-1 text-web-body text-mist-300">{t(s.line)}</p>
-              <span className="mt-5 inline-flex items-center gap-1.5 text-body-medium font-medium text-coral-400 group-hover:text-coral-500">
-                {t({ en: 'Learn more', th: 'ดูเพิ่มเติม' })} <ArrowDown className="h-4 w-4" aria-hidden="true" />
-              </span>
-            </button>
+              <p className="mt-2 text-web-body font-medium text-white">{t(s.whatItIs)}</p>
+              <p className="mt-2 flex-1 text-web-caption text-mist-300">{t(s.line)}</p>
+
+              <div className="mt-6 flex w-full flex-col gap-3">
+                {s.primaryTo ? (
+                  <Link to={s.primaryTo} className="w-full">
+                    <Button variant={s.dimmed ? 'outline-light' : 'primary'} fullWidth className="px-5">
+                      {t(s.primaryLabel)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button
+                    variant="primary"
+                    fullWidth
+                    className="px-5"
+                    onClick={() =>
+                      showToast({
+                        message: t({
+                          en: 'Thanks — we’ll be in touch about early API access.',
+                          th: 'ขอบคุณ — เราจะติดต่อกลับเรื่องสิทธิ์เข้าถึง API ก่อนใคร',
+                        }),
+                      })
+                    }
+                  >
+                    {t(s.primaryLabel)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => scrollToAnchor(s.anchor)}
+                  className="group inline-flex items-center gap-1.5 self-start text-body-medium font-medium text-coral-400 hover:text-coral-500"
+                >
+                  {t({ en: 'Learn more', th: 'ดูเพิ่มเติม' })}{' '}
+                  <ArrowDown className="h-4 w-4 transition group-hover:translate-y-0.5" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
           </RevealItem>
         ))}
       </RevealGroup>
-    </Section>
+    </SectionPanel>
   )
 }
 
@@ -560,7 +572,7 @@ function ServiceCardsSection() {
 function WebAppDetail() {
   const { t } = useLang()
   return (
-    <Section id="web-app" bg="ink-900">
+    <SectionPanel id="web-app" mode="dark" tone="raised">
       <div className="grid items-center gap-14 lg:grid-cols-2">
         <Reveal>
           <div className="flex items-center gap-3">
@@ -590,7 +602,7 @@ function WebAppDetail() {
           <DetectorPreview />
         </Reveal>
       </div>
-    </Section>
+    </SectionPanel>
   )
 }
 
@@ -607,7 +619,7 @@ function DetectorPreview() {
         <HeroRing pct={8} tone="teal" label={t({ en: 'Scam risk', th: 'ความเสี่ยง' })} />
       </div>
       <div className="mt-5 rounded-card bg-ink-950/60 p-3">
-        <p className="text-tag uppercase tracking-wide text-mist-500">{t({ en: 'Transcript (ASR)', th: 'ถอดเสียง (ASR)' })}</p>
+        <p className="font-mono text-tag uppercase tracking-wide text-mist-500">{t({ en: 'Transcript (ASR)', th: 'ถอดเสียง (ASR)' })}</p>
         <p className="mt-1 text-small text-mist-300">
           {t({ en: '“Hey, it’s me — are we still on for lunch tomorrow?”', th: '“นี่ฉันเอง — พรุ่งนี้ยังไปกินข้าวกันใช่ไหม?”' })}
         </p>
@@ -649,7 +661,7 @@ function PhoneAppDetail() {
   const { t } = useLang()
   const { showToast } = useToast()
   return (
-    <Section id="phone-app">
+    <SectionPanel id="phone-app" mode="dark" tone="base">
       <div className="grid items-start gap-14 lg:grid-cols-[0.95fr_1.05fr]">
         <div className="order-2 lg:order-1">
           <Reveal>
@@ -702,7 +714,7 @@ function PhoneAppDetail() {
           <LandingPhoneDemo />
         </Reveal>
       </div>
-    </Section>
+    </SectionPanel>
   )
 }
 
@@ -712,7 +724,7 @@ function ApiDetail() {
   const { t } = useLang()
   const { showToast } = useToast()
   return (
-    <Section id="api" bg="ink-900" className="border-y border-white/5">
+    <SectionPanel id="api" mode="dark" tone="raised" className="border-y border-white/5">
       <div className="grid items-center gap-14 lg:grid-cols-2">
         <Reveal>
           <div className="flex items-center gap-3">
@@ -745,9 +757,9 @@ function ApiDetail() {
             >
               {t({ en: 'Request early access', th: 'ขอสิทธิ์เข้าถึงก่อนใคร' })}
             </Button>
-            <Link to="/how-it-works">
-              <Button variant="outline-light" className="px-6">{t({ en: 'Read the docs', th: 'อ่านเอกสาร' })}</Button>
-            </Link>
+            <Button variant="outline-light" className="px-6" onClick={() => scrollToAnchor('how-it-works')}>
+              {t({ en: 'Read the docs', th: 'อ่านเอกสาร' })}
+            </Button>
           </div>
           <p className="mt-4 text-caption text-mist-500">
             {t({ en: 'Access model: contact us for early access while we finalise pricing.', th: 'รูปแบบการเข้าถึง: ติดต่อเราเพื่อขอสิทธิ์ก่อนใคร ระหว่างที่เรากำหนดราคา' })}
@@ -758,7 +770,7 @@ function ApiDetail() {
           <CodeCard />
         </Reveal>
       </div>
-    </Section>
+    </SectionPanel>
   )
 }
 
@@ -794,54 +806,78 @@ function CodeCard() {
   )
 }
 
-/* ─────────────────────────── 9. Roadmap ─────────────────────────── */
+/* ─────────────────────────── 9. Roadmap — 4-beat scroll story ─────────────────────────── */
+
+const ROADMAP_BEATS: { tag: Localized; title: Localized; body: Localized; status: StatusKind }[] = [
+  {
+    tag: { en: 'Why', th: 'ทำไม' },
+    status: 'coming-soon',
+    title: { en: 'Built for the voices others ignore.', th: 'สร้างมาเพื่อเสียงที่คนอื่นมองข้าม' },
+    body: {
+      en: 'Foreign detection models struggle with Thai — especially regional accents. The people most targeted by scams are the least protected by existing tech. That’s the gap we exist to close.',
+      th: 'โมเดลตรวจจับจากต่างประเทศมักเข้าใจสำเนียงไทยได้ไม่ดี โดยเฉพาะสำเนียงท้องถิ่น คนที่ตกเป็นเป้าของมิจฉาชีพมากที่สุด กลับเป็นกลุ่มที่เทคโนโลยีที่มีอยู่ปกป้องได้น้อยที่สุด นี่คือช่องว่างที่เรามีอยู่เพื่อปิด',
+    },
+  },
+  {
+    tag: { en: 'Now', th: 'ตอนนี้' },
+    status: 'live',
+    title: { en: 'An engine that understands Thai.', th: 'เครื่องมือที่เข้าใจภาษาไทย' },
+    body: {
+      en: 'Live today: the Web App and API, with anti-spoof detection and conversation analysis — covering English, Central Thai, and Isan (Northeastern) with high accuracy. We already do what foreign models can’t.',
+      th: 'พร้อมใช้วันนี้: เว็บแอปและ API พร้อมระบบตรวจจับเสียงปลอมและวิเคราะห์บทสนทนา — ครอบคลุมภาษาอังกฤษ ภาษาไทยกลาง และภาษาอีสาน ด้วยความแม่นยำสูง เราทำในสิ่งที่โมเดลต่างชาติทำไม่ได้ ตั้งแต่วันนี้',
+    },
+  },
+  {
+    tag: { en: 'Next', th: 'ถัดไป' },
+    status: 'coming-soon',
+    title: { en: 'Protection where scams actually happen.', th: 'ป้องกันตรงจุดที่สแกมเกิดขึ้นจริง' },
+    body: {
+      en: 'The phone app launches — moving from analyzing recordings to guarding your live calls automatically, with Elder Mode so families protect each other.',
+      th: 'แอปมือถือกำลังจะเปิดตัว — จากการวิเคราะห์ไฟล์เสียง สู่การเฝ้าระวังสายที่กำลังโทรแบบอัตโนมัติ พร้อมโหมดผู้สูงอายุให้ครอบครัวช่วยดูแลกันได้',
+    },
+  },
+  {
+    tag: { en: 'The vision', th: 'วิสัยทัศน์' },
+    status: 'coming-soon',
+    title: { en: 'Every Thai voice, every accent.', th: 'ทุกเสียงไทย ทุกสำเนียง' },
+    body: {
+      en: 'We expand the model to cover all Thai regional dialects — North, South, every accent — so no one is left unprotected because of how they speak. English and beyond follow.',
+      th: 'เราจะขยายโมเดลให้ครอบคลุมสำเนียงไทยทุกภูมิภาค — เหนือ ใต้ และทุกสำเนียง — เพื่อไม่ให้ใครขาดการปกป้องเพียงเพราะสำเนียงที่พูด ตามด้วยภาษาอังกฤษและภาษาอื่น ๆ ต่อไป',
+    },
+  },
+]
 
 function RoadmapSection() {
   const { t } = useLang()
-  const items: { tag: Localized; title: Localized; body: Localized; status: StatusKind }[] = [
-    {
-      tag: { en: 'Live today', th: 'พร้อมใช้วันนี้' },
-      status: 'live',
-      title: { en: 'The detection engine', th: 'เครื่องมือตรวจจับ' },
-      body: { en: 'Real anti-spoof, ASR and LLM analysis — in the web app and the API.', th: 'ระบบป้องกันเสียงปลอม ถอดเสียง และ LLM จริง — ทั้งในเว็บแอปและ API' },
-    },
-    {
-      tag: { en: 'Next phase', th: 'ขั้นถัดไป' },
-      status: 'coming-soon',
-      title: { en: 'On-device call capture', th: 'ดักจับสายบนอุปกรณ์' },
-      body: { en: 'Mobile telephony integration so the engine runs automatically during real calls.', th: 'เชื่อมต่อระบบโทรศัพท์มือถือ เพื่อให้เครื่องมือทำงานอัตโนมัติระหว่างสายจริง' },
-    },
-    {
-      tag: { en: 'Then', th: 'จากนั้น' },
-      status: 'coming-soon',
-      title: { en: 'Elder Mode & more languages', th: 'โหมดผู้สูงอายุ & ภาษาเพิ่มเติม' },
-      body: { en: 'Guardian alerts in production, plus multi-language support (Thai + English) and beyond.', th: 'การแจ้งเตือนผู้ดูแลในระบบจริง พร้อมรองรับหลายภาษา (ไทย + อังกฤษ) และต่อไป' },
-    },
-  ]
+  const containerRef = useRef<HTMLDivElement>(null)
+
   return (
-    <Section id="roadmap">
+    <SectionPanel id="roadmap" mode="dark" tone="base" roundedBottom glowBottom="coral-blue" zIndex={20}>
       <Reveal className="max-w-2xl">
         <Eyebrow>{t({ en: 'Where we’re going', th: 'ทิศทางของเรา' })}</Eyebrow>
-        <SectionTitle className="mt-3">
-          {t({ en: 'A working engine today, automatic protection next.', th: 'เครื่องมือที่ใช้ได้จริงวันนี้ การป้องกันอัตโนมัติในขั้นถัดไป' })}
-        </SectionTitle>
+        <SectionTitle className="mt-3">{t({ en: 'Where we’re going.', th: 'ทิศทางที่เรากำลังมุ่งไป' })}</SectionTitle>
       </Reveal>
 
-      <RevealGroup className="mt-14 grid gap-6 lg:grid-cols-3">
-        {items.map((it, i) => (
-          <RevealItem key={i}>
-            <div className="relative h-full rounded-web-card border border-white/10 bg-surface-800 p-7">
+      <div ref={containerRef} className="relative mt-16 pl-10 sm:pl-14">
+        <ScrollLine containerRef={containerRef} className="absolute inset-y-0 left-3 sm:left-5" />
+
+        <div className="flex flex-col gap-14">
+          {ROADMAP_BEATS.map((beat, i) => (
+            <Reveal key={i} className="relative">
+              <span
+                aria-hidden="true"
+                className="absolute -left-10 top-1.5 h-3.5 w-3.5 -translate-x-1/2 rounded-full border-2 border-ink-950 bg-coral-500 sm:-left-14"
+              />
               <div className="flex items-center gap-3">
-                <span className="font-display text-h1 font-bold text-white/20">{`0${i + 1}`}</span>
-                <StatusBadge kind={it.status}>{t(it.tag)}</StatusBadge>
+                <StatusBadge kind={beat.status}>{t(beat.tag)}</StatusBadge>
               </div>
-              <p className="mt-4 text-h2 font-semibold text-white">{t(it.title)}</p>
-              <p className="mt-2 text-web-caption text-mist-300">{t(it.body)}</p>
-            </div>
-          </RevealItem>
-        ))}
-      </RevealGroup>
-    </Section>
+              <p className="mt-3 font-display text-h1 font-semibold text-white">{t(beat.title)}</p>
+              <p className="mt-2 max-w-[62ch] text-web-body text-mist-300">{t(beat.body)}</p>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </SectionPanel>
   )
 }
 
@@ -850,26 +886,33 @@ function RoadmapSection() {
 function ClosingCta() {
   const { t } = useLang()
   return (
-    <section className="relative overflow-hidden px-6 py-28 sm:px-8">
-      <div aria-hidden="true" className="absolute inset-0 bg-glow-grad opacity-95" />
-      <AmbientBackground variant="band" className="opacity-40 mix-blend-overlay" />
-      <Reveal className="relative mx-auto max-w-3xl text-center">
-        <h2 className="font-display text-web-section text-white">{t({ en: 'Ready to hear the difference?', th: 'พร้อมจะฟังความต่างหรือยัง?' })}</h2>
+    <SectionPanel id="cta" mode="gradient" roundedBottom className="overflow-hidden py-20 text-center lg:py-24">
+      <AmbientBackground variant="band" className="opacity-30 mix-blend-overlay" />
+      <Reveal className="relative mx-auto max-w-3xl">
+        <h2 className="font-display text-web-section text-white">
+          {t({ en: 'Ready to hear the difference?', th: 'พร้อมจะฟังความต่างหรือยัง?' })}
+        </h2>
         <p className="mx-auto mt-4 max-w-[46ch] text-web-sub text-white/90">
           {t({ en: 'Test the real detector now, or build it into your own product.', th: 'ทดลองเครื่องตรวจจับจริงตอนนี้ หรือนำไปใส่ในผลิตภัณฑ์ของคุณ' })}
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Link to="/demo/live-test">
-            <Button variant="secondary" className="bg-ink-950 px-7 hover:bg-ink-900">{t({ en: 'Try live detection', th: 'ทดลองตรวจจับสด' })}</Button>
+            <Button variant="secondary" className="bg-ink-950 px-7 hover:bg-ink-900">
+              {t({ en: 'Try live detection', th: 'ทดลองตรวจจับสด' })}
+            </Button>
           </Link>
-          <button type="button" onClick={() => scrollToAnchor('api')}>
-            <Button variant="outline-light" className="border-white/40 px-7 text-white hover:bg-white/10">{t({ en: 'Get the API', th: 'ใช้งาน API' })}</Button>
-          </button>
+          <Button
+            variant="outline-light"
+            className="border-white/40 px-7 text-white hover:bg-white/10"
+            onClick={() => scrollToAnchor('api')}
+          >
+            {t({ en: 'Get the API', th: 'ใช้งาน API' })}
+          </Button>
         </div>
         <p className="mt-6 flex items-center justify-center gap-1.5 text-web-caption text-white/80">
           <Lock className="h-4 w-4" aria-hidden="true" /> {t({ en: 'Privacy first — no raw audio stored.', th: 'ความเป็นส่วนตัวมาก่อน — ไม่เก็บไฟล์เสียง' })}
         </p>
       </Reveal>
-    </section>
+    </SectionPanel>
   )
 }
