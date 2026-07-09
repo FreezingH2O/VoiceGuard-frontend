@@ -82,7 +82,7 @@ export function WebNavbar() {
                 {t({ en: 'Home', th: 'หน้าหลัก' })}
               </NavLink>
               <Link
-                to="/app-preview/profile"
+                to="/profile"
                 aria-label={user ? `${user.name} — profile` : 'Profile'}
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
               >
@@ -138,7 +138,7 @@ export function WebNavbar() {
                 <NavLink to="/home" onClick={() => setOpen(false)} className="text-body-sm font-medium text-mist-300">
                   {t({ en: 'Home', th: 'หน้าหลัก' })}
                 </NavLink>
-                <NavLink to="/app-preview/profile" onClick={() => setOpen(false)} className="text-body-sm font-medium text-mist-300">
+                <NavLink to="/profile" onClick={() => setOpen(false)} className="text-body-sm font-medium text-mist-300">
                   {t({ en: 'Profile', th: 'โปรไฟล์' })}
                 </NavLink>
               </>

@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { CircleCheck } from 'lucide-react'
 import { api } from '@/services/api'
@@ -11,8 +11,7 @@ import { Button } from '@/components/Button'
 import { Skeleton } from '@/components/Skeleton'
 import { ErrorState } from '@/components/ErrorState'
 
-export function DemoDebriefScreen() {
-  const { scenarioId = '' } = useParams()
+export function DemoDebriefScreen({ scenarioId, onRestart }: { scenarioId: string; onRestart: () => void }) {
   const { data, isPending, isError, refetch } = useQuery({
     queryKey: queryKeys.demoDebrief(scenarioId),
     queryFn: () => api.demo.getDebrief(scenarioId),
@@ -57,11 +56,14 @@ export function DemoDebriefScreen() {
                   Sign Up Free
                 </Button>
               </Link>
-              <Link to="/demo" className="mt-2 block">
-                <Button variant="outline-neutral" fullWidth className="!bg-transparent !text-white !border-white">
-                  Try another scenario
-                </Button>
-              </Link>
+              <Button
+                variant="outline-neutral"
+                fullWidth
+                className="mt-2 !bg-transparent !text-white !border-white"
+                onClick={onRestart}
+              >
+                Try another scenario
+              </Button>
             </Card>
           </>
         )}

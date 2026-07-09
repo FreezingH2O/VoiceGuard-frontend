@@ -52,7 +52,7 @@ export function WebFooter() {
           title={t({ en: 'Product', th: 'ผลิตภัณฑ์' })}
           links={[
             { label: t({ en: 'How it works', th: 'วิธีการทำงาน' }), to: '/#how-it-works' },
-            { label: t({ en: 'Experience a scam call', th: 'ลองประสบการณ์สายหลอกลวง' }), to: '/demo' },
+            { label: t({ en: 'Experience a scam call', th: 'ลองประสบการณ์สายหลอกลวง' }), to: '/#how-it-works' },
             { label: t({ en: 'Free voice check', th: 'ตรวจเสียงฟรี' }), to: '/demo/live-test' },
           ]}
         />
@@ -60,8 +60,9 @@ export function WebFooter() {
           title={t({ en: 'Account', th: 'บัญชี' })}
           links={[
             { label: t({ en: 'Sign up', th: 'สมัครใช้งาน' }), to: '/signup' },
-            { label: t({ en: 'Privacy policy', th: 'นโยบายความเป็นส่วนตัว' }), to: '/' },
-            { label: t({ en: 'Terms of service', th: 'เงื่อนไขการใช้งาน' }), to: '/' },
+            { label: t({ en: 'Help & support', th: 'ช่วยเหลือ & สนับสนุน' }), to: '/help' },
+            { label: t({ en: 'Privacy policy', th: 'นโยบายความเป็นส่วนตัว' }), to: '/privacy' },
+            { label: t({ en: 'Terms of service', th: 'เงื่อนไขการใช้งาน' }), to: '/terms' },
           ]}
         />
       </div>

@@ -1,12 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { CircleUserRound, History as HistoryIcon, PhoneCall, SlidersHorizontal, Users, type LucideIcon } from 'lucide-react'
+import { Activity, Check, Ear, Sparkles, UserRound } from 'lucide-react'
 import { api } from '@/services/api'
 import { queryKeys } from '@/services/queryKeys'
-import { Card } from '@/components/Card'
-import { Button } from '@/components/Button'
-import { VerdictBadge } from '@/components/VerdictBadge'
-import { ScoreRing } from '@/components/ScoreRing'
 import { Switch } from '@/components/Switch'
 import { Skeleton } from '@/components/Skeleton'
 import { ErrorState } from '@/components/ErrorState'
@@ -46,16 +42,13 @@ export function DashboardScreen() {
   })
 
   return (
-    <div className="flex flex-1 flex-col gap-4 px-5 pb-5 pt-2 text-white">
-      <header className="flex items-center justify-between py-2">
-        <h1 className="text-h1">Home</h1>
-        <Link
-          to="/app-preview/profile"
-          aria-label="Profile"
-          className="flex min-h-tap min-w-tap items-center justify-center"
-        >
-          <CircleUserRound className="h-6 w-6" aria-hidden="true" />
-        </Link>
+    <div className="flex flex-1 flex-col gap-5 px-5 pb-6 pt-3 text-white">
+      <header className="flex items-center justify-between">
+        <h1 className="text-[26px] font-bold tracking-tight text-gold-400">VoiceGuard</h1>
+        <span className="relative inline-flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold-400 to-gold-600 ring-2 ring-gold-400/60">
+          <UserRound className="h-5 w-5 text-white" aria-hidden="true" />
+          <Sparkles className="absolute -right-1 -top-1 h-4 w-4 text-gold-400" aria-hidden="true" />
+        </span>
       </header>
 
       {isPending && (
@@ -70,83 +63,95 @@ export function DashboardScreen() {
 
       {data && (
         <>
-          <Card surface="navy-900" padding="lg" className="bg-gradient-to-br from-navy-900 to-coral-500">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-h1-mobile">Protected</p>
-                <p className="text-caption text-slate-200">
-                  {data.protectionEnabled ? 'VoiceGuard is actively monitoring your calls.' : 'Protection is paused.'}
+          {/* Status hero */}
+          <section className="flex flex-col gap-3">
+            <h2 className="text-label font-semibold text-white/90">Status</h2>
+            <button
+              type="button"
+              onClick={() => startCallMutation.mutate()}
+              disabled={startCallMutation.isPending}
+              className="flex items-center gap-4 rounded-[22px] bg-gold-grad p-5 text-left shadow-[0_16px_40px_-16px_rgba(231,124,42,0.7)]"
+            >
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-[3px] border-white/80">
+                <Check className="h-7 w-7 text-white" strokeWidth={3} aria-hidden="true" />
+              </span>
+              <div className="flex-1">
+                <p className="text-[22px] font-bold leading-tight text-white">
+                  {data.protectionEnabled ? (
+                    <>
+                      Your Line
+                      <br />
+                      is Secure.
+                    </>
+                  ) : (
+                    'Protection Paused'
+                  )}
+                </p>
+                <p className="mt-1 text-caption text-white/85">
+                  {data.lastCall ? `Last Check: ${formatRelativeTime(data.lastCall.startedAt)}` : 'No calls checked yet'}
                 </p>
               </div>
-              <Switch
-                label="Protection enabled"
-                checked={data.protectionEnabled}
-                onChange={(checked) => protectionToggle.mutate(checked)}
-              />
+              <span onClick={(e) => e.stopPropagation()}>
+                <Switch
+                  label="Protection enabled"
+                  tone="onGold"
+                  checked={data.protectionEnabled}
+                  onChange={(checked) => protectionToggle.mutate(checked)}
+                />
+              </span>
+            </button>
+            <div className="flex items-center justify-center gap-1.5" aria-hidden="true">
+              <span className="h-1.5 w-4 rounded-full bg-white/70" />
+              <span className="h-1.5 w-1.5 rounded-full bg-white/25" />
+              <span className="h-1.5 w-1.5 rounded-full bg-white/25" />
             </div>
-          </Card>
+          </section>
 
-          <Button
-            variant="primary"
-            fullWidth
-            onClick={() => startCallMutation.mutate()}
-            disabled={startCallMutation.isPending}
-          >
-            <PhoneCall className="h-5 w-5" aria-hidden="true" />
-            {startCallMutation.isPending ? 'Starting…' : 'Monitor a call on speakerphone'}
-          </Button>
-
-          <div className="grid grid-cols-3 gap-2">
-            <Stat label="Calls today" value={data.today.calls} />
-            <Stat label="Alerts" value={data.today.alerts} tone="danger" />
-            <Stat label="Highest risk" value={`${data.today.highestRisk}%`} tone="warn" />
+          {/* Two review actions */}
+          <div className="grid grid-cols-2 gap-3">
+            <ActionCard icon={Activity} title="Live Call Review" caption="Encourage" />
+            <ActionCard icon={Ear} title="Background Call Check" caption="Encourage" />
           </div>
 
-          {data.lastCall ? (
-            <Link to={`/app-preview/history/${data.lastCall.callId}`}>
-              <Card padding="md" className="flex items-center justify-between">
-                <div>
-                  <p className="text-body-sm text-white">{data.lastCall.callerNumber}</p>
-                  <p className="mt-1 text-caption text-slate-400">{formatRelativeTime(data.lastCall.startedAt)}</p>
-                  <div className="mt-2">
-                    <VerdictBadge verdict={data.lastCall.verdict} />
-                  </div>
-                </div>
-                <ScoreRing value={data.lastCall.riskScore} size={56} label="Risk" tone={toneFor(data.lastCall.riskScore)} />
-              </Card>
-            </Link>
-          ) : (
-            <Card padding="lg">
-              <EmptyState
-                title="No calls yet"
-                description="Try a simulated scam call to see VoiceGuard in action."
-                actionLabel="Try the demo"
-                onAction={() => navigate('/demo')}
-              />
-            </Card>
-          )}
+          {/* Metrics */}
+          <section className="flex flex-col gap-3">
+            <h2 className="text-label font-semibold text-white/90">Today's Metrics</h2>
+            <div className="grid grid-cols-3 gap-3">
+              <Metric value={data.today.calls} top="Connections" bottom="Secured" />
+              <Metric value={data.today.alerts} top="Blocked" bottom="(potential issues)" />
+              <Metric value={`${data.today.highestRisk}%`} top="Peak Risk" bottom="Detected" />
+            </div>
+          </section>
 
-          <div className="grid grid-cols-3 gap-2">
-            <QuickAction to="/app-preview/history" icon={HistoryIcon} label="History" />
-            <QuickAction to="/app-preview/settings" icon={SlidersHorizontal} label="Sensitivity" />
-            <QuickAction to="/app-preview/family" icon={Users} label="Guardian" />
-          </div>
-
-          <section className="flex flex-col gap-2">
-            <h2 className="text-h2">Recent alerts</h2>
-            {data.recentAlerts.length === 0 && <p className="text-small text-slate-400">No alerts recently.</p>}
-            <div className="grid grid-cols-1 gap-2">
+          {/* Recent reviews */}
+          <section className="flex flex-col gap-3">
+            <h2 className="text-label font-semibold text-white/90">Recent Call Reviews</h2>
+            {data.recentAlerts.length === 0 && !data.lastCall && (
+              <div className="rounded-[18px] border border-white/[0.06] bg-panel p-5">
+                <EmptyState
+                  title="No calls yet"
+                  description="Try a simulated scam call to see VoiceGuard in action."
+                  actionLabel="Try the demo"
+                  onAction={() => navigate('/#how-it-works')}
+                />
+              </div>
+            )}
+            <div className="flex flex-col gap-2.5">
               {data.recentAlerts.map((alert) => (
-                <Link key={alert.alertId} to={`/app-preview/history/${alert.callId}`}>
-                  <Card
-                    padding="sm"
-                    className={alert.level === 'scam' ? 'border-l-4 border-danger-600' : 'border-l-4 border-warn-500'}
-                  >
-                    <p className="text-body-sm text-white">{alert.reasonMain}</p>
-                    <p className="mt-1 text-caption text-slate-400">{formatRelativeTime(alert.createdAt)}</p>
-                  </Card>
-                </Link>
+                <ReviewRow
+                  key={alert.alertId}
+                  to={`/app-preview/history/${alert.callId}`}
+                  subtitle={alert.reasonMain || 'Review suggested for new caller'}
+                  time={formatRelativeTime(alert.createdAt)}
+                />
               ))}
+              {data.recentAlerts.length === 0 && data.lastCall && (
+                <ReviewRow
+                  to={`/app-preview/history/${data.lastCall.callId}`}
+                  subtitle="Review suggested for recent caller"
+                  time={formatRelativeTime(data.lastCall.startedAt)}
+                />
+              )}
             </div>
           </section>
         </>
@@ -155,29 +160,50 @@ export function DashboardScreen() {
   )
 }
 
-function toneFor(score: number): 'safe' | 'warn' | 'danger' {
-  if (score >= 70) return 'danger'
-  if (score >= 40) return 'warn'
-  return 'safe'
-}
-
-function Stat({ label, value, tone }: { label: string; value: string | number; tone?: 'danger' | 'warn' }) {
-  const toneClass = tone === 'danger' ? 'text-danger-600' : tone === 'warn' ? 'text-warn-500' : 'text-white'
+function ActionCard({
+  icon: Icon,
+  title,
+  caption,
+}: {
+  icon: typeof Activity
+  title: string
+  caption: string
+}) {
   return (
-    <Card padding="sm" className="flex flex-col items-center gap-1 text-center md:p-4 lg:p-5">
-      <span className={`text-h1-mobile ${toneClass}`}>{value}</span>
-      <span className="text-tag text-slate-400">{label}</span>
-    </Card>
+    <div className="flex flex-col gap-3 rounded-[18px] border border-white/[0.06] bg-panel p-4">
+      <Icon className="h-6 w-6 text-gold-400" aria-hidden="true" />
+      <div>
+        <p className="text-body-sm font-semibold leading-snug text-white">{title}</p>
+        <p className="mt-0.5 text-caption text-gold-400">{caption}</p>
+      </div>
+    </div>
   )
 }
 
-function QuickAction({ to, icon: Icon, label }: { to: string; icon: LucideIcon; label: string }) {
+function Metric({ value, top, bottom }: { value: string | number; top: string; bottom: string }) {
   return (
-    <Link to={to}>
-      <Card padding="sm" className="flex flex-col items-center gap-1 text-center md:p-4 lg:p-5">
-        <Icon className="h-6 w-6" aria-hidden="true" />
-        <span className="text-caption text-slate-200">{label}</span>
-      </Card>
+    <div className="flex flex-col items-center gap-1 rounded-[18px] bg-metric-tile px-2 py-4 text-center ring-1 ring-white/[0.06]">
+      <span className="text-[26px] font-bold leading-none text-gold-400">{value}</span>
+      <span className="text-tag font-semibold leading-tight text-white/90">{top}</span>
+      <span className="text-[9px] leading-tight text-white/55">{bottom}</span>
+    </div>
+  )
+}
+
+function ReviewRow({ to, subtitle, time }: { to: string; subtitle: string; time: string }) {
+  return (
+    <Link
+      to={to}
+      className="flex items-center gap-3 rounded-[18px] border border-white/[0.06] bg-panel p-3.5 transition hover:bg-panel-2"
+    >
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-gold-400/70 to-blue-600/60">
+        <UserRound className="h-5 w-5 text-white" aria-hidden="true" />
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-body-sm font-semibold text-white">Connecting You Safely</p>
+        <p className="truncate text-caption text-mist-300">{subtitle}</p>
+        <p className="mt-0.5 text-tag text-mist-500">{time}</p>
+      </div>
     </Link>
   )
 }

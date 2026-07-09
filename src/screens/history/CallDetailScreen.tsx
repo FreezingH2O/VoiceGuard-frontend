@@ -17,8 +17,11 @@ import { useToast } from '@/components/ToastProvider'
 
 type OpenSheet = null | 'report' | 'share' | 'false-alarm'
 
-export function CallDetailScreen() {
-  const { callId = '' } = useParams()
+export function CallDetailScreen({ callId: callIdProp }: { callId?: string } = {}) {
+  const { callId: routeCallId = '' } = useParams()
+  // When embedded (e.g. the home/landing feature-preview phone) the id is passed
+  // as a prop since there is no /app-preview/:callId route param to read.
+  const callId = callIdProp ?? routeCallId
   const navigate = useNavigate()
   const qc = useQueryClient()
   const { showToast } = useToast()

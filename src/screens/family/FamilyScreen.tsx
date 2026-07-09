@@ -1,16 +1,14 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { UserRound, Users, ChevronRight, ShieldCheck, Bell } from 'lucide-react'
+import { UserRound, Users, ChevronRight, ShieldCheck, Bell, Plus, UserPlus, Sparkles } from 'lucide-react'
 import { api } from '@/services/api'
 import { queryKeys } from '@/services/queryKeys'
-import { Card } from '@/components/Card'
-import { Button } from '@/components/Button'
-import { Pill } from '@/components/Pill'
 import { Skeleton } from '@/components/Skeleton'
 import { ErrorState } from '@/components/ErrorState'
 import { useToast } from '@/components/ToastProvider'
 import { cn } from '@/lib/cn'
+import { formatRelativeTime } from '@/lib/format'
 import type { Ward } from '@/services/types'
 
 type Role = 'family' | 'elder'
@@ -23,46 +21,64 @@ type Role = 'family' | 'elder'
 export function FamilyScreen() {
   const [role, setRole] = useState<Role>('family')
   const { showToast } = useToast()
+  const inviteMutation = useMutation({ mutationFn: api.family.inviteGuardian })
 
   return (
-    <div className="flex flex-1 flex-col gap-3 px-5 pb-6 pt-3 text-white">
+    <div className="flex flex-1 flex-col gap-5 px-5 pb-6 pt-4 text-white">
       {/* 1. Feature intro */}
-      <Card surface="white" padding="lg">
-        <h1 className="text-h2 text-navy-900">Protect someone you love</h1>
-        <p className="mt-1.5 text-small text-slate-600">
-          When the person on the phone is elderly, VoiceGuard's scam alerts also go to a linked family member — so
-          they can step in, call, warn, or block, the moment a call turns dangerous.
+      <div className="relative overflow-hidden rounded-[22px] bg-gold-grad p-5 shadow-[0_16px_40px_-18px_rgba(231,124,42,0.7)]">
+        <Sparkles className="absolute right-4 top-4 h-6 w-6 text-white/90" aria-hidden="true" />
+        <h1 className="pr-8 text-[22px] font-bold leading-tight text-white">Supporting those you care for</h1>
+        <p className="mt-2 text-caption leading-relaxed text-white/90">
+          When the person on the phone is elderly, VoiceGuard's scam alerts also go to a linked family member — so they
+          can step in, warn, or block the moment a call turns dangerous.
         </p>
-      </Card>
-
-      {/* 2. Role toggle — styled like the onboarding profile-type cards */}
-      <div className="grid grid-cols-2 gap-2">
-        <RoleCard
-          icon={Users}
-          label="I'm the family member"
-          selected={role === 'family'}
-          onSelect={() => setRole('family')}
-        />
-        <RoleCard
-          icon={UserRound}
-          label="I'm setting it up for an elder"
-          selected={role === 'elder'}
-          onSelect={() => setRole('elder')}
-        />
       </div>
 
-      {role === 'family' ? <GuardianView /> : <ElderLinkingView />}
+      {/* 2. Role toggle */}
+      <section className="flex flex-col gap-3">
+        <p className="text-tag font-semibold uppercase tracking-[0.12em] text-mist-500">Set-up choices</p>
+        <div className="grid grid-cols-2 gap-3">
+          <RoleCard
+            icon={Users}
+            label="I'm the family member"
+            selected={role === 'family'}
+            onSelect={() => setRole('family')}
+          />
+          <RoleCard
+            icon={UserRound}
+            label="I'm setting it up for an elder"
+            selected={role === 'elder'}
+            onSelect={() => setRole('elder')}
+          />
+        </div>
+      </section>
 
-      {/* 4. Interest capture */}
-      <div className="mt-auto pt-2">
-        <Button
-          variant="primary"
-          fullWidth
-          leftIcon={<Bell className="h-4 w-4" aria-hidden="true" />}
+      {role === 'family' ? <GuardianView /> : <ElderLinkingView inviteMutation={inviteMutation} />}
+
+      {/* 4. Actions */}
+      <div className="mt-auto flex flex-col gap-3 pt-2">
+        <ActionButton
+          variant="solid"
+          icon={<Plus className="h-4 w-4" aria-hidden="true" />}
+          onClick={() => showToast({ message: 'Family invite flow coming soon.', tone: 'success' })}
+        >
+          Add Family Member
+        </ActionButton>
+        <ActionButton
+          variant="outline"
+          icon={<UserPlus className="h-4 w-4" aria-hidden="true" />}
+          onClick={() => inviteMutation.mutate()}
+        >
+          Invite Elder
+        </ActionButton>
+        <ActionButton
+          variant="ghost"
+          icon={<Bell className="h-4 w-4" aria-hidden="true" />}
           onClick={() => showToast({ message: "Thanks — we'll let you know.", tone: 'success' })}
         >
           Notify me when Elder Mode launches
-        </Button>
+        </ActionButton>
       </div>
     </div>
   )
@@ -85,12 +101,14 @@ function RoleCard({
       onClick={onSelect}
       aria-pressed={selected}
       className={cn(
-        'flex flex-col gap-2 rounded-card border bg-white p-3.5 text-left text-navy-900 transition',
-        selected ? 'border-[1.5px] border-blue-600 bg-blue-600/5' : 'border-slate-200',
+        'flex flex-col gap-3 rounded-[18px] border p-4 text-left transition',
+        selected
+          ? 'border-transparent bg-role-grad text-white shadow-[0_12px_30px_-14px_rgba(231,124,42,0.8)]'
+          : 'border-white/[0.08] bg-panel text-white',
       )}
     >
-      <Icon className={cn('h-6 w-6', selected ? 'text-blue-600' : 'text-slate-400')} aria-hidden="true" />
-      <span className="text-body-sm">{label}</span>
+      <Icon className={cn('h-6 w-6', selected ? 'text-white' : 'text-gold-400')} aria-hidden="true" />
+      <span className="text-body-sm font-semibold leading-snug">{label}</span>
     </button>
   )
 }
@@ -100,17 +118,17 @@ function GuardianView() {
   const wardsQuery = useQuery({ queryKey: queryKeys.wards, queryFn: api.family.listWards })
 
   return (
-    <div className="flex flex-col gap-2">
-      <p className="px-1 text-caption uppercase tracking-wide text-slate-400">People you watch over</p>
+    <section className="flex flex-col gap-3">
+      <p className="text-tag font-semibold uppercase tracking-[0.12em] text-mist-500">My protected circle</p>
       {wardsQuery.isPending && <Skeleton variant="card" />}
       {wardsQuery.isError && <ErrorState onRetry={() => wardsQuery.refetch()} />}
       {wardsQuery.data?.length === 0 && (
-        <Card surface="white" padding="md">
-          <p className="text-small text-slate-600">No one linked yet. Ask a family member to invite you.</p>
-        </Card>
+        <div className="rounded-[18px] border border-white/[0.06] bg-panel p-4">
+          <p className="text-small text-mist-300">No one linked yet. Ask a family member to invite you.</p>
+        </div>
       )}
       {wardsQuery.data?.map((ward) => <ElderRow key={ward.id} ward={ward} />)}
-    </div>
+    </section>
   )
 }
 
@@ -123,18 +141,26 @@ function ElderRow({ ward }: { ward: Ward }) {
   const latestAlert = alertsQuery.data?.[0]
 
   const inner = (
-    <Card surface="white" padding="md" className="flex items-center gap-3">
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-100 text-navy-900">
-        <UserRound className="h-5 w-5" aria-hidden="true" />
-      </span>
-      <div className="flex-1">
-        <p className="text-body-sm text-navy-900">{ward.name}</p>
-        <Pill tone="safe" size="xs" icon={<ShieldCheck className="h-3 w-3" aria-hidden="true" />} className="mt-1">
-          Protected
-        </Pill>
+    <div className="rounded-[18px] border border-white/[0.06] bg-panel p-4">
+      <div className="flex items-center gap-3">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-gold-400/70 to-blue-600/60">
+          <UserRound className="h-6 w-6 text-white" aria-hidden="true" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-body-medium font-semibold text-white">{ward.name}</p>
+          <span className="mt-1 inline-flex items-center gap-1 rounded-pill border border-gold-400/50 px-2.5 py-0.5 text-tag font-semibold text-gold-400">
+            <ShieldCheck className="h-3 w-3" aria-hidden="true" />
+            Active Protection
+          </span>
+        </div>
+        <ChevronRight className="h-5 w-5 text-mist-500" aria-hidden="true" />
       </div>
-      <ChevronRight className="h-5 w-5 text-slate-400" aria-hidden="true" />
-    </Card>
+      <div className="mt-3 space-y-0.5 border-t border-white/[0.06] pt-3 text-tag text-mist-500">
+        <p>Recent check {formatRelativeTime(ward.lastActivity)}</p>
+        <p>Linked check at {ward.phone}</p>
+        <p>Linked elder mode</p>
+      </div>
+    </div>
   )
 
   if (!latestAlert) return inner
@@ -142,28 +168,62 @@ function ElderRow({ ward }: { ward: Ward }) {
 }
 
 /** "I'm setting it up for an elder" — mock guardian-linking flow. */
-function ElderLinkingView() {
-  const inviteMutation = useMutation({ mutationFn: api.family.inviteGuardian })
-
+function ElderLinkingView({
+  inviteMutation,
+}: {
+  inviteMutation: ReturnType<typeof useMutation<{ code: string; qrDataUrl: string }, unknown, void>>
+}) {
   return (
-    <Card surface="white" padding="md" className="flex flex-col items-center gap-3 text-center">
-      <p className="text-body-sm text-navy-900">Link a family member</p>
-      <p className="text-caption text-slate-600">
-        Share this code or QR with the person you want to receive scam alerts on your behalf.
-      </p>
-      {inviteMutation.data ? (
-        <>
-          <img src={inviteMutation.data.qrDataUrl} alt="Invite QR code" className="h-40 w-40" />
-          <p className="text-h2 tracking-widest text-navy-900">{inviteMutation.data.code}</p>
-          <Button variant="outline-neutral" onClick={() => inviteMutation.mutate()}>
-            Generate a new code
-          </Button>
-        </>
-      ) : (
-        <Button variant="primary" loading={inviteMutation.isPending} onClick={() => inviteMutation.mutate()}>
-          Generate invite code
-        </Button>
+    <section className="flex flex-col gap-3">
+      <p className="text-tag font-semibold uppercase tracking-[0.12em] text-mist-500">Link a family member</p>
+      <div className="flex flex-col items-center gap-3 rounded-[18px] border border-white/[0.06] bg-panel p-5 text-center">
+        <p className="text-caption text-mist-300">
+          Share this code or QR with the person you want to receive scam alerts on your behalf.
+        </p>
+        {inviteMutation.data ? (
+          <>
+            <img
+              src={inviteMutation.data.qrDataUrl}
+              alt="Invite QR code"
+              className="h-40 w-40 rounded-xl bg-white p-2"
+            />
+            <p className="text-h2 tracking-[0.3em] text-gold-400">{inviteMutation.data.code}</p>
+          </>
+        ) : (
+          <p className="text-small text-mist-500">Tap “Invite Elder” below to generate a code.</p>
+        )}
+      </div>
+    </section>
+  )
+}
+
+function ActionButton({
+  children,
+  icon,
+  variant,
+  onClick,
+}: {
+  children: React.ReactNode
+  icon: React.ReactNode
+  variant: 'solid' | 'outline' | 'ghost'
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        'flex min-h-tap w-full items-center justify-between rounded-[16px] px-5 text-body-sm font-semibold transition',
+        variant === 'solid' && 'bg-gold-grad text-white shadow-[0_12px_28px_-14px_rgba(231,124,42,0.8)]',
+        variant === 'outline' && 'border border-gold-400/60 bg-transparent text-gold-400 hover:bg-gold-400/10',
+        variant === 'ghost' && 'bg-panel-2 text-white hover:bg-panel',
       )}
-    </Card>
+    >
+      <span className="flex items-center gap-2.5">
+        {icon}
+        {children}
+      </span>
+      <ChevronRight className="h-4 w-4 opacity-70" aria-hidden="true" />
+    </button>
   )
 }

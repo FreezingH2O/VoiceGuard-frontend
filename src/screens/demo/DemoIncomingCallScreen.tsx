@@ -1,19 +1,18 @@
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Shield, X, Phone } from 'lucide-react'
 import { Banner } from '@/components/Pill'
 import { Button } from '@/components/Button'
 import { getScenarioCallerName } from '@/services/mock/scenarios.data'
 import { ScenarioIcon } from '@/lib/scenarioIcons'
 
-interface LocationState {
-  elderMode?: boolean
-}
-
-export function DemoIncomingCallScreen() {
-  const { scenarioId = '' } = useParams()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const elderMode = (location.state as LocationState | null)?.elderMode ?? false
+export function DemoIncomingCallScreen({
+  scenarioId,
+  onDecline,
+  onAccept,
+}: {
+  scenarioId: string
+  onDecline: () => void
+  onAccept: () => void
+}) {
   const caller = getScenarioCallerName(scenarioId)
 
   return (
@@ -39,7 +38,7 @@ export function DemoIncomingCallScreen() {
               variant="danger"
               aria-label="Decline"
               className="!h-16 !w-16 !rounded-full !p-0"
-              onClick={() => navigate('/demo')}
+              onClick={onDecline}
             >
               <X className="h-6 w-6" aria-hidden="true" />
             </Button>
@@ -50,7 +49,7 @@ export function DemoIncomingCallScreen() {
               variant="primary"
               aria-label="Accept"
               className="!h-16 !w-16 !rounded-full !bg-safe-500 !p-0"
-              onClick={() => navigate(`/demo/monitor/${scenarioId}`, { state: { elderMode } })}
+              onClick={onAccept}
             >
               <Phone className="h-6 w-6" aria-hidden="true" />
             </Button>

@@ -12,7 +12,7 @@ export function StatusBar({ transparent }: StatusBarProps) {
       aria-hidden="true"
       className={cn(
         'flex h-[38px] items-center justify-between px-5 text-white',
-        transparent ? 'bg-transparent' : 'bg-navy-950',
+        transparent ? 'bg-transparent' : 'bg-night',
       )}
     >
       <span className="text-small font-semibold">9:41</span>

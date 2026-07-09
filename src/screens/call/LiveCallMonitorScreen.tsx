@@ -29,15 +29,24 @@ interface LocationState {
   wsToken?: string
 }
 
+interface DemoInlineProps {
+  /** Set when embedded inline (e.g. the landing page) instead of routed at /demo/monitor/:scenarioId. */
+  scenarioId?: string
+  elderMode?: boolean
+  /** Called instead of navigating to /demo/debrief/:scenarioId when embedded inline. */
+  onExitDemo?: (scenarioId: string) => void
+}
+
 const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false'
 
-export function LiveCallMonitorScreen() {
-  const { callId, scenarioId } = useParams()
+export function LiveCallMonitorScreen(props: DemoInlineProps = {}) {
+  const { callId, scenarioId: routeScenarioId } = useParams()
+  const scenarioId = props.scenarioId ?? routeScenarioId
   const isDemo = !!scenarioId
   const location = useLocation()
   const navigate = useNavigate()
   const locationState = location.state as LocationState | null
-  const elderMode = locationState?.elderMode ?? false
+  const elderMode = props.elderMode ?? locationState?.elderMode ?? false
 
   const scenarioQuery = useQuery({
     queryKey: queryKeys.demoScenario(scenarioId ?? ''),
@@ -69,6 +78,11 @@ export function LiveCallMonitorScreen() {
   const [rate, setRate] = useState<1 | 2>(1)
   const shownInterstitialRef = useRef(false)
 
+  function exitToDebrief() {
+    if (props.onExitDemo) props.onExitDemo(scenarioId!)
+    else navigate(`/demo/debrief/${scenarioId}`)
+  }
+
   // Elder Mode: show the guardian-notified interstitial once, at the alert moment.
   useEffect(() => {
     if (isDemo && elderMode && state.alert?.guardiansNotified && !shownInterstitialRef.current) {
@@ -81,9 +95,10 @@ export function LiveCallMonitorScreen() {
   useEffect(() => {
     if (!isDemo || timeline.length === 0) return
     const lastT = Math.max(0, ...timeline.map((e) => e.t))
-    const id = setTimeout(() => navigate(`/demo/debrief/${scenarioId}`), lastT + 2500)
+    const id = setTimeout(exitToDebrief, lastT + 2500)
     return () => clearTimeout(id)
-  }, [isDemo, timeline, scenarioId, navigate])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDemo, timeline, scenarioId])
 
   const caller = isDemo && scenarioId ? getScenarioCallerName(scenarioId) : { name: `Call ${callId?.slice(0, 8)}`, icon: 'phone' }
 
@@ -97,7 +112,7 @@ export function LiveCallMonitorScreen() {
       endCallMutation.mutate()
       setShowSummary(true)
     } else {
-      navigate(`/demo/debrief/${scenarioId}`)
+      exitToDebrief()
     }
   }
 

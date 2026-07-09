@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, type RouteObject } from 'react-router-dom'
 import { RootLayout } from '@/app/RootLayout'
 import { WebLayout } from '@/app/WebLayout'
 import { PreviewLayout } from '@/app/PreviewLayout'
@@ -16,10 +16,10 @@ import { CallDetailScreen } from '@/screens/history/CallDetailScreen'
 import { FamilyScreen } from '@/screens/family/FamilyScreen'
 import { GuardianAlertDetailScreen } from '@/screens/family/GuardianAlertDetailScreen'
 import { SettingsScreen } from '@/screens/settings/SettingsScreen'
-import { ProfileScreen } from '@/screens/profile/ProfileScreen'
-import { DemoScenarioPickerScreen } from '@/screens/demo/DemoScenarioPickerScreen'
-import { DemoIncomingCallScreen } from '@/screens/demo/DemoIncomingCallScreen'
-import { DemoDebriefScreen } from '@/screens/demo/DemoDebriefScreen'
+import { WebProfileScreen } from '@/screens/profile/WebProfileScreen'
+import { HelpScreen } from '@/screens/support/HelpScreen'
+import { PrivacyScreen } from '@/screens/legal/PrivacyScreen'
+import { TermsScreen } from '@/screens/legal/TermsScreen'
 import { LiveDetectorTestScreen } from '@/screens/demo/LiveDetectorTestScreen'
 
 // Preview-zone auth wrapper — mock/session-local, but the app-preview screens still
@@ -29,6 +29,19 @@ const authed = (el: ReactNode) => (
     <RequireConsent>{el}</RequireConsent>
   </RequireAuth>
 )
+
+// Single source of truth for the app-preview screen tree (path + tab handle + element),
+// shared by the real /app-preview browser route and by any standalone embedding of the
+// same screens (e.g. a memory router rendered inside the phone mockup elsewhere).
+export const appPreviewScreens: RouteObject[] = [
+  { path: '/app-preview', handle: { zone: 'app', tabbar: 'home' }, element: <DashboardScreen /> },
+  { path: '/app-preview/history', handle: { zone: 'app', tabbar: 'history' }, element: <CallHistoryScreen /> },
+  { path: '/app-preview/history/:callId', handle: { zone: 'app', tabbar: 'history' }, element: <CallDetailScreen /> },
+  { path: '/app-preview/call/:callId', handle: { zone: 'app', tabbar: 'home' }, element: <LiveCallMonitorScreen /> },
+  { path: '/app-preview/family', handle: { zone: 'app', tabbar: 'family' }, element: <FamilyScreen /> },
+  { path: '/app-preview/family/alerts/:wardId/:alertId', handle: { zone: 'app', tabbar: 'family' }, element: <GuardianAlertDetailScreen /> },
+  { path: '/app-preview/settings', handle: { zone: 'app', tabbar: 'settings' }, element: <SettingsScreen /> },
+]
 
 export const router = createBrowserRouter([
   {
@@ -50,6 +63,20 @@ export const router = createBrowserRouter([
               </RequireAuth>
             ),
           },
+          {
+            path: '/profile',
+            element: (
+              <RequireAuth>
+                <RequireConsent>
+                  <WebProfileScreen />
+                </RequireConsent>
+              </RequireAuth>
+            ),
+          },
+          // Public support & legal pages (accessible signed-in or not).
+          { path: '/help', element: <HelpScreen /> },
+          { path: '/privacy', element: <PrivacyScreen /> },
+          { path: '/terms', element: <TermsScreen /> },
         ],
       },
 
@@ -74,23 +101,7 @@ export const router = createBrowserRouter([
       // ---- Preview zone: phone mockup on a designed web page ----
       {
         element: <PreviewLayout />,
-        children: [
-          // Scripted demo (public)
-          { path: '/demo', handle: { zone: 'demo' }, element: <DemoScenarioPickerScreen /> },
-          { path: '/demo/call/:scenarioId', handle: { zone: 'demo' }, element: <DemoIncomingCallScreen /> },
-          { path: '/demo/monitor/:scenarioId', handle: { zone: 'demo' }, element: <LiveCallMonitorScreen /> },
-          { path: '/demo/debrief/:scenarioId', handle: { zone: 'demo' }, element: <DemoDebriefScreen /> },
-
-          // Mobile app preview (auth, mock data)
-          { path: '/app-preview', handle: { zone: 'app', tabbar: 'home' }, element: authed(<DashboardScreen />) },
-          { path: '/app-preview/history', handle: { zone: 'app', tabbar: 'history' }, element: authed(<CallHistoryScreen />) },
-          { path: '/app-preview/history/:callId', handle: { zone: 'app', tabbar: 'history' }, element: authed(<CallDetailScreen />) },
-          { path: '/app-preview/call/:callId', handle: { zone: 'app', tabbar: 'home' }, element: authed(<LiveCallMonitorScreen />) },
-          { path: '/app-preview/family', handle: { zone: 'app', tabbar: 'family' }, element: authed(<FamilyScreen />) },
-          { path: '/app-preview/family/alerts/:wardId/:alertId', handle: { zone: 'app', tabbar: 'family' }, element: authed(<GuardianAlertDetailScreen />) },
-          { path: '/app-preview/settings', handle: { zone: 'app', tabbar: 'settings' }, element: authed(<SettingsScreen />) },
-          { path: '/app-preview/profile', handle: { zone: 'app', tabbar: 'profile' }, element: authed(<ProfileScreen />) },
-        ],
+        children: appPreviewScreens.map((r) => ({ ...r, element: authed(r.element) })),
       },
     ],
   },

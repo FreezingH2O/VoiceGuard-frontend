@@ -22,6 +22,12 @@ export default {
         },
         teal: { 400: '#34D6C4' }, // authentic / real voice / safe — glows on dark
 
+        // ── VoiceGuard app-preview dark theme (matches the mobile mockup) ──
+        night: '#0A0E20', // preview phone screen canvas — deep desaturated navy
+        panel: '#161B33', // raised cards inside the preview phone
+        'panel-2': '#1E2543', // nested / hover surface inside the preview phone
+        gold: { 400: '#F7B53F', 500: '#E88B2C', 600: '#C9741F' }, // amber accent + status hero
+
         // ── Existing light-app tokens (kept — do not change) ──
         navy: {
           950: '#0d1545',
@@ -101,6 +107,10 @@ export default {
       backgroundImage: {
         'glow-grad': 'linear-gradient(135deg, #2B3A9F 0%, #EB7449 100%)',
         'glow-grad-soft': 'linear-gradient(135deg, rgba(43,58,159,0.9) 0%, rgba(235,116,73,0.9) 100%)',
+        // App-preview amber hero + metric tiles (mobile mockup)
+        'gold-grad': 'linear-gradient(135deg, #F7B53F 0%, #E17C2A 100%)',
+        'metric-tile': 'linear-gradient(155deg, #3E2411 0%, #6E3A18 55%, #9C4C1E 100%)',
+        'role-grad': 'linear-gradient(140deg, #F49A34 0%, #E4732A 100%)',
       },
       spacing: {
         tap: '44px',

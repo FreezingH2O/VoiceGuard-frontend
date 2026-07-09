@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import {
   Mic,
@@ -23,8 +23,9 @@ import { HeroReveal, HeroFollow } from '@/components/motion/HeroReveal'
 import { Marquee } from '@/components/motion/Marquee'
 import { ScrollLine } from '@/components/motion/ScrollLine'
 import { SectionPanel, SectionGlow } from '@/components/landing/SectionPanel'
+import { EmbeddedScamDemoPhone } from '@/components/landing/EmbeddedScamDemoPhone'
 import { WaveformShieldVisual } from '@/components/landing/WaveformShieldVisual'
-import { LandingPhoneDemo } from '@/screens/landing/LandingPhoneDemo'
+import { PreviewFeaturePhone, PREVIEW_FEATURES, type PhoneScreen } from '@/components/landing/PreviewFeaturePhone'
 import { useLang, type Localized } from '@/i18n/LangProvider'
 import { useCountUp } from '@/hooks/useCountUp'
 import { scrollToAnchor } from '@/hooks/useLenis'
@@ -394,44 +395,44 @@ const PIPELINE: { icon: LucideIcon; title: Localized; line: Localized }[] = [
 
 function HowItWorksSection() {
   const { t } = useLang()
+
   return (
     <SectionPanel id="how-it-works" mode="light">
-      <Reveal className="max-w-2xl">
-        <Eyebrow light>{t({ en: 'How it works', th: 'วิธีการทำงาน' })}</Eyebrow>
-        <SectionTitle light className="mt-3">
-          {t({ en: 'Four stages run on the live call audio.', th: 'สี่ขั้นตอนทำงานบนเสียงสายที่กำลังโทร' })}
-        </SectionTitle>
-      </Reveal>
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start">
+        <div className="order-2 lg:order-1">
+          <Reveal className="max-w-2xl">
+            <Eyebrow light>{t({ en: 'How it works', th: 'วิธีการทำงาน' })}</Eyebrow>
+            <SectionTitle light className="mt-3">
+              {t({ en: 'Four stages run on the live call audio.', th: 'สี่ขั้นตอนทำงานบนเสียงสายที่กำลังโทร' })}
+            </SectionTitle>
+          </Reveal>
 
-      <RevealGroup className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {PIPELINE.map((step, i) => (
-          <RevealItem key={i}>
-            <div className="group relative h-full rounded-web-card border border-slate-200 bg-white p-6 shadow-card transition hover:-translate-y-1 hover:border-coral-500/40">
-              {i < PIPELINE.length - 1 && (
-                <ArrowRight aria-hidden="true" className="absolute -right-[18px] top-11 z-10 hidden h-5 w-5 text-slate-400 lg:block" />
-              )}
-              <span className="flex h-11 w-11 items-center justify-center rounded-button bg-glow-grad text-white">
-                <step.icon className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <p className="mt-4 text-tag font-semibold uppercase tracking-wide text-blue-600">
-                {t({ en: `Stage ${i + 1}`, th: `ขั้นที่ ${i + 1}` })}
-              </p>
-              <p className="mt-1 text-h2 font-semibold text-slate-900">{t(step.title)}</p>
-              <p className="mt-2 text-web-caption text-slate-600">{t(step.line)}</p>
-            </div>
-          </RevealItem>
-        ))}
-      </RevealGroup>
-
-      <Reveal delay={0.1}>
-        <div className="mt-12 flex justify-center">
-          <Link to="/demo">
-            <Button variant="primary" className="px-7" leftIcon={<ShieldAlert className="h-5 w-5" aria-hidden="true" />}>
-              {t({ en: 'Experience a scam call', th: 'ลองประสบการณ์สายหลอกลวง' })} <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Button>
-          </Link>
+          <RevealGroup className="relative mt-14 flex flex-col gap-10 pl-10 sm:pl-14">
+            <div aria-hidden="true" className="absolute inset-y-2 left-3 w-px bg-slate-200 sm:left-5" />
+            {PIPELINE.map((step, i) => (
+              <RevealItem key={i}>
+                <div className="group relative">
+                  <span
+                    aria-hidden="true"
+                    className="absolute -left-10 top-1 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full border-2 border-slate-50 bg-glow-grad text-white shadow-card sm:-left-14"
+                  >
+                    <step.icon className="h-3.5 w-3.5" aria-hidden="true" />
+                  </span>
+                  <p className="text-tag font-semibold uppercase tracking-wide text-blue-600">
+                    {t({ en: `Stage ${i + 1}`, th: `ขั้นที่ ${i + 1}` })}
+                  </p>
+                  <p className="mt-1 text-h2 font-semibold text-slate-900">{t(step.title)}</p>
+                  <p className="mt-2 max-w-[52ch] text-web-caption text-slate-600">{t(step.line)}</p>
+                </div>
+              </RevealItem>
+            ))}
+          </RevealGroup>
         </div>
-      </Reveal>
+
+        <div className="order-1 lg:sticky lg:top-28 lg:order-2">
+          <EmbeddedScamDemoPhone />
+        </div>
+      </div>
     </SectionPanel>
   )
 }
@@ -634,36 +635,23 @@ function DetectorPreview() {
 
 /* ─────────────────────────── 7. Phone app detail ─────────────────────────── */
 
-const PHONE_FEATURES: { title: Localized; line: Localized }[] = [
-  {
-    title: { en: 'Automatic call monitoring', th: 'ตรวจสอบสายอัตโนมัติ' },
-    line: { en: 'Scores every caller in real time while you talk.', th: 'ให้คะแนนผู้โทรทุกคนแบบเรียลไทม์ขณะคุยสาย' },
-  },
-  {
-    title: { en: 'Instant in-call alerts', th: 'แจ้งเตือนกลางสายทันที' },
-    line: { en: 'A clear warning the moment a call looks like a scam.', th: 'คำเตือนชัดเจนทันทีที่สายดูเหมือนหลอกลวง' },
-  },
-  {
-    title: { en: 'Family / Elder Mode', th: 'ครอบครัว / โหมดผู้สูงอายุ' },
-    line: { en: 'Alerts also reach a family member, so no one faces a scam alone.', th: 'การแจ้งเตือนถึงคนในครอบครัวด้วย เพื่อไม่ให้ใครเผชิญสแกมเพียงลำพัง' },
-  },
-  {
-    title: { en: 'Call history & explanations', th: 'ประวัติสาย & คำอธิบาย' },
-    line: { en: 'Every call logged with a plain-language reason.', th: 'บันทึกทุกสายพร้อมเหตุผลที่เข้าใจง่าย' },
-  },
-  {
-    title: { en: 'Your controls', th: 'การตั้งค่าของคุณ' },
-    line: { en: 'Tune sensitivity, scope, blocking and reporting.', th: 'ปรับความไว ขอบเขต การบล็อกและการรายงาน' },
-  },
-]
+// Landing shows only the core features — live call analysis, call history, and
+// Elder Mode — three distinct screens (the full six live on the home page).
+const CORE_PHONE_FEATURES: PhoneScreen[] = ['incoming', 'history', 'family']
 
 function PhoneAppDetail() {
   const { t } = useLang()
   const { showToast } = useToast()
+  const [active, setActive] = useState<PhoneScreen>('incoming')
+  const features = PREVIEW_FEATURES.filter((f) => CORE_PHONE_FEATURES.includes(f.key))
   return (
     <SectionPanel id="phone-app" mode="dark" tone="base">
       <div className="grid items-start gap-14 lg:grid-cols-[0.95fr_1.05fr]">
-        <div className="order-2 lg:order-1">
+        <Reveal className="order-1 lg:sticky lg:top-28">
+          <PreviewFeaturePhone screen={active} />
+        </Reveal>
+
+        <div className="order-2">
           <Reveal>
             <div className="flex items-center gap-3">
               <Eyebrow>{t({ en: 'Phone App', th: 'แอปมือถือ' })}</Eyebrow>
@@ -674,24 +662,44 @@ function PhoneAppDetail() {
             </SectionTitle>
             <p className="mt-4 text-web-body text-mist-300">
               {t({
-                en: 'On your phone, VoiceGuard listens on every call and warns you the instant something sounds wrong. Play with the preview — it runs on sample data.',
-                th: 'บนมือถือ VoiceGuard ฟังทุกสายและเตือนคุณทันทีที่มีบางอย่างผิดปกติ ลองเล่นพรีวิว — ใช้ข้อมูลตัวอย่าง',
+                en: 'Pick a feature to see it on the phone — each one shows the real app screen on the device. Hover the phone to open the full, interactive preview.',
+                th: 'เลือกฟีเจอร์เพื่อดูบนหน้าจอมือถือ — แต่ละอันแสดงหน้าจอแอปจริงบนเครื่อง วางเมาส์บนมือถือเพื่อเปิดพรีวิวเต็มรูปแบบที่โต้ตอบได้',
               })}
             </p>
           </Reveal>
 
           <RevealGroup className="mt-8 flex flex-col gap-3">
-            {PHONE_FEATURES.map((f, i) => (
-              <RevealItem key={i}>
-                <div className="flex items-start gap-3 rounded-card border border-white/10 bg-surface-800 p-4">
-                  <Check className="mt-0.5 h-5 w-5 shrink-0 text-teal-400" aria-hidden="true" />
-                  <div>
-                    <p className="text-body-medium font-semibold text-white">{t(f.title)}</p>
-                    <p className="text-web-caption text-mist-300">{t(f.line)}</p>
-                  </div>
-                </div>
-              </RevealItem>
-            ))}
+            {features.map((f) => {
+              const isActive = f.key === active
+              return (
+                <RevealItem key={f.key}>
+                  <button
+                    type="button"
+                    onClick={() => setActive(f.key)}
+                    aria-pressed={isActive}
+                    className={cn(
+                      'flex w-full items-start gap-3 rounded-card border p-4 text-left transition',
+                      isActive
+                        ? 'border-coral-400/60 bg-coral-500/10 shadow-glow-soft'
+                        : 'border-white/10 bg-surface-800 hover:border-white/25',
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        'mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition',
+                        isActive ? 'bg-coral-500 text-white' : 'bg-white/5 text-mist-300',
+                      )}
+                    >
+                      <f.icon className="h-3.5 w-3.5" aria-hidden="true" />
+                    </span>
+                    <div>
+                      <p className="text-body-medium font-semibold text-white">{t(f.title)}</p>
+                      <p className="mt-0.5 text-web-caption text-mist-300">{t(f.line)}</p>
+                    </div>
+                  </button>
+                </RevealItem>
+              )
+            })}
           </RevealGroup>
 
           <Reveal delay={0.1}>
@@ -709,10 +717,6 @@ function PhoneAppDetail() {
             </div>
           </Reveal>
         </div>
-
-        <Reveal className="order-1 lg:order-2" delay={0.1}>
-          <LandingPhoneDemo />
-        </Reveal>
       </div>
     </SectionPanel>
   )

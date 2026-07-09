@@ -1,19 +1,13 @@
-import { Outlet, Link, NavLink, useMatches } from 'react-router-dom'
+import { Link, NavLink, useMatches } from 'react-router-dom'
 import { House, History as HistoryIcon, Users, Settings as SettingsIcon, ChevronLeft, type LucideIcon } from 'lucide-react'
 import { WebNavbar } from '@/components/web/WebNavbar'
 import { PhoneMockup } from '@/components/web/PhoneMockup'
-import { StatusBar } from '@/components/StatusBar'
-import { BottomTabBar, type TabKey } from '@/components/BottomTabBar'
 import { StatusBadge } from '@/components/web/StatusBadge'
 import { AmbientBackground } from '@/components/motion/AmbientBackground'
+import { PreviewPhoneScreen, type PreviewHandle } from '@/app/PreviewPhoneScreen'
 import { useAuth } from '@/hooks/useAuth'
 import { useLang, type Localized } from '@/i18n/LangProvider'
 import { cn } from '@/lib/cn'
-
-interface PreviewHandle {
-  tabbar?: TabKey
-  zone?: 'app' | 'demo'
-}
 
 const SIDE_LINKS: { to: string; label: Localized; caption: Localized; icon: LucideIcon; end?: boolean }[] = [
   { to: '/app-preview', label: { en: 'Dashboard', th: 'หน้าหลัก' }, caption: { en: 'Protection status & recent calls', th: 'สถานะการป้องกันและสายล่าสุด' }, icon: House, end: true },
@@ -35,7 +29,6 @@ export function PreviewLayout() {
   const matches = useMatches()
   const handle = matches.at(-1)?.handle as PreviewHandle | undefined
   const zone = handle?.zone ?? 'demo'
-  const tabbar = handle?.tabbar
   const exitTo = isAuthed ? '/home' : '/'
 
   const heading: { title: Localized; sub: Localized } =
@@ -104,16 +97,7 @@ export function PreviewLayout() {
             {/* The phone */}
             <div className={cn('order-1 lg:order-2', zone === 'app' && 'mx-auto lg:mx-0')}>
               <PhoneMockup className="shadow-glow-soft">
-                <StatusBar />
-                {zone === 'app' && (
-                  <div className="w-full bg-coral-500 px-3 py-1 text-center text-[10px] font-semibold leading-tight text-white">
-                    {t({ en: 'PREVIEW · sample data — the real app runs on your phone', th: 'พรีวิว · ข้อมูลตัวอย่าง — แอปจริงทำงานบนมือถือของคุณ' })}
-                  </div>
-                )}
-                <main className="flex flex-1 flex-col overflow-y-auto">
-                  <Outlet />
-                </main>
-                {tabbar && <BottomTabBar active={tabbar} />}
+                <PreviewPhoneScreen />
               </PhoneMockup>
             </div>
           </div>

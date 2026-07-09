@@ -1,15 +1,7 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import {
-  Mic,
-  Bell,
-  Users,
-  History as HistoryIcon,
-  SlidersHorizontal,
-  PhoneCall,
-  ChevronRight,
-  type LucideIcon,
-} from 'lucide-react'
+import { Mic, ChevronRight } from 'lucide-react'
 import { api } from '@/services/api'
 import { queryKeys } from '@/services/queryKeys'
 import { Button } from '@/components/Button'
@@ -17,46 +9,16 @@ import { Skeleton } from '@/components/Skeleton'
 import { ErrorState } from '@/components/ErrorState'
 import { StatusBadge } from '@/components/web/StatusBadge'
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal'
+import { PreviewFeaturePhone, PREVIEW_FEATURES, type PhoneScreen } from '@/components/landing/PreviewFeaturePhone'
 import { useAuth } from '@/hooks/useAuth'
-import { useLang, type Localized } from '@/i18n/LangProvider'
+import { useLang } from '@/i18n/LangProvider'
 import { formatRelativeTime } from '@/lib/format'
-
-const SHOWCASE: { icon: LucideIcon; title: Localized; description: Localized; to: string }[] = [
-  {
-    icon: PhoneCall,
-    title: { en: 'Automatic call monitoring', th: 'ตรวจสอบสายอัตโนมัติ' },
-    description: { en: 'We listen during your calls and score the caller’s voice in real time.', th: 'เราฟังระหว่างสายและให้คะแนนเสียงผู้โทรแบบเรียลไทม์' },
-    to: '/demo',
-  },
-  {
-    icon: Bell,
-    title: { en: 'Instant scam alerts', th: 'แจ้งเตือนสแกมทันที' },
-    description: { en: 'The moment a call looks like a scam, you get a clear warning to hang up.', th: 'ทันทีที่สายดูเหมือนหลอกลวง คุณจะได้รับคำเตือนชัดเจนให้วางสาย' },
-    to: '/app-preview/history',
-  },
-  {
-    icon: Users,
-    title: { en: 'Family alerts (Elder Mode)', th: 'แจ้งเตือนครอบครัว (โหมดผู้สูงอายุ)' },
-    description: { en: 'Scam alerts also reach a family member, so no one faces it alone.', th: 'การแจ้งเตือนสแกมถึงคนในครอบครัวด้วย เพื่อไม่ให้ใครเผชิญเพียงลำพัง' },
-    to: '/app-preview/family',
-  },
-  {
-    icon: HistoryIcon,
-    title: { en: 'Call history & explanations', th: 'ประวัติสาย & คำอธิบาย' },
-    description: { en: 'Every call is logged with a plain-language reason for its verdict.', th: 'ทุกสายถูกบันทึกพร้อมเหตุผลของคำตัดสินที่เข้าใจง่าย' },
-    to: '/app-preview/history',
-  },
-  {
-    icon: SlidersHorizontal,
-    title: { en: 'Your controls', th: 'การตั้งค่าของคุณ' },
-    description: { en: 'Tune sensitivity, choose which calls to monitor, block and report numbers.', th: 'ปรับความไว เลือกสายที่จะตรวจ บล็อกและรายงานเบอร์' },
-    to: '/app-preview/settings',
-  },
-]
+import { cn } from '@/lib/cn'
 
 export function WebHomeScreen() {
   const { user } = useAuth()
   const { t } = useLang()
+  const [active, setActive] = useState<PhoneScreen>('incoming')
   const firstName = user?.name?.split(' ')[0] ?? t({ en: 'there', th: 'คุณ' })
 
   return (
@@ -83,38 +45,67 @@ export function WebHomeScreen() {
 
       {/* Secondary: coming to your phone (preview) */}
       <section className="mt-16">
-        <Reveal>
-          <div className="flex items-center gap-2.5">
-            <h2 className="font-display text-web-h1 text-white">{t({ en: 'Coming to your phone', th: 'เร็ว ๆ นี้บนมือถือ' })}</h2>
-            <StatusBadge kind="preview" />
-          </div>
-          <p className="mt-2 max-w-[70ch] text-web-body text-mist-300">
-            {t({
-              en: 'Explore the full app below. On your phone it runs automatically during real calls — that’s our next phase.',
-              th: 'สำรวจแอปเต็มรูปแบบด้านล่าง บนมือถือจะทำงานอัตโนมัติระหว่างสายจริง — นั่นคือขั้นถัดไปของเรา',
-            })}
-          </p>
-        </Reveal>
+        <div className="grid items-start gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:gap-14">
+          <div className="order-2 lg:order-1">
+            <Reveal>
+              <div className="flex items-center gap-2.5">
+                <h2 className="font-display text-web-h1 text-white">{t({ en: 'Coming to your phone', th: 'เร็ว ๆ นี้บนมือถือ' })}</h2>
+                <StatusBadge kind="preview" />
+              </div>
+              <p className="mt-2 max-w-[70ch] text-web-body text-mist-300">
+                {t({
+                  en: 'Pick a feature to see it on the phone — each one shows what that screen looks like on the device. Hover the phone to open the full preview.',
+                  th: 'เลือกฟีเจอร์เพื่อดูบนหน้าจอมือถือ — แต่ละอันแสดงว่าหน้าจอนั้นจะเป็นอย่างไรบนเครื่อง วางเมาส์บนมือถือเพื่อเปิดพรีวิวเต็มรูปแบบ',
+                })}
+              </p>
+            </Reveal>
 
-        <RevealGroup className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {SHOWCASE.map((card) => (
-            <RevealItem key={card.to + t(card.title)}>
-              <Link
-                to={card.to}
-                className="group flex h-full items-start gap-4 rounded-web-card border border-white/10 bg-surface-800 p-5 transition hover:-translate-y-0.5 hover:border-white/20 hover:shadow-glow-soft"
-              >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-button bg-white/5 text-mist-300">
-                  <card.icon className="h-5 w-5" aria-hidden="true" />
-                </span>
-                <span className="flex-1">
-                  <span className="block text-body-medium font-semibold text-white">{t(card.title)}</span>
-                  <span className="mt-0.5 block text-small text-mist-300">{t(card.description)}</span>
-                </span>
-                <ChevronRight className="h-5 w-5 shrink-0 text-mist-500 transition group-hover:translate-x-0.5" aria-hidden="true" />
-              </Link>
-            </RevealItem>
-          ))}
-        </RevealGroup>
+            <RevealGroup className="mt-6 grid gap-4 md:grid-cols-2">
+              {PREVIEW_FEATURES.map((card) => {
+                const isActive = card.key === active
+                return (
+                  <RevealItem key={card.key}>
+                    <button
+                      type="button"
+                      onClick={() => setActive(card.key)}
+                      aria-pressed={isActive}
+                      className={cn(
+                        'group flex h-full w-full items-start gap-4 rounded-web-card border p-5 text-left transition',
+                        isActive
+                          ? 'border-coral-400/60 bg-coral-500/10 shadow-glow-soft'
+                          : 'border-white/10 bg-surface-800 hover:-translate-y-0.5 hover:border-white/20 hover:shadow-glow-soft',
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          'flex h-11 w-11 shrink-0 items-center justify-center rounded-button transition',
+                          isActive ? 'bg-coral-500 text-white' : 'bg-white/5 text-mist-300',
+                        )}
+                      >
+                        <card.icon className="h-5 w-5" aria-hidden="true" />
+                      </span>
+                      <span className="flex-1">
+                        <span className="block text-body-medium font-semibold text-white">{t(card.title)}</span>
+                        <span className="mt-0.5 block text-small text-mist-300">{t(card.line)}</span>
+                      </span>
+                      <ChevronRight
+                        className={cn(
+                          'h-5 w-5 shrink-0 transition',
+                          isActive ? 'text-coral-400' : 'text-mist-500 group-hover:translate-x-0.5',
+                        )}
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </RevealItem>
+                )
+              })}
+            </RevealGroup>
+          </div>
+
+          <Reveal className="order-1 flex justify-center lg:order-2 lg:sticky lg:top-28" delay={0.1}>
+            <PreviewFeaturePhone screen={active} />
+          </Reveal>
+        </div>
       </section>
 
       <div className="mt-12 text-center">

@@ -5,9 +5,17 @@ interface SwitchProps {
   onChange: (checked: boolean) => void
   label: string // visually-hidden accessible name
   disabled?: boolean
+  // 'gold' = amber track when on (preview app theme); 'onGold' = white track for
+  // use on top of the gold status hero, where an amber track would disappear.
+  tone?: 'gold' | 'onGold'
 }
 
-export function Switch({ checked, onChange, label, disabled }: SwitchProps) {
+const trackOn: Record<NonNullable<SwitchProps['tone']>, string> = {
+  gold: 'bg-gold-500',
+  onGold: 'bg-white',
+}
+
+export function Switch({ checked, onChange, label, disabled, tone = 'gold' }: SwitchProps) {
   return (
     <button
       type="button"
@@ -18,9 +26,9 @@ export function Switch({ checked, onChange, label, disabled }: SwitchProps) {
       onClick={() => onChange(!checked)}
       className={cn(
         'relative inline-flex h-[26px] w-[44px] shrink-0 items-center rounded-pill transition-colors',
-        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
+        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400',
         'disabled:opacity-50',
-        checked ? 'bg-safe-500' : 'bg-slate-200',
+        checked ? trackOn[tone] : 'bg-white/25',
       )}
     >
       <span
