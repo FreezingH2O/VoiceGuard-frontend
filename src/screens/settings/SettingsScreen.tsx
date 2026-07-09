@@ -230,7 +230,7 @@ export function SettingsScreen() {
           </Button>
 
           <Sheet open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Are you sure?">
-            <p className="text-small text-slate-600">
+            <p className="text-small text-mist-300">
               This permanently deletes your account and all call history. This cannot be undone.
             </p>
             <Button

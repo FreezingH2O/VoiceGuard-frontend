@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query'
 import { Play } from 'lucide-react'
 import { api } from '@/services/api'
 import { queryKeys } from '@/services/queryKeys'
-import { Card } from '@/components/Card'
 import { Pill, Banner } from '@/components/Pill'
 import { Skeleton } from '@/components/Skeleton'
 import { ErrorState } from '@/components/ErrorState'
@@ -17,10 +16,10 @@ export function DemoScenarioPickerScreen({ onSelectScenario }: { onSelectScenari
   return (
     <div className="flex flex-1 flex-col">
       <Banner tone="demo">PREVIEW · simulated call showing the in-call experience</Banner>
-      <div className="flex flex-col gap-4 bg-navy-950 px-5 py-5 text-white">
+      <div className="flex flex-1 flex-col gap-4 bg-night px-5 py-5 text-white">
         <div>
-          <h1 className="text-h1-mobile text-coral-500">Experience a scam call, safely</h1>
-          <p className="mt-1 text-small text-slate-400">
+          <h1 className="text-h1-mobile font-bold text-gold-400">Experience a scam call, safely</h1>
+          <p className="mt-1 text-small text-mist-300">
             Pick a scenario to see how PaTuean detects and reacts to a scam call in real time.
           </p>
         </div>
@@ -36,29 +35,28 @@ export function DemoScenarioPickerScreen({ onSelectScenario }: { onSelectScenari
 
         <div className="grid grid-cols-1 gap-3">
           {data?.map((scenario) => (
-            <Card
+            <button
               key={scenario.id}
-              as="button"
+              type="button"
               onClick={() => onSelectScenario(scenario.id)}
-              padding="md"
-              className="flex items-start gap-3"
+              className="flex w-full items-start gap-3 rounded-[18px] border border-white/[0.06] bg-panel p-4 text-left transition hover:bg-panel-2"
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-button bg-slate-100">
-                <ScenarioIcon slug={scenario.icon} className="h-5 w-5 text-navy-900" />
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] bg-gradient-to-br from-gold-400/70 to-blue-600/60">
+                <ScenarioIcon slug={scenario.icon} className="h-5 w-5 text-white" />
               </span>
               <div className="flex-1 text-left">
                 <div className="flex items-center gap-2">
-                  <p className="text-body-sm text-white">{scenario.title}</p>
+                  <p className="text-body-sm font-semibold text-white">{scenario.title}</p>
                   <Pill tone={scenario.tag === 'Control' ? 'safe' : scenario.tag === 'Voice clone' ? 'danger' : 'warn'} size="xs">
                     {scenario.tag}
                   </Pill>
                 </div>
-                <p className="mt-1 text-small text-slate-400">{scenario.description}</p>
-                <p className="mt-1 flex items-center gap-1 text-small font-semibold text-coral-500">
+                <p className="mt-1 text-small text-mist-300">{scenario.description}</p>
+                <p className="mt-1.5 flex items-center gap-1 text-small font-semibold text-gold-400">
                   <Play className="h-3 w-3 fill-current" aria-hidden="true" /> Start demo
                 </p>
               </div>
-            </Card>
+            </button>
           ))}
         </div>
       </div>

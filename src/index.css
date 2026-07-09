@@ -19,6 +19,43 @@ html[lang='th'] {
   --font-display: 'Kanit', 'Prompt', system-ui, sans-serif;
 }
 
+/*
+ * App-preview theme tokens (the phone screens). Dark is the default everywhere,
+ * so marketing/live pages — which never carry a [data-vg-theme] scope — keep the
+ * dark palette. Only a wrapper marked data-vg-theme="light" flips to the light
+ * palette; the phone's ThemeProvider sets that attribute. Tailwind's night/panel/
+ * ink/mid/low/accent/hairline tokens resolve to these variables.
+ */
+:root,
+[data-vg-theme='dark'] {
+  --vg-screen: #0a0e20;
+  --vg-panel: #161b33;
+  --vg-panel-2: #1e2543;
+  --vg-ink: #ffffff;
+  --vg-mid: #b4b9d8;
+  --vg-low: #7c82a8;
+  --vg-accent: #f7b53f;
+  --vg-hairline: 255 255 255; /* used as rgb(var(--vg-hairline) / <alpha>) */
+}
+
+[data-vg-theme='light'] {
+  --vg-screen: #eef1f8;
+  --vg-panel: #ffffff;
+  --vg-panel-2: #eef2fb;
+  --vg-ink: #0d1545;
+  --vg-mid: #4a5178;
+  --vg-low: #8b91b5;
+  --vg-accent: #c9741f;
+  --vg-hairline: 13 20 45;
+}
+
+[data-vg-theme='light'] {
+  color-scheme: light;
+}
+[data-vg-theme='dark'] {
+  color-scheme: dark;
+}
+
 html,
 body,
 #root {

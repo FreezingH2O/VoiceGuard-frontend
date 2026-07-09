@@ -9,9 +9,9 @@ interface ReasonRowProps {
 }
 
 const toneTextClasses = {
-  neutral: 'text-slate-600',
-  danger: 'text-danger-600',
-  warn: 'text-warn-500',
+  neutral: 'text-mist-300',
+  danger: 'text-danger-500',
+  warn: 'text-coral-500',
 } as const
 
 export function ReasonRow({ icon, index, text, tone = 'neutral' }: ReasonRowProps) {
@@ -20,7 +20,7 @@ export function ReasonRow({ icon, index, text, tone = 'neutral' }: ReasonRowProp
       {typeof index === 'number' ? (
         <span
           aria-hidden="true"
-          className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-warn-100 text-tag font-bold text-warn-500"
+          className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-gold-400/15 text-tag font-bold text-gold-400"
         >
           {index}
         </span>

@@ -5,12 +5,11 @@ import { ChevronLeft, CircleUserRound, Phone, MessageSquare, Ban } from 'lucide-
 import { api } from '@/services/api'
 import { queryKeys } from '@/services/queryKeys'
 import { AlertBanner } from '@/components/AlertBanner'
-import { Card } from '@/components/Card'
 import { Button } from '@/components/Button'
-import { Pill } from '@/components/Pill'
 import { Skeleton } from '@/components/Skeleton'
 import { ErrorState } from '@/components/ErrorState'
 import { useToast } from '@/components/ToastProvider'
+import { cn } from '@/lib/cn'
 
 export function GuardianAlertDetailScreen() {
   const { wardId = '', alertId = '' } = useParams()
@@ -42,18 +41,18 @@ export function GuardianAlertDetailScreen() {
   }, [wardId, alertId])
 
   return (
-    <div className="flex flex-1 flex-col bg-navy-900">
-      <div className="mx-auto flex w-full max-w-xl flex-col gap-3.5 px-4 pb-6 pt-2 text-white sm:max-w-2xl sm:px-6 lg:max-w-3xl">
-      <header className="flex items-center gap-3 py-2">
+    <div className="flex flex-1 flex-col bg-night">
+      <div className="mx-auto flex w-full max-w-xl flex-col gap-3.5 px-5 pb-6 pt-3 text-white sm:max-w-2xl sm:px-6 lg:max-w-3xl">
+      <header className="flex items-center gap-2 py-1">
         <button
           type="button"
           onClick={() => navigate(-1)}
           aria-label="Back"
-          className="flex min-h-tap min-w-tap items-center justify-center"
+          className="flex min-h-tap min-w-tap items-center justify-center rounded-full text-mist-300 hover:text-white"
         >
           <ChevronLeft className="h-6 w-6" aria-hidden="true" />
         </button>
-        <h1 className="text-screen-header">Family alert</h1>
+        <h1 className="text-h2 font-bold">Family alert</h1>
       </header>
 
       {alertQuery.isPending && <Skeleton variant="card" className="h-64" />}
@@ -67,27 +66,32 @@ export function GuardianAlertDetailScreen() {
             actions={<div />}
           />
 
-          <Card surface="white" padding="md" className="flex items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
-              <CircleUserRound className="h-6 w-6 text-navy-900" aria-hidden="true" />
+          <section className="flex items-center gap-3 rounded-[18px] border border-white/[0.06] bg-panel p-4">
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-gold-400/70 to-blue-600/60">
+              <CircleUserRound className="h-6 w-6 text-white" aria-hidden="true" />
             </span>
             <div className="flex-1">
-              <p className="text-body-sm text-navy-900">
+              <p className="text-body-sm text-white">
                 {alertQuery.data.elderName} · {alertQuery.data.elderPhone}
               </p>
-              <Pill tone="danger" size="xs" className="mt-1">
+              <span
+                className={cn(
+                  'mt-1 inline-flex items-center gap-1 rounded-pill px-2.5 py-0.5 text-tag font-semibold',
+                  alertQuery.data.callOngoing ? 'bg-danger-500 text-white' : 'bg-white/10 text-mist-300',
+                )}
+              >
                 {alertQuery.data.callOngoing ? 'Call ongoing' : 'Call ended'}
-              </Pill>
+              </span>
             </div>
-          </Card>
+          </section>
 
-          <Card surface="white" padding="md">
-            <h2 className="text-label text-navy-900">What's happening</h2>
-            <p className="mt-1.5 text-small text-slate-600">{alertQuery.data.whatsHappening}</p>
-          </Card>
+          <section className="rounded-[18px] border border-white/[0.06] bg-panel p-4">
+            <h2 className="text-label text-white">What's happening</h2>
+            <p className="mt-1.5 text-small text-mist-300">{alertQuery.data.whatsHappening}</p>
+          </section>
 
           <Button
-            variant="primary"
+            variant="gold"
             fullWidth
             href={`tel:${alertQuery.data.elderPhone}`}
             leftIcon={<Phone className="h-4 w-4" aria-hidden="true" />}
@@ -95,7 +99,7 @@ export function GuardianAlertDetailScreen() {
             Call {alertQuery.data.elderName.split(' ')[0]} now
           </Button>
           <Button
-            variant="outline-blue"
+            variant="outline-light"
             fullWidth
             onClick={() => notifyMutation.mutate()}
             loading={notifyMutation.isPending}
@@ -113,7 +117,7 @@ export function GuardianAlertDetailScreen() {
             Block this number
           </Button>
 
-          <p className="text-center text-caption text-slate-400">
+          <p className="text-center text-caption text-mist-500">
             If you don't respond, PaTuean will keep monitoring and notify you of any updates.
           </p>
         </>

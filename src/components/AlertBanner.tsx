@@ -23,27 +23,28 @@ export function AlertBanner({
   onKeepTalking,
   actions,
 }: AlertBannerProps) {
-  const borderColor = level === 'scam' ? 'border-danger-600' : 'border-warn-500'
+  const borderColor = level === 'scam' ? 'border-danger-500' : 'border-coral-500'
+  const iconColor = level === 'scam' ? 'text-danger-500' : 'text-coral-500'
   const title = level === 'scam' ? 'Likely SCAM call' : 'Suspicious call'
 
   return (
-    <div className={cn('rounded-card border-2 bg-card p-4 text-white', borderColor)}>
-      <h2 className="flex items-center gap-1.5 text-alert-title">
+    <div className={cn('rounded-[18px] border-2 bg-panel p-4 text-white', borderColor)}>
+      <h2 className={cn('flex items-center gap-1.5 text-alert-title', iconColor)}>
         <TriangleAlert className="h-5 w-5 shrink-0" aria-hidden="true" />
         {title}
       </h2>
-      <p className="mt-1 text-body text-slate-200">{reasonMain}</p>
+      <p className="mt-1 text-body text-mist-300">{reasonMain}</p>
       {reasons && reasons.length > 0 && (
         <ul className="mt-2 space-y-1">
           {reasons.map((r) => (
-            <li key={r} className="text-small text-slate-400">
+            <li key={r} className="text-small text-mist-500">
               • {r}
             </li>
           ))}
         </ul>
       )}
       {guardiansNotified && (
-        <p className="mt-2 flex items-center gap-1 text-caption text-safe-500">
+        <p className="mt-2 flex items-center gap-1 text-caption text-gold-400">
           <CircleCheck className="h-3.5 w-3.5" aria-hidden="true" />
           Family notified
         </p>
@@ -56,7 +57,7 @@ export function AlertBanner({
             </Button>
           )}
           {onKeepTalking && (
-            <Button variant="outline-neutral" fullWidth onClick={onKeepTalking}>
+            <Button variant="outline-light" fullWidth onClick={onKeepTalking}>
               Keep Talking
             </Button>
           )}

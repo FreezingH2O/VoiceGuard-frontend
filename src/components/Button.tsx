@@ -3,24 +3,29 @@ import { cn } from '@/lib/cn'
 
 export type ButtonVariant =
   | 'primary'
+  | 'gold'
   | 'secondary'
   | 'danger'
   | 'ghost'
   | 'outline-neutral'
   | 'outline-light'
+  | 'outline-gold'
   | 'outline-danger'
   | 'outline-blue'
 
 const variantClasses: Record<ButtonVariant, string> = {
   // coral primary works on both surfaces; on dark it lifts + glows on hover
   primary: 'bg-coral-500 text-white shadow-card transition-transform hover:bg-coral-400 hover:-translate-y-0.5 hover:shadow-glow-coral',
+  // amber gradient — the app-preview theme's primary CTA
+  gold: 'bg-gold-grad text-white shadow-[0_12px_28px_-14px_rgba(231,124,42,0.8)] transition-transform hover:-translate-y-0.5',
   secondary: 'bg-navy-800 text-white shadow-card hover:brightness-110',
-  danger: 'bg-danger-600 text-white shadow-card hover:brightness-105',
+  danger: 'bg-danger-500 text-white shadow-card hover:brightness-105',
   ghost: 'bg-transparent text-mist-300 hover:text-white',
   'outline-neutral': 'bg-white text-slate-600 border border-slate-200',
   // dark-surface secondary: hairline light outline, subtle fill on hover
   'outline-light': 'bg-white/5 text-white border border-white/15 hover:bg-white/10 hover:border-white/30',
-  'outline-danger': 'bg-transparent text-danger-600 border-[1.5px] border-danger-600',
+  'outline-gold': 'bg-transparent text-gold-400 border-[1.5px] border-gold-400/60 hover:bg-gold-400/10',
+  'outline-danger': 'bg-transparent text-danger-500 border-[1.5px] border-danger-500/70 hover:bg-danger-500/10',
   'outline-blue': 'bg-transparent text-blue-600 border-[1.5px] border-blue-600',
 }
 

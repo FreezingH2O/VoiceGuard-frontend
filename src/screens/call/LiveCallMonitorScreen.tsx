@@ -4,7 +4,6 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { MicOff, PhoneOff, Flag } from 'lucide-react'
 import { api } from '@/services/api'
 import { queryKeys } from '@/services/queryKeys'
-import { Card } from '@/components/Card'
 import { ScoreRing } from '@/components/ScoreRing'
 import { AlertBanner } from '@/components/AlertBanner'
 import { IntentPillRow } from '@/components/IntentPillRow'
@@ -103,7 +102,7 @@ export function LiveCallMonitorScreen(props: DemoInlineProps = {}) {
   const caller = isDemo && scenarioId ? getScenarioCallerName(scenarioId) : { name: `Call ${callId?.slice(0, 8)}`, icon: 'phone' }
 
   const stripColor =
-    state.callState === 'alerted' ? 'bg-danger-600' : state.callState === 'suspicious' ? 'bg-warn-500' : 'bg-slate-600'
+    state.callState === 'alerted' ? 'bg-danger-500' : state.callState === 'suspicious' ? 'bg-coral-500' : 'bg-white/15'
 
   function handleEndCall() {
     stopMic()
@@ -123,22 +122,24 @@ export function LiveCallMonitorScreen(props: DemoInlineProps = {}) {
   const playback = hasPlaybackControls(client) ? client : null
 
   return (
-    <div className="flex flex-1 flex-col bg-navy-950 text-white">
+    <div className="flex flex-1 flex-col bg-night text-white">
       {isDemo && <Banner tone="demo">PREVIEW · simulated call showing the in-call experience</Banner>}
 
       <div className={`h-1 w-full ${stripColor}`} aria-hidden="true" />
 
       {state.connectionState === 'reconnecting' && (
-        <div className="bg-warn-500 px-4 py-1 text-center text-caption text-white">
+        <div className="bg-coral-500 px-4 py-1 text-center text-caption text-white">
           Protection limited, reconnecting…
         </div>
       )}
 
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center gap-3 px-4 py-4 sm:max-w-lg md:max-w-xl">
         <div className="flex flex-col items-center gap-1">
-          <ScenarioIcon slug={caller.icon} className="h-10 w-10" />
-          <p className="text-screen-header">{caller.name}</p>
-          <p className="text-small text-slate-400">
+          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-gold-400/70 to-blue-600/60 text-white">
+            <ScenarioIcon slug={caller.icon} className="h-8 w-8" />
+          </span>
+          <p className="text-screen-header mt-1 font-semibold">{caller.name}</p>
+          <p className="text-small text-mist-300">
             {formatTimer(timerSeconds)} · {state.connectionState === 'open' ? 'Analyzing' : state.connectionState}
           </p>
         </div>
@@ -161,9 +162,9 @@ export function LiveCallMonitorScreen(props: DemoInlineProps = {}) {
           <ScoreRing value={state.riskScore} size={84} label="Scam risk" tone="danger" />
         </div>
 
-        <Card padding="md" className="w-full">
-          <h2 className="text-label">Conversation context</h2>
-          <p className="mt-1.5 text-small text-slate-400">
+        <section className="w-full rounded-[18px] border border-white/[0.06] bg-panel p-4">
+          <h2 className="text-label text-white">Conversation context</h2>
+          <p className="mt-1.5 text-small text-mist-300">
             {state.contextSummary ?? 'Listening for context…'}
           </p>
           {state.intents.length > 0 && (
@@ -171,14 +172,14 @@ export function LiveCallMonitorScreen(props: DemoInlineProps = {}) {
               <IntentPillRow intents={state.intents} />
             </div>
           )}
-        </Card>
+        </section>
 
         <div className="flex w-full flex-1 flex-col gap-2 overflow-y-auto">
           {state.transcript.length === 0 && <Skeleton variant="line" className="w-3/4" />}
           {state.transcript.map((line) => (
             <div
               key={line.seq}
-              className="max-w-[85%] self-start rounded-tr-card rounded-bl-card rounded-tl-[4px] rounded-br-card bg-card px-3 py-2 text-small"
+              className="max-w-[85%] self-start rounded-tr-[16px] rounded-bl-[16px] rounded-tl-[4px] rounded-br-[16px] bg-panel-2 px-3 py-2 text-small text-mist-300"
             >
               {line.text}
             </div>
@@ -197,7 +198,7 @@ export function LiveCallMonitorScreen(props: DemoInlineProps = {}) {
             >
               {paused ? 'Resume' : 'Pause'}
             </Button>
-            <Button variant="outline-neutral" onClick={() => playback.restart()}>
+            <Button variant="outline-light" onClick={() => playback.restart()}>
               Restart
             </Button>
             <Button
@@ -210,14 +211,14 @@ export function LiveCallMonitorScreen(props: DemoInlineProps = {}) {
             >
               {rate}x
             </Button>
-            <Button variant="outline-neutral" onClick={() => playback.skipToAlert()}>
+            <Button variant="outline-light" onClick={() => playback.skipToAlert()}>
               Skip to alert
             </Button>
           </div>
         )}
       </div>
 
-      <div className="flex justify-center bg-navy-bar px-4 py-4">
+      <div className="flex justify-center border-t border-white/[0.06] bg-panel px-4 py-4">
         <div className="mx-auto flex w-full max-w-md items-center justify-center gap-4 sm:max-w-lg md:max-w-xl">
           <Button variant="outline-neutral" className="!h-[52px] !w-[52px] !rounded-full !p-0" aria-label="Mute" onClick={handleKeepTalking}>
             <MicOff className="h-5 w-5" aria-hidden="true" />
@@ -232,17 +233,17 @@ export function LiveCallMonitorScreen(props: DemoInlineProps = {}) {
       </div>
 
       <Sheet open={showGuardianInterstitial} onClose={() => setShowGuardianInterstitial(false)} title="Guardian notified">
-        <p className="text-small text-slate-600">
+        <p className="text-small text-mist-300">
           Because Elder Mode is on, your guardian was notified in real time about this likely scam call.
         </p>
-        <Button variant="primary" fullWidth className="mt-4" onClick={() => setShowGuardianInterstitial(false)}>
+        <Button variant="gold" fullWidth className="mt-4" onClick={() => setShowGuardianInterstitial(false)}>
           Continue
         </Button>
       </Sheet>
 
       <Sheet open={showSummary} onClose={() => navigate('/app-preview/history')} title="Call ended">
-        <p className="text-small text-slate-600">This call has been added to your call history.</p>
-        <Button variant="primary" fullWidth className="mt-4" onClick={() => navigate('/app-preview/history')}>
+        <p className="text-small text-mist-300">This call has been added to your call history.</p>
+        <Button variant="gold" fullWidth className="mt-4" onClick={() => navigate('/app-preview/history')}>
           View history
         </Button>
       </Sheet>

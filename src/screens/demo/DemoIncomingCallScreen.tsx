@@ -16,22 +16,22 @@ export function DemoIncomingCallScreen({
   const caller = getScenarioCallerName(scenarioId)
 
   return (
-    <div className="flex flex-1 flex-col bg-navy-900 text-white">
+    <div className="flex flex-1 flex-col bg-night text-white">
       <Banner tone="demo">PREVIEW · simulated call showing the in-call experience</Banner>
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center gap-4 px-6 text-center sm:max-w-lg md:max-w-xl">
-        <span className="flex h-24 w-24 items-center justify-center rounded-full bg-white">
-          <ScenarioIcon slug={caller.icon} className="h-10 w-10 text-navy-900" />
+        <span className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-gold-400/70 to-blue-600/60 ring-2 ring-white/10">
+          <ScenarioIcon slug={caller.icon} className="h-10 w-10 text-white" />
         </span>
         <div>
-          <p className="text-h1-mobile">{caller.name}</p>
-          <p className="mt-1 text-body text-slate-300">Unknown number</p>
+          <p className="text-h1-mobile font-bold">{caller.name}</p>
+          <p className="mt-1 text-body text-mist-300">Unknown number</p>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-pill bg-white px-3 py-1.5 text-body-sm text-navy-900">
+        <span className="inline-flex items-center gap-1.5 rounded-pill border border-gold-400/40 bg-gold-400/15 px-3 py-1.5 text-body-sm font-semibold text-gold-400">
           <Shield className="h-4 w-4" aria-hidden="true" /> PaTuean is monitoring
         </span>
       </div>
 
-      <div className="flex justify-center bg-navy-950 py-8">
+      <div className="flex justify-center border-t border-white/[0.06] bg-panel py-8">
         <div className="mx-auto flex w-full max-w-md items-center justify-center gap-16 sm:max-w-lg md:max-w-xl">
           <div className="flex flex-col items-center gap-2">
             <Button
@@ -42,7 +42,7 @@ export function DemoIncomingCallScreen({
             >
               <X className="h-6 w-6" aria-hidden="true" />
             </Button>
-            <span className="text-caption text-slate-400">Decline</span>
+            <span className="text-caption text-mist-300">Decline</span>
           </div>
           <div className="flex flex-col items-center gap-2">
             <Button

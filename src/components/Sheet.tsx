@@ -59,10 +59,10 @@ export function Sheet({ open, onClose, title, children }: SheetProps) {
         aria-modal="true"
         aria-label={title}
         tabIndex={-1}
-        className="relative z-10 max-h-[85%] w-full overflow-y-auto rounded-t-card bg-white p-5 text-navy-900 shadow-card focus:outline-none"
+        className="relative z-10 max-h-[85%] w-full overflow-y-auto rounded-t-[24px] border-t border-white/[0.08] bg-panel p-5 text-white shadow-glow-soft focus:outline-none"
       >
-        <div className="mx-auto mb-3 h-1 w-10 rounded-pill bg-slate-200" aria-hidden="true" />
-        {title && <h2 className="mb-3 text-screen-header">{title}</h2>}
+        <div className="mx-auto mb-3 h-1 w-10 rounded-pill bg-white/20" aria-hidden="true" />
+        {title && <h2 className="mb-3 text-screen-header font-semibold">{title}</h2>}
         {children}
       </div>
     </div>

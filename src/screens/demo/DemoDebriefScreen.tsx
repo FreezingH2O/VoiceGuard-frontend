@@ -3,9 +3,8 @@ import { useQuery } from '@tanstack/react-query'
 import { CircleCheck } from 'lucide-react'
 import { api } from '@/services/api'
 import { queryKeys } from '@/services/queryKeys'
-import { Card } from '@/components/Card'
 import { Banner } from '@/components/Pill'
-import { VerdictBadge } from '@/components/VerdictBadge'
+import { VerdictPill } from '@/components/VerdictPill'
 import { ReasonRow } from '@/components/ReasonRow'
 import { Button } from '@/components/Button'
 import { Skeleton } from '@/components/Skeleton'
@@ -18,7 +17,7 @@ export function DemoDebriefScreen({ scenarioId, onRestart }: { scenarioId: strin
   })
 
   return (
-    <div className="flex flex-1 flex-col gap-3 bg-navy-950 text-white">
+    <div className="flex flex-1 flex-col gap-3 bg-night text-white">
       <Banner tone="demo">PREVIEW · simulated call showing the in-call experience</Banner>
       <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-3 px-4 py-4 sm:max-w-2xl lg:max-w-3xl">
         {isPending && (
@@ -31,40 +30,43 @@ export function DemoDebriefScreen({ scenarioId, onRestart }: { scenarioId: strin
 
         {data && (
           <>
-            <Card padding="lg" className="flex flex-col items-center gap-2 text-center">
-              <h1 className="flex items-center gap-1.5 text-alert-title">
-                <CircleCheck className="h-5 w-5 shrink-0 text-safe-500" aria-hidden="true" />
+            <section className="flex flex-col items-center gap-2 rounded-[18px] border border-white/[0.06] bg-panel p-5 text-center">
+              <h1 className="flex items-center gap-1.5 text-alert-title font-bold">
+                <CircleCheck className="h-5 w-5 shrink-0 text-gold-400" aria-hidden="true" />
                 {data.verdict === 'safe' ? 'No scam detected' : 'Demo call blocked'}
               </h1>
-              <VerdictBadge verdict={data.verdict} />
-              <p className="text-small text-slate-400">{data.caption}</p>
-            </Card>
+              <VerdictPill verdict={data.verdict} size="md" />
+              <p className="text-small text-mist-300">{data.caption}</p>
+            </section>
 
-            <Card padding="md">
-              <h2 className="text-label">How it caught the scam</h2>
+            <section className="rounded-[18px] border border-white/[0.06] bg-panel p-4">
+              <h2 className="text-label text-white">How it caught the scam</h2>
               <div className="mt-2.5 flex flex-col gap-3">
                 {data.stages.map((stage, i) => (
                   <ReasonRow key={stage.title} index={i + 1} text={`${stage.title} — ${stage.description}`} />
                 ))}
               </div>
-            </Card>
+            </section>
 
-            <Card padding="lg" className="bg-gradient-to-br from-card to-blue-600">
-              <h2 className="text-body-sm">Want this protection on every call?</h2>
+            <section className="rounded-[18px] bg-gold-grad p-5 shadow-[0_16px_40px_-18px_rgba(231,124,42,0.7)]">
+              <h2 className="text-body-medium font-semibold text-white">Want this protection on every call?</h2>
               <Link to="/signup" className="mt-3 block">
-                <Button variant="primary" fullWidth>
+                <button
+                  type="button"
+                  className="min-h-tap w-full rounded-[14px] bg-white text-body-sm font-semibold text-gold-600 shadow-card transition hover:-translate-y-0.5"
+                >
                   Sign Up Free
-                </Button>
+                </button>
               </Link>
               <Button
-                variant="outline-neutral"
+                variant="outline-light"
                 fullWidth
-                className="mt-2 !bg-transparent !text-white !border-white"
+                className="mt-2 !border-white/40 !text-white"
                 onClick={onRestart}
               >
                 Try another scenario
               </Button>
-            </Card>
+            </section>
           </>
         )}
       </div>

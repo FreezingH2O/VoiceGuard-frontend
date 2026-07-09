@@ -73,8 +73,8 @@ function RestartLabel() {
 function IdleCover({ onStart }: { onStart: () => void }) {
   const { t } = useLang()
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-5 bg-navy-950 px-6 text-center">
-      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-coral-500/15 text-coral-500">
+    <div className="flex flex-1 flex-col items-center justify-center gap-5 bg-night px-6 text-center">
+      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gold-400/15 text-gold-400">
         <ShieldAlert className="h-7 w-7" aria-hidden="true" />
       </span>
       <div>
@@ -91,7 +91,7 @@ function IdleCover({ onStart }: { onStart: () => void }) {
       <button
         type="button"
         onClick={onStart}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-coral-500 text-white shadow-glow-coral transition hover:-translate-y-0.5 hover:bg-coral-400"
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-gold-grad text-white shadow-[0_12px_28px_-10px_rgba(231,124,42,0.8)] transition hover:-translate-y-0.5"
         aria-label={t({ en: 'Start demo', th: 'เริ่มเดโม' })}
       >
         <Play className="h-6 w-6 fill-current" aria-hidden="true" />
