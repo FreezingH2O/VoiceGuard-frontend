@@ -144,7 +144,7 @@ function seedWardAlerts(): Record<string, WardAlert[]> {
         elderPhone: '+66 82 555 0147',
         callOngoing: false,
         whatsHappening:
-          'A caller claiming to be from "Bangkok Bank Security" asked Somsak to read out a one-time passcode. VoiceGuard detected a high-confidence cloned voice and flagged the call as a likely scam.',
+          'A caller claiming to be from "Bangkok Bank Security" asked Somsak to read out a one-time passcode. PaTuean detected a high-confidence cloned voice and flagged the call as a likely scam.',
         createdAt: isoMinutesAgo(45),
         acked: false,
         blockAllowed: true,

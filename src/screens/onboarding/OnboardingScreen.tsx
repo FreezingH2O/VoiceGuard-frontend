@@ -60,7 +60,7 @@ export function OnboardingScreen() {
       <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-3.5 px-6 pb-6 pt-8 sm:max-w-2xl lg:max-w-3xl">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 font-display text-body-medium font-bold">
-            <ShieldCheck className="h-5 w-5" aria-hidden="true" /> VoiceGuard
+            <ShieldCheck className="h-5 w-5" aria-hidden="true" /> PaTuean
           </Link>
           <LangToggle />
         </div>
@@ -73,8 +73,8 @@ export function OnboardingScreen() {
         <h1 className="font-display text-h1-mobile text-white">{t({ en: 'Permissions & consent', th: 'สิทธิ์การใช้งาน & ความยินยอม' })}</h1>
         <p className="text-small text-white/85">
           {t({
-            en: 'VoiceGuard needs a few permissions to protect your calls. You can change these anytime in Settings.',
-            th: 'VoiceGuard ต้องการสิทธิ์บางอย่างเพื่อปกป้องสายของคุณ เปลี่ยนได้ทุกเมื่อในการตั้งค่า',
+            en: 'PaTuean needs a few permissions to protect your calls. You can change these anytime in Settings.',
+            th: 'ป้าเตือน ต้องการสิทธิ์บางอย่างเพื่อปกป้องสายของคุณ เปลี่ยนได้ทุกเมื่อในการตั้งค่า',
           })}
         </p>
 
@@ -91,7 +91,7 @@ export function OnboardingScreen() {
         <PermissionCard
           icon={Smartphone}
           title={t({ en: 'Phone state', th: 'สถานะโทรศัพท์' })}
-          description={t({ en: 'Not available on web — VoiceGuard uses this on mobile to detect incoming calls automatically.', th: 'ไม่รองรับบนเว็บ — บนมือถือใช้เพื่อตรวจจับสายเรียกเข้าอัตโนมัติ' })}
+          description={t({ en: 'Not available on web — PaTuean uses this on mobile to detect incoming calls automatically.', th: 'ไม่รองรับบนเว็บ — บนมือถือใช้เพื่อตรวจจับสายเรียกเข้าอัตโนมัติ' })}
           tag={t({ en: 'Recommended', th: 'แนะนำ' })}
           tagTone="neutral"
           state="idle"
@@ -118,8 +118,8 @@ export function OnboardingScreen() {
           />
           <span className="text-small text-slate-600">
             {t({
-              en: 'I understand VoiceGuard analyzes my calls in real time to detect scams, and I consent to this monitoring.',
-              th: 'ฉันเข้าใจว่า VoiceGuard วิเคราะห์สายของฉันแบบเรียลไทม์เพื่อตรวจจับการหลอกลวง และยินยอมให้ตรวจสอบ',
+              en: 'I understand PaTuean analyzes my calls in real time to detect scams, and I consent to this monitoring.',
+              th: 'ฉันเข้าใจว่า ป้าเตือน วิเคราะห์สายของฉันแบบเรียลไทม์เพื่อตรวจจับการหลอกลวง และยินยอมให้ตรวจสอบ',
             })}
           </span>
         </label>

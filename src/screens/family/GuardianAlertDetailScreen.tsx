@@ -114,7 +114,7 @@ export function GuardianAlertDetailScreen() {
           </Button>
 
           <p className="text-center text-caption text-slate-400">
-            If you don't respond, VoiceGuard will keep monitoring and notify you of any updates.
+            If you don't respond, PaTuean will keep monitoring and notify you of any updates.
           </p>
         </>
       )}

@@ -44,7 +44,7 @@ export function DashboardScreen() {
   return (
     <div className="flex flex-1 flex-col gap-5 px-5 pb-6 pt-3 text-white">
       <header className="flex items-center justify-between">
-        <h1 className="text-[26px] font-bold tracking-tight text-gold-400">VoiceGuard</h1>
+        <h1 className="text-[26px] font-bold tracking-tight text-gold-400">PaTuean</h1>
         <span className="relative inline-flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold-400 to-gold-600 ring-2 ring-gold-400/60">
           <UserRound className="h-5 w-5 text-white" aria-hidden="true" />
           <Sparkles className="absolute -right-1 -top-1 h-4 w-4 text-gold-400" aria-hidden="true" />
@@ -130,7 +130,7 @@ export function DashboardScreen() {
               <div className="rounded-[18px] border border-white/[0.06] bg-panel p-5">
                 <EmptyState
                   title="No calls yet"
-                  description="Try a simulated scam call to see VoiceGuard in action."
+                  description="Try a simulated scam call to see PaTuean in action."
                   actionLabel="Try the demo"
                   onAction={() => navigate('/#how-it-works')}
                 />

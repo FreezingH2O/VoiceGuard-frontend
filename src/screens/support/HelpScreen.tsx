@@ -5,7 +5,7 @@ import { Button } from '@/components/Button'
 import { useAuth } from '@/hooks/useAuth'
 import { useLang, type Localized } from '@/i18n/LangProvider'
 
-const SUPPORT_EMAIL = 'support@voiceguard.example'
+const SUPPORT_EMAIL = 'support@patuean.example'
 
 export function HelpScreen() {
   const { t } = useLang()
@@ -20,7 +20,7 @@ export function HelpScreen() {
     },
     {
       icon: Waypoints,
-      title: { en: 'How VoiceGuard works', th: 'VoiceGuard ทำงานอย่างไร' },
+      title: { en: 'How PaTuean works', th: 'ป้าเตือน ทำงานอย่างไร' },
       desc: { en: 'The four-stage detection pipeline, explained.', th: 'อธิบายกระบวนการตรวจจับสี่ขั้นตอน' },
       to: '/#how-it-works',
     },
@@ -34,7 +34,7 @@ export function HelpScreen() {
 
   const faqs: { q: Localized; a: Localized }[] = [
     {
-      q: { en: 'Is VoiceGuard listening to my real phone calls?', th: 'VoiceGuard ฟังสายจริงของฉันหรือไม่?' },
+      q: { en: 'Is PaTuean listening to my real phone calls?', th: 'ป้าเตือน ฟังสายจริงของฉันหรือไม่?' },
       a: {
         en: 'No. A browser cannot access live cellular calls, so the web demo only ever analyzes a clip you deliberately record or upload in the Live Detector.',
         th: 'ไม่ เบราว์เซอร์ไม่สามารถเข้าถึงสายจริงได้ เดโมบนเว็บวิเคราะห์เฉพาะคลิปที่คุณตั้งใจอัดหรืออัปโหลดในเครื่องตรวจจับสดเท่านั้น',
@@ -64,8 +64,8 @@ export function HelpScreen() {
     {
       q: { en: 'Can I use this on my phone yet?', th: 'ใช้บนมือถือได้แล้วหรือยัง?' },
       a: {
-        en: 'Not yet. On-device live-call capture is the next phase. Today VoiceGuard is a web proof-of-concept: the detection engine is real and provable in your browser.',
-        th: 'ยัง การดักจับสายบนอุปกรณ์คือขั้นถัดไป วันนี้ VoiceGuard เป็นเดโมบนเว็บ โดยเครื่องมือตรวจจับทำงานจริงและพิสูจน์ได้ในเบราว์เซอร์',
+        en: 'Not yet. On-device live-call capture is the next phase. Today PaTuean is a web proof-of-concept: the detection engine is real and provable in your browser.',
+        th: 'ยัง การดักจับสายบนอุปกรณ์คือขั้นถัดไป วันนี้ ป้าเตือน เป็นเดโมบนเว็บ โดยเครื่องมือตรวจจับทำงานจริงและพิสูจน์ได้ในเบราว์เซอร์',
       },
     },
   ]
@@ -85,8 +85,8 @@ export function HelpScreen() {
         </h1>
         <p className="mt-6 max-w-[68ch] text-pretty text-web-sub text-mist-300">
           {t({
-            en: 'Answers to the questions people ask most about the VoiceGuard demo — and a direct line to us if you need more.',
-            th: 'คำตอบสำหรับคำถามที่พบบ่อยเกี่ยวกับเดโม VoiceGuard และช่องทางติดต่อเราโดยตรงหากต้องการเพิ่มเติม',
+            en: 'Answers to the questions people ask most about the PaTuean demo — and a direct line to us if you need more.',
+            th: 'คำตอบสำหรับคำถามที่พบบ่อยเกี่ยวกับเดโม ป้าเตือน และช่องทางติดต่อเราโดยตรงหากต้องการเพิ่มเติม',
           })}
         </p>
       </Reveal>

@@ -46,7 +46,7 @@ const bankOfficer: ScenarioDefinition = {
   ],
   debrief: {
     verdict: 'scam',
-    caption: 'VoiceGuard flagged this call as a likely scam in 12.5 seconds.',
+    caption: 'PaTuean flagged this call as a likely scam in 12.5 seconds.',
     stages: [
       { title: 'Voice analysis', description: 'The caller\'s voice showed cloning artifacts inconsistent with a real bank officer.' },
       { title: 'Language patterns', description: 'Urgency and authority-impersonation language triggered the context model.' },
@@ -95,7 +95,7 @@ const policeOfficer: ScenarioDefinition = {
   ],
   debrief: {
     verdict: 'scam',
-    caption: 'VoiceGuard flagged this call as a likely scam in 12.5 seconds.',
+    caption: 'PaTuean flagged this call as a likely scam in 12.5 seconds.',
     stages: [
       { title: 'Voice analysis', description: 'Vocal-synthesis artifacts were detected partway through the call.' },
       { title: 'Language patterns', description: 'Authority impersonation and legal threats triggered the context model.' },
@@ -144,7 +144,7 @@ const grandchild: ScenarioDefinition = {
   ],
   debrief: {
     verdict: 'scam',
-    caption: 'VoiceGuard flagged this call as a likely scam in 12.5 seconds.',
+    caption: 'PaTuean flagged this call as a likely scam in 12.5 seconds.',
     stages: [
       { title: 'Voice analysis', description: 'The voice was a strong match for an AI clone, not the real grandchild.' },
       { title: 'Language patterns', description: 'Emotional urgency plus isolation language ("don\'t tell mom and dad") triggered the model.' },
@@ -159,7 +159,7 @@ const legitimate: ScenarioDefinition = {
     id: 'legitimate-call',
     title: 'A real, everyday call',
     tag: 'Control',
-    description: 'See how VoiceGuard stays quiet during an ordinary, safe conversation.',
+    description: 'See how PaTuean stays quiet during an ordinary, safe conversation.',
     icon: 'safe',
   },
   events: [
@@ -176,7 +176,7 @@ const legitimate: ScenarioDefinition = {
   ],
   debrief: {
     verdict: 'safe',
-    caption: 'VoiceGuard stayed quiet — nothing suspicious was detected.',
+    caption: 'PaTuean stayed quiet — nothing suspicious was detected.',
     stages: [
       { title: 'Voice analysis', description: 'The voice print was consistent with a real, unmodified human voice throughout.' },
       { title: 'Language patterns', description: 'No urgency, authority, or financial-request language was detected.' },

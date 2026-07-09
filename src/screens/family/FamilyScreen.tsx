@@ -30,7 +30,7 @@ export function FamilyScreen() {
         <Sparkles className="absolute right-4 top-4 h-6 w-6 text-white/90" aria-hidden="true" />
         <h1 className="pr-8 text-[22px] font-bold leading-tight text-white">Supporting those you care for</h1>
         <p className="mt-2 text-caption leading-relaxed text-white/90">
-          When the person on the phone is elderly, VoiceGuard's scam alerts also go to a linked family member — so they
+          When the person on the phone is elderly, PaTuean's scam alerts also go to a linked family member — so they
           can step in, warn, or block the moment a call turns dangerous.
         </p>
       </div>

@@ -34,7 +34,7 @@ export function WebFooter() {
       <div className="relative z-[1] mx-auto grid max-w-content gap-10 px-6 pb-16 pt-16 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr]">
         <div className="flex flex-col gap-3">
           <p className="flex items-center gap-2 font-display text-body-medium font-bold text-slate-900">
-            <ShieldCheck className="h-5 w-5 text-coral-500" aria-hidden="true" /> VoiceGuard
+            <ShieldCheck className="h-5 w-5 text-coral-500" aria-hidden="true" /> PaTuean
           </p>
           <p className="max-w-[38ch] text-small text-slate-600">
             {t({
@@ -69,8 +69,8 @@ export function WebFooter() {
       <div className="relative z-[1] border-t border-slate-200">
         <p className="mx-auto max-w-content px-6 py-6 text-caption text-slate-400 sm:px-8">
           {t({
-            en: '© VoiceGuard — a proof-of-concept demo. Not a production security product.',
-            th: '© VoiceGuard — ตัวอย่างเดโมเชิงพิสูจน์แนวคิด ไม่ใช่ผลิตภัณฑ์ความปลอดภัยเชิงพาณิชย์',
+            en: '© PaTuean — a proof-of-concept demo. Not a production security product.',
+            th: '© ป้าเตือน — ตัวอย่างเดโมเชิงพิสูจน์แนวคิด ไม่ใช่ผลิตภัณฑ์ความปลอดภัยเชิงพาณิชย์',
           })}
         </p>
       </div>

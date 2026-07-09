@@ -34,11 +34,11 @@ export function PreviewLayout() {
   const heading: { title: Localized; sub: Localized } =
     zone === 'app'
       ? {
-          title: { en: 'The VoiceGuard mobile app', th: 'แอปมือถือ VoiceGuard' },
+          title: { en: 'The PaTuean mobile app', th: 'แอปมือถือ ป้าเตือน' },
           sub: { en: 'Sample data — on your phone this runs automatically during real calls.', th: 'ข้อมูลตัวอย่าง — บนมือถือจะทำงานอัตโนมัติระหว่างสายจริง' },
         }
       : {
-          title: { en: 'See VoiceGuard on a live call', th: 'ดู VoiceGuard บนสายจริง' },
+          title: { en: 'See PaTuean on a live call', th: 'ดู ป้าเตือน บนสายจริง' },
           sub: { en: 'A scripted sample call showing the in-call experience. Nothing is recorded.', th: 'สายตัวอย่างแบบสคริปต์แสดงประสบการณ์ระหว่างสาย ไม่มีการบันทึก' },
         }
 

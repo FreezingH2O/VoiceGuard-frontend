@@ -84,7 +84,7 @@ export function PhoneDemoProfileScreen() {
       </Card>
 
       <Card padding="md" className="flex flex-col divide-y divide-slate-200/10">
-        <ProfileLink label="How VoiceGuard works" />
+        <ProfileLink label="How PaTuean works" />
         <ProfileLink label="Help & support" />
         <ProfileLink label="Privacy policy" />
         <ProfileLink label="Terms of service" />

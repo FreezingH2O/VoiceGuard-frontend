@@ -10,18 +10,18 @@ export function TermsScreen() {
       heading: t({ en: 'Acceptance of these terms', th: 'การยอมรับข้อกำหนด' }),
       blocks: [
         t({
-          en: 'By creating an account or using VoiceGuard, you agree to these terms. If you do not agree, please do not use the demo. These terms cover the proof-of-concept demo described here, not any future commercial product.',
-          th: 'เมื่อสร้างบัญชีหรือใช้ VoiceGuard คุณตกลงตามข้อกำหนดเหล่านี้ หากไม่ตกลง โปรดอย่าใช้เดโม',
+          en: 'By creating an account or using PaTuean, you agree to these terms. If you do not agree, please do not use the demo. These terms cover the proof-of-concept demo described here, not any future commercial product.',
+          th: 'เมื่อสร้างบัญชีหรือใช้ ป้าเตือน คุณตกลงตามข้อกำหนดเหล่านี้ หากไม่ตกลง โปรดอย่าใช้เดโม',
         }),
       ],
     },
     {
       id: 'what-it-is',
-      heading: t({ en: 'What VoiceGuard is', th: 'VoiceGuard คืออะไร' }),
+      heading: t({ en: 'What PaTuean is', th: 'ป้าเตือน คืออะไร' }),
       blocks: [
         t({
-          en: 'VoiceGuard demonstrates real-time scam-call and AI-voice detection. The web demo has two clearly labeled zones: a LIVE detection engine that runs real models on a clip you submit, and a PREVIEW of the future mobile app running on sample data.',
-          th: 'VoiceGuard สาธิตการตรวจจับสายหลอกลวงและเสียง AI แบบเรียลไทม์ เดโมมีสองโซนที่ระบุชัดเจน: เครื่องมือ LIVE ที่รันโมเดลจริง และ PREVIEW ของแอปมือถือในอนาคตบนข้อมูลตัวอย่าง',
+          en: 'PaTuean demonstrates real-time scam-call and AI-voice detection. The web demo has two clearly labeled zones: a LIVE detection engine that runs real models on a clip you submit, and a PREVIEW of the future mobile app running on sample data.',
+          th: 'ป้าเตือน สาธิตการตรวจจับสายหลอกลวงและเสียง AI แบบเรียลไทม์ เดโมมีสองโซนที่ระบุชัดเจน: เครื่องมือ LIVE ที่รันโมเดลจริง และ PREVIEW ของแอปมือถือในอนาคตบนข้อมูลตัวอย่าง',
         }),
       ],
     },
@@ -47,7 +47,7 @@ export function TermsScreen() {
       heading: t({ en: 'Your account', th: 'บัญชีของคุณ' }),
       blocks: [
         t({
-          en: 'You are responsible for the information you enter. Because the demo performs no identity verification, please use non-sensitive test details. You may stop using VoiceGuard and log out at any time.',
+          en: 'You are responsible for the information you enter. Because the demo performs no identity verification, please use non-sensitive test details. You may stop using PaTuean and log out at any time.',
           th: 'คุณรับผิดชอบต่อข้อมูลที่กรอก เนื่องจากเดโมไม่มีการยืนยันตัวตน โปรดใช้ข้อมูลทดสอบที่ไม่ละเอียดอ่อน',
         }),
       ],
@@ -57,8 +57,8 @@ export function TermsScreen() {
       heading: t({ en: 'Disclaimer & liability', th: 'ข้อจำกัดความรับผิด' }),
       blocks: [
         t({
-          en: 'The demo is provided "as is", without warranties of any kind. To the fullest extent permitted by law, the VoiceGuard team is not liable for any loss arising from your use of, or reliance on, the demo.',
-          th: 'เดโมให้บริการ "ตามสภาพ" โดยไม่มีการรับประกันใด ๆ ทีม VoiceGuard ไม่รับผิดต่อความเสียหายที่เกิดจากการใช้หรือพึ่งพาเดโมเท่าที่กฎหมายอนุญาต',
+          en: 'The demo is provided "as is", without warranties of any kind. To the fullest extent permitted by law, the PaTuean team is not liable for any loss arising from your use of, or reliance on, the demo.',
+          th: 'เดโมให้บริการ "ตามสภาพ" โดยไม่มีการรับประกันใด ๆ ทีม ป้าเตือน ไม่รับผิดต่อความเสียหายที่เกิดจากการใช้หรือพึ่งพาเดโมเท่าที่กฎหมายอนุญาต',
         }),
       ],
     },
@@ -79,8 +79,8 @@ export function TermsScreen() {
       title={t({ en: 'Terms of service', th: 'ข้อกำหนดการใช้งาน' })}
       updated={t({ en: 'Last updated · 9 July 2026', th: 'อัปเดตล่าสุด · 9 กรกฎาคม 2026' })}
       intro={t({
-        en: 'The ground rules for using the VoiceGuard demo. Short, readable, and honest about what this build is.',
-        th: 'กติกาพื้นฐานในการใช้เดโม VoiceGuard สั้น อ่านง่าย และตรงไปตรงมาเกี่ยวกับสิ่งที่บิลด์นี้เป็น',
+        en: 'The ground rules for using the PaTuean demo. Short, readable, and honest about what this build is.',
+        th: 'กติกาพื้นฐานในการใช้เดโม ป้าเตือน สั้น อ่านง่าย และตรงไปตรงมาเกี่ยวกับสิ่งที่บิลด์นี้เป็น',
       })}
       sections={sections}
     />

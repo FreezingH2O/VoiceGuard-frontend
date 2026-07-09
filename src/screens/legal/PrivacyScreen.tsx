@@ -10,8 +10,8 @@ export function PrivacyScreen() {
       heading: t({ en: 'Overview', th: 'ภาพรวม' }),
       blocks: [
         t({
-          en: 'VoiceGuard is a proof-of-concept demo, not a production security product. This policy explains what the demo does and does not do with your information so you can explore it with confidence. Where the real mobile product would behave differently, we say so.',
-          th: 'VoiceGuard เป็นเดโมเชิงพิสูจน์แนวคิด ไม่ใช่ผลิตภัณฑ์ความปลอดภัยเชิงพาณิชย์ นโยบายนี้อธิบายว่าเดโมทำและไม่ทำอะไรกับข้อมูลของคุณ เพื่อให้คุณสำรวจได้อย่างมั่นใจ',
+          en: 'PaTuean is a proof-of-concept demo, not a production security product. This policy explains what the demo does and does not do with your information so you can explore it with confidence. Where the real mobile product would behave differently, we say so.',
+          th: 'ป้าเตือน เป็นเดโมเชิงพิสูจน์แนวคิด ไม่ใช่ผลิตภัณฑ์ความปลอดภัยเชิงพาณิชย์ นโยบายนี้อธิบายว่าเดโมทำและไม่ทำอะไรกับข้อมูลของคุณ เพื่อให้คุณสำรวจได้อย่างมั่นใจ',
         }),
       ],
     },
@@ -78,8 +78,8 @@ export function PrivacyScreen() {
       heading: t({ en: 'Contact', th: 'ติดต่อ' }),
       blocks: [
         t({
-          en: 'Questions about this demo or its handling of data can be sent to privacy@voiceguard.example. We will respond as the demo team, not as a commercial data controller.',
-          th: 'คำถามเกี่ยวกับเดโมนี้หรือการจัดการข้อมูล ส่งได้ที่ privacy@voiceguard.example',
+          en: 'Questions about this demo or its handling of data can be sent to privacy@patuean.example. We will respond as the demo team, not as a commercial data controller.',
+          th: 'คำถามเกี่ยวกับเดโมนี้หรือการจัดการข้อมูล ส่งได้ที่ privacy@patuean.example',
         }),
       ],
     },
@@ -90,8 +90,8 @@ export function PrivacyScreen() {
       title={t({ en: 'Privacy policy', th: 'นโยบายความเป็นส่วนตัว' })}
       updated={t({ en: 'Last updated · 9 July 2026', th: 'อัปเดตล่าสุด · 9 กรกฎาคม 2026' })}
       intro={t({
-        en: 'How VoiceGuard handles your information — written plainly, because trust is the whole point of a product like this.',
-        th: 'VoiceGuard จัดการข้อมูลของคุณอย่างไร — เขียนอย่างตรงไปตรงมา เพราะความไว้วางใจคือหัวใจของผลิตภัณฑ์แบบนี้',
+        en: 'How PaTuean handles your information — written plainly, because trust is the whole point of a product like this.',
+        th: 'ป้าเตือน จัดการข้อมูลของคุณอย่างไร — เขียนอย่างตรงไปตรงมา เพราะความไว้วางใจคือหัวใจของผลิตภัณฑ์แบบนี้',
       })}
       sections={sections}
     />

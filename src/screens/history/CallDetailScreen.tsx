@@ -187,7 +187,7 @@ export function CallDetailScreen({ callId: callIdProp }: { callId?: string } = {
       <Sheet open={openSheet === 'false-alarm'} onClose={() => setOpenSheet(null)} title="Mark false alarm">
         <div className="flex flex-col gap-3">
           <p className="text-small text-slate-600">
-            Let us know this call was actually safe — it helps VoiceGuard improve.
+            Let us know this call was actually safe — it helps PaTuean improve.
           </p>
           <textarea
             value={note}

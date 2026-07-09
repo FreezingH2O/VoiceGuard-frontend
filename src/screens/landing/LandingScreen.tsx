@@ -121,8 +121,8 @@ function Hero() {
           <HeroFollow delay={0.5}>
             <p className="max-w-[54ch] text-web-sub text-mist-300">
               {t({
-                en: 'VoiceGuard detects AI-cloned voices and reads scam intent in real time — built to understand Thai voices, accent by accent.',
-                th: 'VoiceGuard ตรวจจับเสียงที่ถูกโคลนด้วย AI และอ่านเจตนาหลอกลวงแบบเรียลไทม์ — สร้างมาเพื่อเข้าใจเสียงคนไทยในทุกสำเนียง',
+                en: 'PaTuean detects AI-cloned voices and reads scam intent in real time — built to understand Thai voices, accent by accent.',
+                th: 'ป้าเตือน ตรวจจับเสียงที่ถูกโคลนด้วย AI และอ่านเจตนาหลอกลวงแบบเรียลไทม์ — สร้างมาเพื่อเข้าใจเสียงคนไทยในทุกสำเนียง',
               })}
             </p>
           </HeroFollow>
@@ -299,8 +299,8 @@ function KeyFeatureSection() {
           </SectionTitle>
           <p className="mt-4 text-web-body text-mist-300">
             {t({
-              en: 'VoiceGuard scores whether the caller’s voice is AI-generated, and separately reads the conversation for scam intent. Then it combines both into one verdict.',
-              th: 'VoiceGuard ให้คะแนนว่าเสียงผู้โทรถูกสร้างด้วย AI หรือไม่ และอ่านบทสนทนาเพื่อหาเจตนาหลอกลวงแยกกัน แล้วจึงรวมทั้งสองเป็นคำตัดสินเดียว',
+              en: 'PaTuean scores whether the caller’s voice is AI-generated, and separately reads the conversation for scam intent. Then it combines both into one verdict.',
+              th: 'ป้าเตือน ให้คะแนนว่าเสียงผู้โทรถูกสร้างด้วย AI หรือไม่ และอ่านบทสนทนาเพื่อหาเจตนาหลอกลวงแยกกัน แล้วจึงรวมทั้งสองเป็นคำตัดสินเดียว',
             })}
           </p>
           <div className="mt-6 flex items-start gap-3 rounded-web-card border border-teal-400/30 bg-teal-400/5 p-5">
@@ -469,8 +469,8 @@ const SERVICES: {
     status: 'coming-soon',
     whatItIs: { en: 'Automatic protection during real phone calls.', th: 'การป้องกันอัตโนมัติระหว่างสายโทรศัพท์จริง' },
     line: {
-      en: 'VoiceGuard listens in the background and alerts you — and your family — the instant a call looks like a scam.',
-      th: 'VoiceGuard ฟังอยู่เบื้องหลังและแจ้งเตือนคุณ — และครอบครัว — ทันทีที่สายดูเหมือนหลอกลวง',
+      en: 'PaTuean listens in the background and alerts you — and your family — the instant a call looks like a scam.',
+      th: 'ป้าเตือน ฟังอยู่เบื้องหลังและแจ้งเตือนคุณ — และครอบครัว — ทันทีที่สายดูเหมือนหลอกลวง',
     },
     anchor: 'phone-app',
     primaryLabel: { en: 'Preview the app', th: 'พรีวิวแอป' },
@@ -792,7 +792,7 @@ function CodeCard() {
         <code>
           <span className="text-mist-500"># Score a voice clip for AI-spoofing</span>
           {'\n'}
-          <span className="text-teal-400">curl</span> https://api.voiceguard.ai/v1/analyze \{'\n'}
+          <span className="text-teal-400">curl</span> https://api.patuean.ai/v1/analyze \{'\n'}
           {'  '}-H <span className="text-coral-400">"Authorization: Bearer $KEY"</span> \{'\n'}
           {'  '}-F <span className="text-coral-400">audio=@call.wav</span>
           {'\n\n'}

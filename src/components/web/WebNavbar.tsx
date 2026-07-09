@@ -63,7 +63,7 @@ export function WebNavbar() {
       <div className="mx-auto flex h-16 max-w-content items-center justify-between px-6 sm:px-8">
         <Link to="/" className="flex items-center gap-2 font-display text-[19px] font-bold tracking-tight text-white">
           <ShieldCheck className="h-5 w-5 text-coral-500" aria-hidden="true" />
-          VoiceGuard
+          {t({ en: 'PaTuean', th: 'ป้าเตือน' })}
         </Link>
 
         {/* Desktop nav */}

@@ -83,8 +83,8 @@ function IdleCover({ onStart }: { onStart: () => void }) {
         </p>
         <p className="mt-2 max-w-[26ch] text-body-sm text-mist-300">
           {t({
-            en: 'The real scripted demo, running right here — pick a scenario and watch VoiceGuard detect it.',
-            th: 'เดโมจริงแบบสคริปต์ ทำงานตรงนี้เลย — เลือกสถานการณ์แล้วดู VoiceGuard ตรวจจับ',
+            en: 'The real scripted demo, running right here — pick a scenario and watch PaTuean detect it.',
+            th: 'เดโมจริงแบบสคริปต์ ทำงานตรงนี้เลย — เลือกสถานการณ์แล้วดู ป้าเตือน ตรวจจับ',
           })}
         </p>
       </div>

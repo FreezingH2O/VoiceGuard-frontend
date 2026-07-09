@@ -21,7 +21,7 @@ export function DemoScenarioPickerScreen({ onSelectScenario }: { onSelectScenari
         <div>
           <h1 className="text-h1-mobile text-coral-500">Experience a scam call, safely</h1>
           <p className="mt-1 text-small text-slate-400">
-            Pick a scenario to see how VoiceGuard detects and reacts to a scam call in real time.
+            Pick a scenario to see how PaTuean detects and reacts to a scam call in real time.
           </p>
         </div>
 

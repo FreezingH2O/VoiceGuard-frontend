@@ -62,7 +62,7 @@ export function SignUpScreen() {
         <AmbientBackground variant="band" className="opacity-50 mix-blend-overlay" />
         <div className="relative flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 font-display text-body-medium font-bold">
-            <ShieldCheck className="h-5 w-5" aria-hidden="true" /> VoiceGuard
+            <ShieldCheck className="h-5 w-5" aria-hidden="true" /> PaTuean
           </Link>
           <LangToggle />
         </div>

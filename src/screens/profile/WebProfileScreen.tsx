@@ -53,8 +53,8 @@ export function WebProfileScreen() {
         <h1 className="font-display text-web-h1 text-white">{t({ en: 'Account', th: 'บัญชี' })}</h1>
         <p className="mt-2 max-w-[60ch] text-web-body text-mist-300">
           {t({
-            en: 'Manage your VoiceGuard profile, find support, and review the legal details.',
-            th: 'จัดการโปรไฟล์ VoiceGuard ค้นหาความช่วยเหลือ และดูรายละเอียดทางกฎหมาย',
+            en: 'Manage your PaTuean profile, find support, and review the legal details.',
+            th: 'จัดการโปรไฟล์ ป้าเตือน ค้นหาความช่วยเหลือ และดูรายละเอียดทางกฎหมาย',
           })}
         </p>
       </Reveal>
@@ -195,7 +195,7 @@ function SupportSection() {
       rows={[
         {
           icon: Waypoints,
-          label: t({ en: 'How VoiceGuard works', th: 'VoiceGuard ทำงานอย่างไร' }),
+          label: t({ en: 'How PaTuean works', th: 'ป้าเตือน ทำงานอย่างไร' }),
           desc: t({ en: 'The four-stage detection pipeline.', th: 'กระบวนการตรวจจับสี่ขั้นตอน' }),
           to: '/#how-it-works',
         },

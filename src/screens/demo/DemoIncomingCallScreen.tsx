@@ -27,7 +27,7 @@ export function DemoIncomingCallScreen({
           <p className="mt-1 text-body text-slate-300">Unknown number</p>
         </div>
         <span className="inline-flex items-center gap-1.5 rounded-pill bg-white px-3 py-1.5 text-body-sm text-navy-900">
-          <Shield className="h-4 w-4" aria-hidden="true" /> VoiceGuard is monitoring
+          <Shield className="h-4 w-4" aria-hidden="true" /> PaTuean is monitoring
         </span>
       </div>
 

@@ -28,7 +28,7 @@ export function WebHomeScreen() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="font-display text-web-h1 text-white">{t({ en: `Welcome, ${firstName}`, th: `ยินดีต้อนรับ ${firstName}` })}</h1>
-            <p className="mt-1 text-web-body text-mist-300">{t({ en: 'Your VoiceGuard account is ready.', th: 'บัญชี VoiceGuard ของคุณพร้อมแล้ว' })}</p>
+            <p className="mt-1 text-web-body text-mist-300">{t({ en: 'Your PaTuean account is ready.', th: 'บัญชี ป้าเตือน ของคุณพร้อมแล้ว' })}</p>
           </div>
           <Link to="/demo/live-test" className="shrink-0">
             <Button variant="primary" leftIcon={<Mic className="h-4 w-4" aria-hidden="true" />}>
@@ -110,7 +110,7 @@ export function WebHomeScreen() {
 
       <div className="mt-12 text-center">
         <Link to="/#how-it-works" className="text-body-sm font-medium text-mist-300 underline underline-offset-4 transition hover:text-white">
-          {t({ en: 'How VoiceGuard works', th: 'VoiceGuard ทำงานอย่างไร' })}
+          {t({ en: 'How PaTuean works', th: 'ป้าเตือน ทำงานอย่างไร' })}
         </Link>
       </div>
       </div>
