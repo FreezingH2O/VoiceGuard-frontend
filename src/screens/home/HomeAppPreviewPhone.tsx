@@ -4,6 +4,7 @@ import { PhoneMockup } from '@/components/web/PhoneMockup'
 import { StatusBar } from '@/components/StatusBar'
 import { BottomTabBar, type TabKey } from '@/components/BottomTabBar'
 import { EmbeddedPreviewProvider } from '@/app/EmbeddedPreview'
+import { PreviewThemeProvider } from '@/app/PreviewTheme'
 import { DashboardScreen } from '@/screens/dashboard/DashboardScreen'
 import { CallHistoryScreen } from '@/screens/history/CallHistoryScreen'
 import { FamilyScreen } from '@/screens/family/FamilyScreen'
@@ -41,6 +42,7 @@ export function HomeAppPreviewPhone({ initialTab = 'home' }: { initialTab?: TabK
   const Screen = TAB_SCREENS[tab]
 
   return (
+    <PreviewThemeProvider>
     <PhoneMockup className="shadow-glow-soft">
       <QueryClientProvider client={client}>
         <EmbeddedPreviewProvider value={true}>
@@ -55,5 +57,6 @@ export function HomeAppPreviewPhone({ initialTab = 'home' }: { initialTab?: TabK
         </EmbeddedPreviewProvider>
       </QueryClientProvider>
     </PhoneMockup>
+    </PreviewThemeProvider>
   )
 }

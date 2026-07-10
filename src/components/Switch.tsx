@@ -28,7 +28,7 @@ export function Switch({ checked, onChange, label, disabled, tone = 'gold' }: Sw
         'relative inline-flex h-[26px] w-[44px] shrink-0 items-center rounded-pill transition-colors',
         'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400',
         'disabled:opacity-50',
-        checked ? trackOn[tone] : 'bg-white/25',
+        checked ? trackOn[tone] : 'bg-hairline/25',
       )}
     >
       <span

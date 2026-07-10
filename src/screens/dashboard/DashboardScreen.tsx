@@ -10,8 +10,10 @@ import { EmptyState } from '@/components/EmptyState'
 import { useToast } from '@/components/ToastProvider'
 import { useProtectionToggle } from '@/hooks/useProtectionToggle'
 import { formatRelativeTime } from '@/lib/format'
+import { useLang } from '@/i18n/LangProvider'
 
 export function DashboardScreen() {
+  const { t, lang } = useLang()
   const { data, isPending, isError, refetch } = useQuery({
     queryKey: queryKeys.dashboard,
     queryFn: api.dashboard.get,
@@ -32,19 +34,19 @@ export function DashboardScreen() {
         showToast({
           message:
             res.reason === 'protection_disabled'
-              ? 'Turn protection on to monitor a call.'
-              : 'Call monitoring is not available right now.',
+              ? t({ en: 'Turn protection on to monitor a call.', th: 'เปิดการป้องกันเพื่อเฝ้าระวังสาย' })
+              : t({ en: 'Call monitoring is not available right now.', th: 'ขณะนี้ยังไม่สามารถเฝ้าระวังสายได้' }),
           tone: 'error',
         })
       }
     },
-    onError: () => showToast({ message: "Couldn't start monitoring, try again.", tone: 'error' }),
+    onError: () => showToast({ message: t({ en: "Couldn't start monitoring, try again.", th: 'เริ่มการเฝ้าระวังไม่สำเร็จ กรุณาลองอีกครั้ง' }), tone: 'error' }),
   })
 
   return (
-    <div className="flex flex-1 flex-col gap-5 px-5 pb-6 pt-3 text-white">
+    <div className="flex flex-1 flex-col gap-5 px-5 pb-6 pt-3 text-fg">
       <header className="flex items-center justify-between">
-        <h1 className="text-[26px] font-bold tracking-tight text-gold-400">PaTuean</h1>
+        <h1 className="text-[26px] font-bold tracking-tight text-accent">PaTuean</h1>
         <span className="relative inline-flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold-400 to-gold-600 ring-2 ring-gold-400/60">
           <UserRound className="h-5 w-5 text-white" aria-hidden="true" />
           <Sparkles className="absolute -right-1 -top-1 h-4 w-4 text-gold-400" aria-hidden="true" />
@@ -65,7 +67,7 @@ export function DashboardScreen() {
         <>
           {/* Status hero */}
           <section className="flex flex-col gap-3">
-            <h2 className="text-label font-semibold text-white/90">Status</h2>
+            <h2 className="text-label font-semibold text-fg">{t({ en: 'Status', th: 'สถานะ' })}</h2>
             <button
               type="button"
               onClick={() => startCallMutation.mutate()}
@@ -77,23 +79,19 @@ export function DashboardScreen() {
               </span>
               <div className="flex-1">
                 <p className="text-[22px] font-bold leading-tight text-white">
-                  {data.protectionEnabled ? (
-                    <>
-                      Your Line
-                      <br />
-                      is Secure.
-                    </>
-                  ) : (
-                    'Protection Paused'
-                  )}
+                  {data.protectionEnabled
+                    ? t({ en: 'Your Line is Secure.', th: 'สายของคุณปลอดภัย' })
+                    : t({ en: 'Protection Paused', th: 'หยุดการป้องกันชั่วคราว' })}
                 </p>
                 <p className="mt-1 text-caption text-white/85">
-                  {data.lastCall ? `Last Check: ${formatRelativeTime(data.lastCall.startedAt)}` : 'No calls checked yet'}
+                  {data.lastCall
+                    ? `${t({ en: 'Last Check:', th: 'ตรวจล่าสุด:' })} ${formatRelativeTime(data.lastCall.startedAt, lang)}`
+                    : t({ en: 'No calls checked yet', th: 'ยังไม่มีสายที่ตรวจ' })}
                 </p>
               </div>
               <span onClick={(e) => e.stopPropagation()}>
                 <Switch
-                  label="Protection enabled"
+                  label={t({ en: 'Protection enabled', th: 'เปิดการป้องกัน' })}
                   tone="onGold"
                   checked={data.protectionEnabled}
                   onChange={(checked) => protectionToggle.mutate(checked)}
@@ -109,29 +107,29 @@ export function DashboardScreen() {
 
           {/* Two review actions */}
           <div className="grid grid-cols-2 gap-3">
-            <ActionCard icon={Activity} title="Live Call Review" caption="Encourage" />
-            <ActionCard icon={Ear} title="Background Call Check" caption="Encourage" />
+            <ActionCard icon={Activity} title={t({ en: 'Live Call Review', th: 'ตรวจสายแบบเรียลไทม์' })} caption={t({ en: 'Encourage', th: 'แนะนำ' })} />
+            <ActionCard icon={Ear} title={t({ en: 'Background Call Check', th: 'ตรวจสายเบื้องหลัง' })} caption={t({ en: 'Encourage', th: 'แนะนำ' })} />
           </div>
 
           {/* Metrics */}
           <section className="flex flex-col gap-3">
-            <h2 className="text-label font-semibold text-white/90">Today's Metrics</h2>
+            <h2 className="text-label font-semibold text-fg">{t({ en: "Today's Metrics", th: 'สรุปวันนี้' })}</h2>
             <div className="grid grid-cols-3 gap-3">
-              <Metric value={data.today.calls} top="Connections" bottom="Secured" />
-              <Metric value={data.today.alerts} top="Blocked" bottom="(potential issues)" />
-              <Metric value={`${data.today.highestRisk}%`} top="Peak Risk" bottom="Detected" />
+              <Metric value={data.today.calls} top={t({ en: 'Connections', th: 'สายที่รับ' })} bottom={t({ en: 'Secured', th: 'ปลอดภัย' })} />
+              <Metric value={data.today.alerts} top={t({ en: 'Blocked', th: 'บล็อก' })} bottom={t({ en: '(potential issues)', th: '(อาจมีปัญหา)' })} />
+              <Metric value={`${data.today.highestRisk}%`} top={t({ en: 'Peak Risk', th: 'ความเสี่ยงสูงสุด' })} bottom={t({ en: 'Detected', th: 'ที่ตรวจพบ' })} />
             </div>
           </section>
 
           {/* Recent reviews */}
           <section className="flex flex-col gap-3">
-            <h2 className="text-label font-semibold text-white/90">Recent Call Reviews</h2>
+            <h2 className="text-label font-semibold text-fg">{t({ en: 'Recent Call Reviews', th: 'การตรวจสายล่าสุด' })}</h2>
             {data.recentAlerts.length === 0 && !data.lastCall && (
-              <div className="rounded-[18px] border border-white/[0.06] bg-panel p-5">
+              <div className="rounded-[18px] border border-hairline/10 bg-panel p-5">
                 <EmptyState
-                  title="No calls yet"
-                  description="Try a simulated scam call to see PaTuean in action."
-                  actionLabel="Try the demo"
+                  title={t({ en: 'No calls yet', th: 'ยังไม่มีสาย' })}
+                  description={t({ en: 'Try a simulated scam call to see PaTuean in action.', th: 'ลองสายมิจฉาชีพจำลองเพื่อดู ป้าเตือน ทำงาน' })}
+                  actionLabel={t({ en: 'Try the demo', th: 'ลองเดโม' })}
                   onAction={() => navigate('/#how-it-works')}
                 />
               </div>
@@ -141,15 +139,17 @@ export function DashboardScreen() {
                 <ReviewRow
                   key={alert.alertId}
                   to={`/app-preview/history/${alert.callId}`}
-                  subtitle={alert.reasonMain || 'Review suggested for new caller'}
-                  time={formatRelativeTime(alert.createdAt)}
+                  title={t({ en: 'Connecting You Safely', th: 'เชื่อมต่อคุณอย่างปลอดภัย' })}
+                  subtitle={alert.reasonMain || t({ en: 'Review suggested for new caller', th: 'แนะนำให้ตรวจสอบผู้โทรรายใหม่' })}
+                  time={formatRelativeTime(alert.createdAt, lang)}
                 />
               ))}
               {data.recentAlerts.length === 0 && data.lastCall && (
                 <ReviewRow
                   to={`/app-preview/history/${data.lastCall.callId}`}
-                  subtitle="Review suggested for recent caller"
-                  time={formatRelativeTime(data.lastCall.startedAt)}
+                  title={t({ en: 'Connecting You Safely', th: 'เชื่อมต่อคุณอย่างปลอดภัย' })}
+                  subtitle={t({ en: 'Review suggested for recent caller', th: 'แนะนำให้ตรวจสอบผู้โทรล่าสุด' })}
+                  time={formatRelativeTime(data.lastCall.startedAt, lang)}
                 />
               )}
             </div>
@@ -170,11 +170,11 @@ function ActionCard({
   caption: string
 }) {
   return (
-    <div className="flex flex-col gap-3 rounded-[18px] border border-white/[0.06] bg-panel p-4">
-      <Icon className="h-6 w-6 text-gold-400" aria-hidden="true" />
+    <div className="flex flex-col gap-3 rounded-[18px] border border-hairline/10 bg-panel p-4">
+      <Icon className="h-6 w-6 text-accent" aria-hidden="true" />
       <div>
-        <p className="text-body-sm font-semibold leading-snug text-white">{title}</p>
-        <p className="mt-0.5 text-caption text-gold-400">{caption}</p>
+        <p className="text-body-sm font-semibold leading-snug text-fg">{title}</p>
+        <p className="mt-0.5 text-caption text-accent">{caption}</p>
       </div>
     </div>
   )
@@ -190,19 +190,19 @@ function Metric({ value, top, bottom }: { value: string | number; top: string; b
   )
 }
 
-function ReviewRow({ to, subtitle, time }: { to: string; subtitle: string; time: string }) {
+function ReviewRow({ to, title, subtitle, time }: { to: string; title: string; subtitle: string; time: string }) {
   return (
     <Link
       to={to}
-      className="flex items-center gap-3 rounded-[18px] border border-white/[0.06] bg-panel p-3.5 transition hover:bg-panel-2"
+      className="flex items-center gap-3 rounded-[18px] border border-hairline/10 bg-panel p-3.5 transition hover:bg-panel-2"
     >
       <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-gold-400/70 to-blue-600/60">
         <UserRound className="h-5 w-5 text-white" aria-hidden="true" />
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-body-sm font-semibold text-white">Connecting You Safely</p>
-        <p className="truncate text-caption text-mist-300">{subtitle}</p>
-        <p className="mt-0.5 text-tag text-mist-500">{time}</p>
+        <p className="text-body-sm font-semibold text-fg">{title}</p>
+        <p className="truncate text-caption text-mid">{subtitle}</p>
+        <p className="mt-0.5 text-tag text-low">{time}</p>
       </div>
     </Link>
   )

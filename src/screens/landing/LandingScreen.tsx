@@ -24,7 +24,7 @@ import { Marquee } from '@/components/motion/Marquee'
 import { ScrollLine } from '@/components/motion/ScrollLine'
 import { SectionPanel, SectionGlow } from '@/components/landing/SectionPanel'
 import { EmbeddedScamDemoPhone } from '@/components/landing/EmbeddedScamDemoPhone'
-import { WaveformShieldVisual } from '@/components/landing/WaveformShieldVisual'
+import { HeroAppPreviewPhone } from '@/components/landing/HeroAppPreviewPhone'
 import { PreviewFeaturePhone, PREVIEW_FEATURES, type PhoneScreen } from '@/components/landing/PreviewFeaturePhone'
 import { useLang, type Localized } from '@/i18n/LangProvider'
 import { useCountUp } from '@/hooks/useCountUp'
@@ -149,7 +149,7 @@ function Hero() {
         </div>
 
         <HeroFollow delay={0.4}>
-          <WaveformShieldVisual />
+          <HeroAppPreviewPhone />
         </HeroFollow>
       </div>
 

@@ -7,24 +7,26 @@ import { Skeleton } from '@/components/Skeleton'
 import { ErrorState } from '@/components/ErrorState'
 import { EmptyState } from '@/components/EmptyState'
 import { cn } from '@/lib/cn'
+import { useLang, type Localized } from '@/i18n/LangProvider'
 import type { Verdict } from '@/types/domain'
 
 type FilterKey = 'all' | Verdict
 
-const filters: { key: FilterKey; label: string; icon: LucideIcon }[] = [
-  { key: 'all', label: 'All', icon: ListFilter },
-  { key: 'safe', label: 'Safe', icon: Check },
-  { key: 'suspicious', label: 'Needs Review', icon: TriangleAlert },
-  { key: 'scam', label: 'Scam', icon: Ban },
+const filters: { key: FilterKey; label: Localized; icon: LucideIcon }[] = [
+  { key: 'all', label: { en: 'All', th: 'ทั้งหมด' }, icon: ListFilter },
+  { key: 'safe', label: { en: 'Safe', th: 'ปลอดภัย' }, icon: Check },
+  { key: 'suspicious', label: { en: 'Needs Review', th: 'ควรตรวจสอบ' }, icon: TriangleAlert },
+  { key: 'scam', label: { en: 'Scam', th: 'มิจฉาชีพ' }, icon: Ban },
 ]
 
-const verdictStyle: Record<Verdict, { label: string; icon: LucideIcon; className: string }> = {
-  safe: { label: 'Safe', icon: Check, className: 'bg-gold-500 text-white' },
-  suspicious: { label: 'Needs Review', icon: TriangleAlert, className: 'bg-coral-500 text-white' },
-  scam: { label: 'Scam', icon: Ban, className: 'bg-danger-500 text-white' },
+const verdictStyle: Record<Verdict, { label: Localized; icon: LucideIcon; className: string }> = {
+  safe: { label: { en: 'Safe', th: 'ปลอดภัย' }, icon: Check, className: 'bg-gold-500 text-white' },
+  suspicious: { label: { en: 'Needs Review', th: 'ควรตรวจสอบ' }, icon: TriangleAlert, className: 'bg-coral-500 text-white' },
+  scam: { label: { en: 'Scam', th: 'มิจฉาชีพ' }, icon: Ban, className: 'bg-danger-500 text-white' },
 }
 
 export function CallHistoryScreen() {
+  const { t } = useLang()
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState<FilterKey>('all')
   const sentinelRef = useRef<HTMLDivElement>(null)
@@ -57,15 +59,15 @@ export function CallHistoryScreen() {
   const items = query.data?.pages.flatMap((p) => p.items) ?? []
 
   return (
-    <div className="flex flex-1 flex-col gap-4 px-5 pb-5 pt-3 text-white">
-      <h1 className="text-h1 font-bold">Call History</h1>
+    <div className="flex flex-1 flex-col gap-4 px-5 pb-5 pt-3 text-fg">
+      <h1 className="text-h1 font-bold">{t({ en: 'Call History', th: 'ประวัติการโทร' })}</h1>
 
       <input
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search by phone number"
-        aria-label="Search call history"
-        className="min-h-tap w-full rounded-[14px] border border-white/[0.08] bg-panel px-4 text-body text-white placeholder:text-mist-500 focus:border-gold-400/60 focus:outline-none"
+        placeholder={t({ en: 'Search by phone number', th: 'ค้นหาด้วยเบอร์โทรศัพท์' })}
+        aria-label={t({ en: 'Search call history', th: 'ค้นหาประวัติการโทร' })}
+        className="min-h-tap w-full rounded-[14px] border border-hairline/10 bg-panel px-4 text-body text-fg placeholder:text-low focus:border-gold-400/60 focus:outline-none"
       />
 
       <div className="flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label="Filter by verdict">
@@ -81,12 +83,12 @@ export function CallHistoryScreen() {
               className={cn(
                 'inline-flex min-h-[34px] shrink-0 items-center gap-1.5 rounded-pill border px-3.5 text-caption font-semibold transition',
                 active
-                  ? 'border-gold-400 bg-gold-400/15 text-gold-400'
-                  : 'border-white/[0.1] bg-panel text-mist-300 hover:text-white',
+                  ? 'border-gold-400 bg-gold-400/15 text-accent'
+                  : 'border-hairline/20 bg-panel text-mid hover:text-fg',
               )}
             >
               <f.icon className="h-3.5 w-3.5" aria-hidden="true" />
-              {f.label}
+              {t(f.label)}
             </button>
           )
         })}
@@ -104,9 +106,15 @@ export function CallHistoryScreen() {
 
       {query.isSuccess && items.length === 0 && (
         <EmptyState
-          title={search || filter !== 'all' ? 'No matches' : 'No calls yet'}
+          title={
+            search || filter !== 'all'
+              ? t({ en: 'No matches', th: 'ไม่พบรายการ' })
+              : t({ en: 'No calls yet', th: 'ยังไม่มีสาย' })
+          }
           description={
-            search || filter !== 'all' ? 'Try a different search or filter.' : 'Your call history will show up here.'
+            search || filter !== 'all'
+              ? t({ en: 'Try a different search or filter.', th: 'ลองค้นหาหรือกรองด้วยเงื่อนไขอื่น' })
+              : t({ en: 'Your call history will show up here.', th: 'ประวัติการโทรของคุณจะแสดงที่นี่' })
           }
         />
       )}
@@ -118,13 +126,13 @@ export function CallHistoryScreen() {
             <Link
               key={call.callId}
               to={`/app-preview/history/${call.callId}`}
-              className="flex items-center gap-3 rounded-[18px] border border-white/[0.06] bg-panel p-3 transition hover:bg-panel-2"
+              className="flex items-center gap-3 rounded-[18px] border border-hairline/10 bg-panel p-3 transition hover:bg-panel-2"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-panel-2 to-blue-600/40">
-                <UserRound className="h-5 w-5 text-mist-300" aria-hidden="true" />
+                <UserRound className="h-5 w-5 text-mid" aria-hidden="true" />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="text-body-medium text-white">{call.callerNumber}</p>
+                <p className="text-body-medium text-fg">{call.callerNumber}</p>
                 <span
                   className={cn(
                     'mt-1.5 inline-flex items-center gap-1 rounded-pill px-2.5 py-1 text-caption font-semibold',
@@ -132,16 +140,16 @@ export function CallHistoryScreen() {
                   )}
                 >
                   <v.icon className="h-3.5 w-3.5" aria-hidden="true" />
-                  {v.label}
+                  {t(v.label)}
                 </span>
               </div>
               <div className="flex items-center gap-2 text-right">
                 <div>
-                  <p className="text-body-sm font-bold text-white">{call.spoofScore}%</p>
-                  <p className="text-tag text-mist-500">spoof</p>
+                  <p className="text-body-sm font-bold text-fg">{call.spoofScore}%</p>
+                  <p className="text-tag text-low">{t({ en: 'spoof', th: 'เสียงปลอม' })}</p>
                 </div>
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10" aria-hidden="true">
-                  <Info className="h-3.5 w-3.5 text-mist-300" />
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-hairline/10" aria-hidden="true">
+                  <Info className="h-3.5 w-3.5 text-mid" />
                 </span>
               </div>
             </Link>

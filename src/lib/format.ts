@@ -4,9 +4,17 @@ export function formatDuration(sec: number): string {
   return `${m}:${s.toString().padStart(2, '0')}`
 }
 
-export function formatRelativeTime(iso: string): string {
+export function formatRelativeTime(iso: string, lang: 'en' | 'th' = 'en'): string {
   const diffMs = Date.now() - new Date(iso).getTime()
   const minutes = Math.round(diffMs / 60_000)
+  if (lang === 'th') {
+    if (minutes < 1) return 'เมื่อสักครู่'
+    if (minutes < 60) return `${minutes} นาทีที่แล้ว`
+    const hours = Math.round(minutes / 60)
+    if (hours < 24) return `${hours} ชม.ที่แล้ว`
+    const days = Math.round(hours / 24)
+    return `${days} วันที่แล้ว`
+  }
   if (minutes < 1) return 'just now'
   if (minutes < 60) return `${minutes}m ago`
   const hours = Math.round(minutes / 60)

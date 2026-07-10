@@ -1,6 +1,7 @@
 import { forwardRef, useState } from 'react'
 import { Play, ShieldAlert } from 'lucide-react'
 import { PhoneMockup } from '@/components/web/PhoneMockup'
+import { PreviewThemeProvider } from '@/app/PreviewTheme'
 import { StatusBar } from '@/components/StatusBar'
 import { DemoScenarioPickerScreen } from '@/screens/demo/DemoScenarioPickerScreen'
 import { DemoIncomingCallScreen } from '@/screens/demo/DemoIncomingCallScreen'
@@ -28,6 +29,7 @@ export const EmbeddedScamDemoPhone = forwardRef<HTMLDivElement, object>(function
 
   return (
     <div ref={ref} className="flex flex-col items-center gap-4">
+      <PreviewThemeProvider>
       <PhoneMockup className="shadow-glow-soft">
         <StatusBar />
         {phase.name === 'idle' && <IdleCover onStart={() => setPhase({ name: 'picker' })} />}
@@ -51,6 +53,7 @@ export const EmbeddedScamDemoPhone = forwardRef<HTMLDivElement, object>(function
           <DemoDebriefScreen scenarioId={phase.scenarioId} onRestart={() => setPhase({ name: 'picker' })} />
         )}
       </PhoneMockup>
+      </PreviewThemeProvider>
 
       {phase.name !== 'idle' && (
         <button
@@ -78,10 +81,10 @@ function IdleCover({ onStart }: { onStart: () => void }) {
         <ShieldAlert className="h-7 w-7" aria-hidden="true" />
       </span>
       <div>
-        <p className="text-h2 font-semibold text-white">
+        <p className="text-h2 font-semibold text-fg">
           {t({ en: 'See a scam call in real time', th: 'ดูสายหลอกลวงแบบเรียลไทม์' })}
         </p>
-        <p className="mt-2 max-w-[26ch] text-body-sm text-mist-300">
+        <p className="mt-2 max-w-[26ch] text-body-sm text-mid">
           {t({
             en: 'The real scripted demo, running right here — pick a scenario and watch PaTuean detect it.',
             th: 'เดโมจริงแบบสคริปต์ ทำงานตรงนี้เลย — เลือกสถานการณ์แล้วดู ป้าเตือน ตรวจจับ',

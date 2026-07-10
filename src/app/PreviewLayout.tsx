@@ -5,6 +5,7 @@ import { PhoneMockup } from '@/components/web/PhoneMockup'
 import { StatusBadge } from '@/components/web/StatusBadge'
 import { AmbientBackground } from '@/components/motion/AmbientBackground'
 import { PreviewPhoneScreen, type PreviewHandle } from '@/app/PreviewPhoneScreen'
+import { PreviewThemeProvider } from '@/app/PreviewTheme'
 import { useAuth } from '@/hooks/useAuth'
 import { useLang, type Localized } from '@/i18n/LangProvider'
 import { cn } from '@/lib/cn'
@@ -96,9 +97,11 @@ export function PreviewLayout() {
 
             {/* The phone */}
             <div className={cn('order-1 lg:order-2', zone === 'app' && 'mx-auto lg:mx-0')}>
-              <PhoneMockup className="shadow-glow-soft">
-                <PreviewPhoneScreen />
-              </PhoneMockup>
+              <PreviewThemeProvider>
+                <PhoneMockup className="shadow-glow-soft">
+                  <PreviewPhoneScreen />
+                </PhoneMockup>
+              </PreviewThemeProvider>
             </div>
           </div>
         </div>

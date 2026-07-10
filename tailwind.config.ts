@@ -22,10 +22,16 @@ export default {
         },
         teal: { 400: '#34D6C4' }, // authentic / real voice / safe — glows on dark
 
-        // ── VoiceGuard app-preview dark theme (matches the mobile mockup) ──
-        night: '#0A0E20', // preview phone screen canvas — deep desaturated navy
-        panel: '#161B33', // raised cards inside the preview phone
-        'panel-2': '#1E2543', // nested / hover surface inside the preview phone
+        // ── VoiceGuard app-preview theme (light + dark via CSS vars in index.css) ──
+        // These resolve to --vg-* variables that flip inside a [data-vg-theme] scope.
+        night: 'var(--vg-screen)', // preview phone screen canvas
+        panel: 'var(--vg-panel)', // raised cards inside the preview phone
+        'panel-2': 'var(--vg-panel-2)', // nested / hover surface inside the preview phone
+        fg: 'var(--vg-ink)', // primary text on panel/screen (preview theme; renamed from ink to avoid clobbering the ink-950/900/navy scale above)
+        mid: 'var(--vg-mid)', // secondary text on panel/screen
+        low: 'var(--vg-low)', // tertiary text / captions on panel/screen
+        accent: 'var(--vg-accent)', // amber accent TEXT (darkens in light mode for contrast)
+        hairline: 'rgb(var(--vg-hairline) / <alpha-value>)', // borders + subtle overlays
         gold: { 400: '#F7B53F', 500: '#E88B2C', 600: '#C9741F' }, // amber accent + status hero
 
         // ── Existing light-app tokens (kept — do not change) ──

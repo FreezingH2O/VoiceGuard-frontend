@@ -1,6 +1,15 @@
 import { Pill } from './Pill'
 
-const dangerIntents = new Set(['asks for OTP', 'money transfer', 'payment demand'])
+// Match both the English intent tags and their Thai translations (see
+// scenarios.data.ts `intent`), so danger tone survives localization.
+const dangerIntents = new Set([
+  'asks for OTP',
+  'money transfer',
+  'payment demand',
+  'ขอรหัส OTP',
+  'โอนเงิน',
+  'เรียกเก็บเงิน',
+])
 
 interface IntentPillRowProps {
   intents: string[]

@@ -9,7 +9,7 @@ interface ReasonRowProps {
 }
 
 const toneTextClasses = {
-  neutral: 'text-mist-300',
+  neutral: 'text-mid',
   danger: 'text-danger-500',
   warn: 'text-coral-500',
 } as const

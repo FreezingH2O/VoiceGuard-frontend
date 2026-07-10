@@ -1,11 +1,12 @@
 import { Ban, Check, TriangleAlert, type LucideIcon } from 'lucide-react'
 import type { Verdict } from '@/types/domain'
 import { cn } from '@/lib/cn'
+import { useLang, type Localized } from '@/i18n/LangProvider'
 
-const config: Record<Verdict, { label: string; icon: LucideIcon; className: string }> = {
-  safe: { label: 'Safe', icon: Check, className: 'bg-gold-500 text-white' },
-  suspicious: { label: 'Needs Review', icon: TriangleAlert, className: 'bg-coral-500 text-white' },
-  scam: { label: 'Scam', icon: Ban, className: 'bg-danger-500 text-white' },
+const config: Record<Verdict, { label: Localized; icon: LucideIcon; className: string }> = {
+  safe: { label: { en: 'Safe', th: 'ปลอดภัย' }, icon: Check, className: 'bg-gold-500 text-white' },
+  suspicious: { label: { en: 'Needs Review', th: 'ควรตรวจสอบ' }, icon: TriangleAlert, className: 'bg-coral-500 text-white' },
+  scam: { label: { en: 'Scam', th: 'มิจฉาชีพ' }, icon: Ban, className: 'bg-danger-500 text-white' },
 }
 
 /**
@@ -13,6 +14,7 @@ const config: Record<Verdict, { label: string; icon: LucideIcon; className: stri
  * Review, red Scam). Always icon + label together for accessibility.
  */
 export function VerdictPill({ verdict, size = 'sm' }: { verdict: Verdict; size?: 'sm' | 'md' }) {
+  const { t } = useLang()
   const { label, icon: Icon, className } = config[verdict]
   return (
     <span
@@ -23,7 +25,7 @@ export function VerdictPill({ verdict, size = 'sm' }: { verdict: Verdict; size?:
       )}
     >
       <Icon className={size === 'sm' ? 'h-3.5 w-3.5' : 'h-4 w-4'} aria-hidden="true" />
-      {label}
+      {t(label)}
     </span>
   )
 }

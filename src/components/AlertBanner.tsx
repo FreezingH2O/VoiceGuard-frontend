@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { TriangleAlert, CircleCheck } from 'lucide-react'
 import type { AlertLevel } from '@/types/domain'
 import { cn } from '@/lib/cn'
+import { useLang } from '@/i18n/LangProvider'
 import { Button } from './Button'
 
 interface AlertBannerProps {
@@ -23,42 +24,43 @@ export function AlertBanner({
   onKeepTalking,
   actions,
 }: AlertBannerProps) {
+  const { t } = useLang()
   const borderColor = level === 'scam' ? 'border-danger-500' : 'border-coral-500'
   const iconColor = level === 'scam' ? 'text-danger-500' : 'text-coral-500'
-  const title = level === 'scam' ? 'Likely SCAM call' : 'Suspicious call'
+  const title = level === 'scam' ? t({ en: 'Likely SCAM call', th: 'น่าจะเป็นสายมิจฉาชีพ' }) : t({ en: 'Suspicious call', th: 'สายที่น่าสงสัย' })
 
   return (
-    <div className={cn('rounded-[18px] border-2 bg-panel p-4 text-white', borderColor)}>
+    <div className={cn('rounded-[18px] border-2 bg-panel p-4 text-fg', borderColor)}>
       <h2 className={cn('flex items-center gap-1.5 text-alert-title', iconColor)}>
         <TriangleAlert className="h-5 w-5 shrink-0" aria-hidden="true" />
         {title}
       </h2>
-      <p className="mt-1 text-body text-mist-300">{reasonMain}</p>
+      <p className="mt-1 text-body text-mid">{reasonMain}</p>
       {reasons && reasons.length > 0 && (
         <ul className="mt-2 space-y-1">
           {reasons.map((r) => (
-            <li key={r} className="text-small text-mist-500">
+            <li key={r} className="text-small text-low">
               • {r}
             </li>
           ))}
         </ul>
       )}
       {guardiansNotified && (
-        <p className="mt-2 flex items-center gap-1 text-caption text-gold-400">
+        <p className="mt-2 flex items-center gap-1 text-caption text-accent">
           <CircleCheck className="h-3.5 w-3.5" aria-hidden="true" />
-          Family notified
+          {t({ en: 'Family notified', th: 'แจ้งครอบครัวแล้ว' })}
         </p>
       )}
       {actions ?? (
         <div className="mt-4 flex flex-col gap-2 sm:flex-row">
           {onEndCall && (
             <Button variant="danger" fullWidth onClick={onEndCall}>
-              End Call
+              {t({ en: 'End Call', th: 'วางสาย' })}
             </Button>
           )}
           {onKeepTalking && (
             <Button variant="outline-light" fullWidth onClick={onKeepTalking}>
-              Keep Talking
+              {t({ en: 'Keep Talking', th: 'คุยต่อ' })}
             </Button>
           )}
         </div>

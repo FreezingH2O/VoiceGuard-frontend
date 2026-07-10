@@ -19,6 +19,7 @@ import { DemoSchedulerClient } from '@/ws/DemoSchedulerClient'
 import { hasPlaybackControls } from '@/ws/RealtimeClient'
 import { getScenarioCallerName } from '@/services/mock/scenarios.data'
 import { ScenarioIcon } from '@/lib/scenarioIcons'
+import { useLang } from '@/i18n/LangProvider'
 import type { TimedEvent } from '@/ws/types'
 
 interface LocationState {
@@ -46,9 +47,10 @@ export function LiveCallMonitorScreen(props: DemoInlineProps = {}) {
   const navigate = useNavigate()
   const locationState = location.state as LocationState | null
   const elderMode = props.elderMode ?? locationState?.elderMode ?? false
+  const { t, lang } = useLang()
 
   const scenarioQuery = useQuery({
-    queryKey: queryKeys.demoScenario(scenarioId ?? ''),
+    queryKey: [...queryKeys.demoScenario(scenarioId ?? ''), lang],
     queryFn: () => api.demo.getScenario(scenarioId!),
     enabled: isDemo,
   })
@@ -122,14 +124,18 @@ export function LiveCallMonitorScreen(props: DemoInlineProps = {}) {
   const playback = hasPlaybackControls(client) ? client : null
 
   return (
-    <div className="flex flex-1 flex-col bg-night text-white">
-      {isDemo && <Banner tone="demo">PREVIEW · simulated call showing the in-call experience</Banner>}
+    <div className="flex flex-1 flex-col bg-night text-fg">
+      {isDemo && (
+        <Banner tone="demo">
+          {t({ en: 'PREVIEW · simulated call showing the in-call experience', th: 'ตัวอย่าง · สายจำลองเพื่อแสดงประสบการณ์ระหว่างสาย' })}
+        </Banner>
+      )}
 
       <div className={`h-1 w-full ${stripColor}`} aria-hidden="true" />
 
       {state.connectionState === 'reconnecting' && (
         <div className="bg-coral-500 px-4 py-1 text-center text-caption text-white">
-          Protection limited, reconnecting…
+          {t({ en: 'Protection limited, reconnecting…', th: 'การป้องกันจำกัดชั่วคราว กำลังเชื่อมต่อใหม่…' })}
         </div>
       )}
 
@@ -139,8 +145,8 @@ export function LiveCallMonitorScreen(props: DemoInlineProps = {}) {
             <ScenarioIcon slug={caller.icon} className="h-8 w-8" />
           </span>
           <p className="text-screen-header mt-1 font-semibold">{caller.name}</p>
-          <p className="text-small text-mist-300">
-            {formatTimer(timerSeconds)} · {state.connectionState === 'open' ? 'Analyzing' : state.connectionState}
+          <p className="text-small text-mid">
+            {formatTimer(timerSeconds)} · {state.connectionState === 'open' ? t({ en: 'Analyzing', th: 'กำลังวิเคราะห์' }) : state.connectionState}
           </p>
         </div>
 
@@ -158,14 +164,14 @@ export function LiveCallMonitorScreen(props: DemoInlineProps = {}) {
         )}
 
         <div className="flex gap-7">
-          <ScoreRing value={state.spoofScore} size={84} label="Fake voice" tone="danger" />
-          <ScoreRing value={state.riskScore} size={84} label="Scam risk" tone="danger" />
+          <ScoreRing value={state.spoofScore} size={84} label={t({ en: 'Fake voice', th: 'เสียงปลอม' })} tone="danger" />
+          <ScoreRing value={state.riskScore} size={84} label={t({ en: 'Scam risk', th: 'ความเสี่ยงมิจฉาชีพ' })} tone="danger" />
         </div>
 
-        <section className="w-full rounded-[18px] border border-white/[0.06] bg-panel p-4">
-          <h2 className="text-label text-white">Conversation context</h2>
-          <p className="mt-1.5 text-small text-mist-300">
-            {state.contextSummary ?? 'Listening for context…'}
+        <section className="w-full rounded-[18px] border border-hairline/10 bg-panel p-4">
+          <h2 className="text-label text-fg">{t({ en: 'Conversation context', th: 'บริบทการสนทนา' })}</h2>
+          <p className="mt-1.5 text-small text-mid">
+            {state.contextSummary ?? t({ en: 'Listening for context…', th: 'กำลังฟังเพื่อจับบริบท…' })}
           </p>
           {state.intents.length > 0 && (
             <div className="mt-2">
@@ -179,7 +185,7 @@ export function LiveCallMonitorScreen(props: DemoInlineProps = {}) {
           {state.transcript.map((line) => (
             <div
               key={line.seq}
-              className="max-w-[85%] self-start rounded-tr-[16px] rounded-bl-[16px] rounded-tl-[4px] rounded-br-[16px] bg-panel-2 px-3 py-2 text-small text-mist-300"
+              className="max-w-[85%] self-start rounded-tr-[16px] rounded-bl-[16px] rounded-tl-[4px] rounded-br-[16px] bg-panel-2 px-3 py-2 text-small text-mid"
             >
               {line.text}
             </div>
@@ -196,10 +202,10 @@ export function LiveCallMonitorScreen(props: DemoInlineProps = {}) {
                 setPaused(!paused)
               }}
             >
-              {paused ? 'Resume' : 'Pause'}
+              {paused ? t({ en: 'Resume', th: 'เล่นต่อ' }) : t({ en: 'Pause', th: 'หยุดชั่วคราว' })}
             </Button>
             <Button variant="outline-light" onClick={() => playback.restart()}>
-              Restart
+              {t({ en: 'Restart', th: 'เริ่มใหม่' })}
             </Button>
             <Button
               variant="outline-neutral"
@@ -212,39 +218,48 @@ export function LiveCallMonitorScreen(props: DemoInlineProps = {}) {
               {rate}x
             </Button>
             <Button variant="outline-light" onClick={() => playback.skipToAlert()}>
-              Skip to alert
+              {t({ en: 'Skip to alert', th: 'ข้ามไปที่การแจ้งเตือน' })}
             </Button>
           </div>
         )}
       </div>
 
-      <div className="flex justify-center border-t border-white/[0.06] bg-panel px-4 py-4">
+      <div className="flex justify-center border-t border-hairline/10 bg-panel px-4 py-4">
         <div className="mx-auto flex w-full max-w-md items-center justify-center gap-4 sm:max-w-lg md:max-w-xl">
-          <Button variant="outline-neutral" className="!h-[52px] !w-[52px] !rounded-full !p-0" aria-label="Mute" onClick={handleKeepTalking}>
+          <Button variant="outline-neutral" className="!h-[52px] !w-[52px] !rounded-full !p-0" aria-label={t({ en: 'Mute', th: 'ปิดเสียง' })} onClick={handleKeepTalking}>
             <MicOff className="h-5 w-5" aria-hidden="true" />
           </Button>
-          <Button variant="danger" className="!h-[64px] !w-[64px] !rounded-full !p-0" aria-label="End call" onClick={handleEndCall}>
+          <Button variant="danger" className="!h-[64px] !w-[64px] !rounded-full !p-0" aria-label={t({ en: 'End call', th: 'วางสาย' })} onClick={handleEndCall}>
             <PhoneOff className="h-6 w-6" aria-hidden="true" />
           </Button>
-          <Button variant="outline-neutral" className="!h-[52px] !w-[52px] !rounded-full !p-0" aria-label="Flag">
+          <Button variant="outline-neutral" className="!h-[52px] !w-[52px] !rounded-full !p-0" aria-label={t({ en: 'Flag', th: 'รายงานสาย' })}>
             <Flag className="h-5 w-5" aria-hidden="true" />
           </Button>
         </div>
       </div>
 
-      <Sheet open={showGuardianInterstitial} onClose={() => setShowGuardianInterstitial(false)} title="Guardian notified">
-        <p className="text-small text-mist-300">
-          Because Elder Mode is on, your guardian was notified in real time about this likely scam call.
+      <Sheet
+        open={showGuardianInterstitial}
+        onClose={() => setShowGuardianInterstitial(false)}
+        title={t({ en: 'Guardian notified', th: 'แจ้งผู้ดูแลแล้ว' })}
+      >
+        <p className="text-small text-mid">
+          {t({
+            en: 'Because Elder Mode is on, your guardian was notified in real time about this likely scam call.',
+            th: 'เนื่องจากเปิดโหมดผู้สูงอายุไว้ ระบบจึงแจ้งผู้ดูแลของคุณแบบเรียลไทม์เกี่ยวกับสายที่น่าจะเป็นมิจฉาชีพนี้',
+          })}
         </p>
         <Button variant="gold" fullWidth className="mt-4" onClick={() => setShowGuardianInterstitial(false)}>
-          Continue
+          {t({ en: 'Continue', th: 'ดำเนินการต่อ' })}
         </Button>
       </Sheet>
 
-      <Sheet open={showSummary} onClose={() => navigate('/app-preview/history')} title="Call ended">
-        <p className="text-small text-mist-300">This call has been added to your call history.</p>
+      <Sheet open={showSummary} onClose={() => navigate('/app-preview/history')} title={t({ en: 'Call ended', th: 'วางสายแล้ว' })}>
+        <p className="text-small text-mid">
+          {t({ en: 'This call has been added to your call history.', th: 'สายนี้ถูกบันทึกลงในประวัติการโทรของคุณแล้ว' })}
+        </p>
         <Button variant="gold" fullWidth className="mt-4" onClick={() => navigate('/app-preview/history')}>
-          View history
+          {t({ en: 'View history', th: 'ดูประวัติ' })}
         </Button>
       </Sheet>
     </div>
