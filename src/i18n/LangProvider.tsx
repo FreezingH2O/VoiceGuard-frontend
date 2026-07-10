@@ -17,11 +17,12 @@ const LangContext = createContext<LangContextValue | null>(null)
 const STORAGE_KEY = 'vg.lang'
 
 function initialLang(): Lang {
-  if (typeof window === 'undefined') return 'en'
+  if (typeof window === 'undefined') return 'th'
   const stored = window.localStorage.getItem(STORAGE_KEY)
   if (stored === 'en' || stored === 'th') return stored
-  // Default to Thai for the primary audience when the browser prefers it.
-  return navigator.language?.toLowerCase().startsWith('th') ? 'th' : 'en'
+  // Thai is the primary audience, so default to Thai unless the visitor has
+  // explicitly chosen a language before (respected via the stored value above).
+  return 'th'
 }
 
 export function LangProvider({ children }: { children: ReactNode }) {
