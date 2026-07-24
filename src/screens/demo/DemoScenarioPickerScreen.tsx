@@ -10,8 +10,11 @@ import { useLang } from '@/i18n/LangProvider'
 
 // Pill tone is derived from the scenario id, not its (translated) tag label.
 const pillToneById: Record<string, 'safe' | 'danger' | 'warn'> = {
-  'legitimate-call': 'safe',
-  'grandchild-emergency': 'danger',
+  'fake-arrest-warrant': 'danger',
+  'cloned-son-accident': 'danger',
+  'hospital-appointment': 'safe',
+  'cloned-daughter-accident': 'danger',
+  'bank-fraud-officer': 'danger',
 }
 
 export function DemoScenarioPickerScreen({ onSelectScenario }: { onSelectScenario: (scenarioId: string) => void }) {

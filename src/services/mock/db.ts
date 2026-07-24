@@ -180,3 +180,14 @@ export const db = {
 export function getCurrentUser(): User | null {
   return db.users.find((u) => u.id === db.currentUserId) ?? null
 }
+
+/**
+ * Re-establish a logged-in user after a page refresh. The mock store reseeds on
+ * every reload, so a persisted session (see mockSessionStorage) must re-insert its
+ * user and mark them current — otherwise preview screens that read getCurrentUser()
+ * would 401 even though the UI shows you as logged in.
+ */
+export function setCurrentUser(user: User): void {
+  if (!db.users.some((u) => u.id === user.id)) db.users.push(user)
+  db.currentUserId = user.id
+}

@@ -47,10 +47,10 @@ export function HomeAppPreviewPhone({ initialTab = 'home' }: { initialTab?: TabK
       <QueryClientProvider client={client}>
         <EmbeddedPreviewProvider value={true}>
           <StatusBar />
-          <div className="w-full bg-coral-500 px-3 py-1 text-center text-[10px] font-semibold leading-tight text-white">
+          <div className="w-full bg-coral-500 px-3 py-1 text-center text-tag font-semibold uppercase tracking-wide text-white">
             {t({ en: 'PREVIEW · sample data — the real app runs on your phone', th: 'พรีวิว · ข้อมูลตัวอย่าง — แอปจริงทำงานบนมือถือของคุณ' })}
           </div>
-          <main className="flex flex-1 flex-col overflow-y-auto bg-night">
+          <main className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-night [&>*]:min-h-full">
             <Screen />
           </main>
           <BottomTabBar active={tab} onNavigate={setTab} showProfile />

@@ -32,26 +32,30 @@ export const EmbeddedScamDemoPhone = forwardRef<HTMLDivElement, object>(function
       <PreviewThemeProvider>
       <PhoneMockup className="shadow-glow-soft">
         <StatusBar />
-        {phase.name === 'idle' && <IdleCover onStart={() => setPhase({ name: 'picker' })} />}
-        {phase.name === 'picker' && (
-          <DemoScenarioPickerScreen onSelectScenario={(scenarioId) => setPhase({ name: 'ringing', scenarioId })} />
-        )}
-        {phase.name === 'ringing' && (
-          <DemoIncomingCallScreen
-            scenarioId={phase.scenarioId}
-            onDecline={() => setPhase({ name: 'picker' })}
-            onAccept={() => setPhase({ name: 'live', scenarioId: phase.scenarioId })}
-          />
-        )}
-        {phase.name === 'live' && (
-          <LiveCallMonitorScreen
-            scenarioId={phase.scenarioId}
-            onExitDemo={(scenarioId) => setPhase({ name: 'debrief', scenarioId })}
-          />
-        )}
-        {phase.name === 'debrief' && (
-          <DemoDebriefScreen scenarioId={phase.scenarioId} onRestart={() => setPhase({ name: 'picker' })} />
-        )}
+        {/* Screens were direct children of the device frame, which is overflow-hidden —
+            anything taller than the glass was simply cut off. */}
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain [&>*]:min-h-full">
+          {phase.name === 'idle' && <IdleCover onStart={() => setPhase({ name: 'picker' })} />}
+          {phase.name === 'picker' && (
+            <DemoScenarioPickerScreen onSelectScenario={(scenarioId) => setPhase({ name: 'ringing', scenarioId })} />
+          )}
+          {phase.name === 'ringing' && (
+            <DemoIncomingCallScreen
+              scenarioId={phase.scenarioId}
+              onDecline={() => setPhase({ name: 'picker' })}
+              onAccept={() => setPhase({ name: 'live', scenarioId: phase.scenarioId })}
+            />
+          )}
+          {phase.name === 'live' && (
+            <LiveCallMonitorScreen
+              scenarioId={phase.scenarioId}
+              onExitDemo={(scenarioId) => setPhase({ name: 'debrief', scenarioId })}
+            />
+          )}
+          {phase.name === 'debrief' && (
+            <DemoDebriefScreen scenarioId={phase.scenarioId} onRestart={() => setPhase({ name: 'picker' })} />
+          )}
+        </div>
       </PhoneMockup>
       </PreviewThemeProvider>
 

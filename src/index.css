@@ -33,7 +33,7 @@ html[lang='th'] {
   --vg-panel-2: #1e2543;
   --vg-ink: #ffffff;
   --vg-mid: #b4b9d8;
-  --vg-low: #7c82a8;
+  --vg-low: #969cc0; /* was #7c82a8 — 4.5:1 on panel was too tight to read comfortably; now 6.3:1 */
   --vg-accent: #f7b53f;
   --vg-hairline: 255 255 255; /* used as rgb(var(--vg-hairline) / <alpha>) */
 }
@@ -44,9 +44,66 @@ html[lang='th'] {
   --vg-panel-2: #eef2fb;
   --vg-ink: #0d1545;
   --vg-mid: #4a5178;
-  --vg-low: #8b91b5;
-  --vg-accent: #c9741f;
+  --vg-low: #5c638c; /* was #8b91b5 — 2.9:1 on white failed AA outright; now 5.8:1 */
+  --vg-accent: #a85c12; /* was #c9741f — 3.5:1; accent is used as body-size text, so now 5.0:1 */
   --vg-hairline: 13 20 45;
+}
+
+/*
+ * Elder-legible type scale for the app-preview phone.
+ *
+ * The primary user is an older adult reading a small screen, so every step of the
+ * app scale is enlarged ~15-25% — the smallest steps most, since 9-12px labels are
+ * what actually fails first. Scoped to [data-vg-theme] (every phone host, both
+ * themes) so the marketing/web scale outside the device is untouched. The tokens
+ * are declared with these names in tailwind.config.ts; changing a value here
+ * restyles every app screen at once.
+ */
+[data-vg-theme] {
+  --fs-display: 44px;
+  --lh-display: 52px;
+  --fs-h1: 30px;
+  --lh-h1: 38px;
+  --fs-h1-mobile: 25px;
+  --lh-h1-mobile: 32px;
+  --fs-h2: 23px;
+  --lh-h2: 30px;
+  --fs-alert-title: 23px;
+  --lh-alert-title: 30px;
+  --fs-screen-header: 21px;
+  --lh-screen-header: 28px;
+  --fs-body: 18px;
+  --lh-body: 27px;
+  --fs-body-sm: 17px;
+  --lh-body-sm: 24px;
+  --fs-small: 15px;
+  --lh-small: 22px;
+  --fs-label: 16px;
+  --lh-label: 22px;
+  --fs-caption: 14px;
+  --lh-caption: 19px;
+  --fs-micro: 13px;
+  --lh-micro: 17px;
+  --fs-tag: 12px;
+  --lh-tag: 15px;
+  --fs-score: 36px;
+  --lh-score: 44px;
+  --fs-ring-value: 18px;
+  --lh-ring-value: 22px;
+  --fs-score-micro: 11px;
+  --lh-score-micro: 14px;
+}
+
+/*
+ * Minimum comfortable tap target inside the phone. Most controls already clear
+ * this; the ones that don't are icon-only buttons, which are exactly the ones an
+ * older user struggles to hit. Opt out with data-compact on genuinely inline
+ * controls (a link inside a sentence, a chip inside a row).
+ */
+[data-vg-theme] button:not([data-compact]),
+[data-vg-theme] [role='tab']:not([data-compact]),
+[data-vg-theme] a[role='button']:not([data-compact]) {
+  min-height: 44px;
 }
 
 [data-vg-theme='light'] {

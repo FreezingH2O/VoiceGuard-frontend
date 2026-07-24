@@ -12,6 +12,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { Button } from '@/components/Button'
+import { PreviewThemeProvider } from '@/app/PreviewTheme'
 import { PhoneMockup } from '@/components/web/PhoneMockup'
 import { StatusBar } from '@/components/StatusBar'
 import { EmbeddedPreviewProvider } from '@/app/EmbeddedPreview'
@@ -132,11 +133,12 @@ export function PreviewFeaturePhone({ screen }: { screen: PhoneScreen }) {
 
   return (
     <div className="group relative mx-auto w-full max-w-[404px] sm:w-[412px]">
+      <PreviewThemeProvider>
       <PhoneMockup className="shadow-glow-soft">
         <QueryClientProvider client={client}>
           <EmbeddedPreviewProvider value={true}>
             <StatusBar />
-            <div className="w-full bg-coral-500 px-3 py-1 text-center text-[10px] font-semibold leading-tight text-white">
+            <div className="w-full bg-coral-500 px-3 py-1 text-center text-tag font-semibold uppercase tracking-wide text-white">
               {t({ en: 'PREVIEW · sample data', th: 'พรีวิว · ข้อมูลตัวอย่าง' })}
             </div>
             <div ref={contentRef} className="flex flex-1 select-none flex-col overflow-hidden bg-slate-50 [pointer-events:none]">
@@ -145,6 +147,7 @@ export function PreviewFeaturePhone({ screen }: { screen: PhoneScreen }) {
           </EmbeddedPreviewProvider>
         </QueryClientProvider>
       </PhoneMockup>
+      </PreviewThemeProvider>
 
       {/* Hover / focus overlay → jump to the full, interactive preview (login-gated) */}
       <Link

@@ -31,7 +31,8 @@ export function LiveDetectorTestScreen() {
     mutationFn: (blob: Blob) => api.demo.submitLiveTest(blob),
     onSuccess: (data) => {
       if (isAuthed) {
-        api.detector.recordTest({ spoofProb: data.spoofProb, scamProb: data.scamProb })
+        // Real backend already saved this during the request; mock stores it now.
+        api.detector.recordTest(data)
         qc.invalidateQueries({ queryKey: queryKeys.detectorTests })
       }
     },

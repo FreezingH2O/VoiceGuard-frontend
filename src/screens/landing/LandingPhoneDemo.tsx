@@ -10,6 +10,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { PhoneMockup } from '@/components/web/PhoneMockup'
+import { PreviewThemeProvider } from '@/app/PreviewTheme'
 import { StatusBar } from '@/components/StatusBar'
 import { useLang, type Localized } from '@/i18n/LangProvider'
 import { cn } from '@/lib/cn'
@@ -34,17 +35,19 @@ export function LandingPhoneDemo() {
 
   return (
     <div className="flex flex-col items-center gap-5">
+      <PreviewThemeProvider>
       <PhoneMockup className="shadow-glow-soft">
         <StatusBar />
-        <div className="w-full bg-coral-500 px-3 py-1 text-center text-[10px] font-semibold leading-tight text-white">
+        <div className="w-full bg-coral-500 px-3 py-1 text-center text-tag font-semibold uppercase tracking-wide text-white">
           {t({ en: 'PREVIEW · sample data', th: 'พรีวิว · ข้อมูลตัวอย่าง' })}
         </div>
-        <div className="flex-1 overflow-hidden bg-slate-50">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-slate-50">
           {screen === 'dashboard' && <DashboardScreen />}
           {screen === 'alert' && <AlertScreen />}
           {screen === 'family' && <FamilyScreenMini />}
         </div>
       </PhoneMockup>
+      </PreviewThemeProvider>
 
       {/* Segmented screen switcher */}
       <div role="tablist" aria-label="Phone preview screens" className="flex flex-wrap justify-center gap-1.5 rounded-pill bg-white/5 p-1 ring-1 ring-white/10">
@@ -73,7 +76,7 @@ function DashboardScreen() {
     <div className="flex flex-col gap-3 p-4 text-slate-900">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-caption uppercase tracking-wide text-slate-400">{t({ en: 'Protection', th: 'การป้องกัน' })}</p>
+          <p className="text-caption uppercase tracking-wide text-slate-600">{t({ en: 'Protection', th: 'การป้องกัน' })}</p>
           <p className="text-h2 font-bold text-safe-500">{t({ en: 'Active', th: 'เปิดใช้งาน' })}</p>
         </div>
         <span className="flex h-11 w-11 items-center justify-center rounded-full bg-safe-100 text-safe-500">
@@ -84,7 +87,7 @@ function DashboardScreen() {
         <StatTile value="128" label={t({ en: 'Calls screened', th: 'สายที่ตรวจ' })} />
         <StatTile value="6" label={t({ en: 'Scams blocked', th: 'บล็อกสแกม' })} tone="danger" />
       </div>
-      <p className="mt-1 text-caption font-semibold uppercase tracking-wide text-slate-400">
+      <p className="mt-1 text-caption font-semibold uppercase tracking-wide text-slate-600">
         {t({ en: 'Recent calls', th: 'สายล่าสุด' })}
       </p>
       <CallRow name="+66 2 111 3333" verdict={t({ en: 'Safe', th: 'ปลอดภัย' })} tone="safe" />
@@ -113,7 +116,7 @@ function AlertScreen() {
           <MiniRing pct={88} label={t({ en: 'Scam risk', th: 'ความเสี่ยง' })} tone="danger" />
         </div>
         <div className="rounded-card bg-white p-3 shadow-card">
-          <p className="text-caption uppercase tracking-wide text-slate-400">{t({ en: 'Transcript', th: 'ถอดเสียง' })}</p>
+          <p className="text-caption uppercase tracking-wide text-slate-600">{t({ en: 'Transcript', th: 'ถอดเสียง' })}</p>
           <p className="mt-1 text-small text-slate-600">
             {t({
               en: '“…confirm the 6-digit code we just sent to keep your account safe.”',
@@ -136,7 +139,7 @@ function FamilyScreenMini() {
         </span>
         <div>
           <p className="text-body-sm font-semibold text-slate-900">{t({ en: 'Elder Mode', th: 'โหมดผู้สูงอายุ' })}</p>
-          <p className="text-caption text-slate-400">{t({ en: 'Guardian: you', th: 'ผู้ดูแล: คุณ' })}</p>
+          <p className="text-caption text-slate-600">{t({ en: 'Guardian: you', th: 'ผู้ดูแล: คุณ' })}</p>
         </div>
       </div>
       <div className="rounded-card border border-danger-100 bg-white p-3 shadow-card">
@@ -153,7 +156,7 @@ function FamilyScreenMini() {
           <GuardianAction icon={Ban} label={t({ en: 'Block', th: 'บล็อก' })} />
         </div>
       </div>
-      <p className="text-caption text-slate-400">
+      <p className="text-caption text-slate-600">
         {t({ en: 'Alerts reach you even when she’s unsure what to do.', th: 'การแจ้งเตือนถึงคุณ แม้ท่านไม่รู้ว่าต้องทำอย่างไร' })}
       </p>
     </div>
@@ -164,7 +167,7 @@ function StatTile({ value, label, tone = 'safe' }: { value: string; label: strin
   return (
     <div className="rounded-card bg-white p-3 shadow-card">
       <p className={cn('text-h1 font-bold tabular-nums', tone === 'danger' ? 'text-danger-600' : 'text-slate-900')}>{value}</p>
-      <p className="text-caption text-slate-400">{label}</p>
+      <p className="text-caption text-slate-600">{label}</p>
     </div>
   )
 }
@@ -187,7 +190,7 @@ function CallRow({ name, verdict, tone }: { name: string; verdict: string; tone:
         >
           {verdict}
         </span>
-        <ChevronRight className="h-4 w-4 text-slate-400" aria-hidden="true" />
+        <ChevronRight className="h-4 w-4 text-slate-600" aria-hidden="true" />
       </span>
     </div>
   )
@@ -215,7 +218,7 @@ function MiniRing({ pct, label, tone }: { pct: number; label: string; tone: 'dan
         </svg>
         <span className="absolute inset-0 flex items-center justify-center text-small font-bold tabular-nums text-slate-900">{pct}%</span>
       </div>
-      <span className="text-tag uppercase tracking-wide text-slate-400">{label}</span>
+      <span className="text-tag uppercase tracking-wide text-slate-600">{label}</span>
     </div>
   )
 }

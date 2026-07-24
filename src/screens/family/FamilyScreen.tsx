@@ -30,7 +30,7 @@ export function FamilyScreen() {
       {/* 1. Feature intro */}
       <div className="relative overflow-hidden rounded-[22px] bg-gold-grad p-5 shadow-[0_16px_40px_-18px_rgba(231,124,42,0.7)]">
         <Sparkles className="absolute right-4 top-4 h-6 w-6 text-white/90" aria-hidden="true" />
-        <h1 className="pr-8 text-[22px] font-bold leading-tight text-white">
+        <h1 className="pr-8 text-h1-mobile font-bold leading-tight text-white">
           {t({ en: 'Supporting those you care for', th: 'ดูแลคนที่คุณห่วงใย' })}
         </h1>
         <p className="mt-2 text-caption leading-relaxed text-white/90">

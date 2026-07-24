@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { Mic, ChevronRight } from 'lucide-react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Mic, ChevronLeft, ChevronRight, Trash2, X } from 'lucide-react'
 import { api } from '@/services/api'
 import { queryKeys } from '@/services/queryKeys'
 import { Button } from '@/components/Button'
 import { Skeleton } from '@/components/Skeleton'
 import { ErrorState } from '@/components/ErrorState'
+import { ScoreRing } from '@/components/ScoreRing'
+import { IntentPillRow } from '@/components/IntentPillRow'
 import { StatusBadge } from '@/components/web/StatusBadge'
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal'
 import { PreviewFeaturePhone, PREVIEW_FEATURES, type PhoneScreen } from '@/components/landing/PreviewFeaturePhone'
@@ -14,6 +16,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useLang } from '@/i18n/LangProvider'
 import { formatRelativeTime } from '@/lib/format'
 import { cn } from '@/lib/cn'
+import type { DetectorTestRecord } from '@/services/types'
 
 export function WebHomeScreen() {
   const { user } = useAuth()
@@ -148,17 +151,47 @@ function LiveDetectorPanel() {
   )
 }
 
+const TESTS_PER_PAGE = 3
+
 function YourTestsPanel() {
   const { t } = useLang()
+  const qc = useQueryClient()
+  const [selected, setSelected] = useState<DetectorTestRecord | null>(null)
+  const [page, setPage] = useState(0)
+  const [showAll, setShowAll] = useState(false)
   const { data, isPending, isError, refetch } = useQuery({
     queryKey: queryKeys.detectorTests,
     queryFn: api.detector.listTests,
   })
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => api.detector.deleteTest(id),
+    onSuccess: (_res, id) => {
+      if (selected?.id === id) setSelected(null)
+      qc.invalidateQueries({ queryKey: queryKeys.detectorTests })
+    },
+  })
+
+  const total = data?.length ?? 0
+  const pageCount = Math.max(1, Math.ceil(total / TESTS_PER_PAGE))
+  const safePage = Math.min(page, pageCount - 1) // stays valid as rows are deleted
+  const pageRows = data ? data.slice(safePage * TESTS_PER_PAGE, safePage * TESTS_PER_PAGE + TESTS_PER_PAGE) : []
+
   return (
     <div className="lg:col-span-4">
       <div className="h-full rounded-web-card border border-white/10 bg-surface-800 p-6">
-        <h2 className="text-h2 font-semibold text-white">{t({ en: 'Your tests', th: 'การทดสอบของคุณ' })}</h2>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-h2 font-semibold text-white">{t({ en: 'Your tests', th: 'การทดสอบของคุณ' })}</h2>
+          {total > 0 && (
+            <button
+              type="button"
+              onClick={() => setShowAll(true)}
+              className="shrink-0 text-caption font-medium text-coral-400 transition hover:text-coral-300"
+            >
+              {t({ en: `View all (${total})`, th: `ดูทั้งหมด (${total})` })}
+            </button>
+          )}
+        </div>
 
         {isPending && (
           <div className="mt-4 flex flex-col gap-2">
@@ -182,34 +215,261 @@ function YourTestsPanel() {
         )}
 
         {data && data.length > 0 && (
-          <ul className="mt-4 flex flex-col divide-y divide-white/10">
-            {data.map((row) => {
-              const realVoice = 100 - row.spoofProb
-              const flagged = row.scamProb >= 50
-              return (
-                <li key={row.id}>
-                  <Link to="/demo/live-test" className="flex items-center gap-3 py-3 transition hover:opacity-80">
-                    <span
-                      className={
-                        'flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-tag font-semibold ' +
-                        (flagged ? 'bg-danger-500/15 text-danger-500' : 'bg-teal-400/15 text-teal-400')
-                      }
-                    >
-                      {flagged ? 'FAKE' : 'REAL'}
-                    </span>
-                    <span className="flex-1">
-                      <span className="block text-small text-white">
-                        {t({ en: `Real voice ${realVoice}% · Scam ${row.scamProb}%`, th: `เสียงจริง ${realVoice}% · สแกม ${row.scamProb}%` })}
-                      </span>
-                      <span className="block text-caption text-mist-500">{formatRelativeTime(row.createdAt)}</span>
-                    </span>
-                    <ChevronRight className="h-5 w-5 shrink-0 text-mist-500" aria-hidden="true" />
-                  </Link>
-                </li>
-              )
-            })}
+          <>
+            <ul className="mt-4 flex flex-col divide-y divide-white/10">
+              {pageRows.map((row) => (
+                <TestRow
+                  key={row.id}
+                  row={row}
+                  onSelect={() => setSelected(row)}
+                  onDelete={() => deleteMutation.mutate(row.id)}
+                  deleting={deleteMutation.isPending && deleteMutation.variables === row.id}
+                />
+              ))}
+            </ul>
+
+            {pageCount > 1 && (
+              <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-3">
+                <span className="text-caption text-mist-500">
+                  {t({
+                    en: `${safePage * TESTS_PER_PAGE + 1}–${safePage * TESTS_PER_PAGE + pageRows.length} of ${total}`,
+                    th: `${safePage * TESTS_PER_PAGE + 1}–${safePage * TESTS_PER_PAGE + pageRows.length} จาก ${total}`,
+                  })}
+                </span>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setPage(safePage - 1)}
+                    disabled={safePage === 0}
+                    aria-label={t({ en: 'Previous page', th: 'หน้าก่อนหน้า' })}
+                    className="flex h-8 w-8 items-center justify-center rounded-full text-mist-300 transition hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-30"
+                  >
+                    <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                  <span className="min-w-[3ch] text-center text-caption tabular-nums text-mist-300">
+                    {safePage + 1}/{pageCount}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setPage(safePage + 1)}
+                    disabled={safePage >= pageCount - 1}
+                    aria-label={t({ en: 'Next page', th: 'หน้าถัดไป' })}
+                    className="flex h-8 w-8 items-center justify-center rounded-full text-mist-300 transition hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-30"
+                  >
+                    <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {showAll && data && (
+        <FullHistoryModal
+          records={data}
+          onClose={() => setShowAll(false)}
+          onSelect={(row) => setSelected(row)}
+          onDelete={(id) => deleteMutation.mutate(id)}
+          deletingId={deleteMutation.isPending ? (deleteMutation.variables as string) : null}
+        />
+      )}
+
+      {selected && (
+        <TestDetailModal
+          record={selected}
+          onClose={() => setSelected(null)}
+          onDelete={() => deleteMutation.mutate(selected.id)}
+          deleting={deleteMutation.isPending}
+        />
+      )}
+    </div>
+  )
+}
+
+function TestRow({
+  row,
+  onSelect,
+  onDelete,
+  deleting,
+}: {
+  row: DetectorTestRecord
+  onSelect: () => void
+  onDelete: () => void
+  deleting: boolean
+}) {
+  const { t } = useLang()
+  const realVoice = 100 - row.spoofProb
+  const flagged = row.scamProb >= 50
+  return (
+    <li className="flex items-center gap-2">
+      <button
+        type="button"
+        onClick={onSelect}
+        className="flex flex-1 items-center gap-3 py-3 text-left transition hover:opacity-80"
+      >
+        <span
+          className={
+            'flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-tag font-semibold ' +
+            (flagged ? 'bg-danger-500/15 text-danger-500' : 'bg-teal-400/15 text-teal-400')
+          }
+        >
+          {flagged ? 'FAKE' : 'REAL'}
+        </span>
+        <span className="flex-1">
+          <span className="block text-small text-white">
+            {t({ en: `Real voice ${realVoice}% · Scam ${row.scamProb}%`, th: `เสียงจริง ${realVoice}% · สแกม ${row.scamProb}%` })}
+          </span>
+          <span className="block text-caption text-mist-500">{formatRelativeTime(row.createdAt)}</span>
+        </span>
+      </button>
+      <button
+        type="button"
+        onClick={onDelete}
+        disabled={deleting}
+        aria-label={t({ en: 'Delete test', th: 'ลบการทดสอบ' })}
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-mist-500 transition hover:bg-danger-500/15 hover:text-danger-500 disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger-500"
+      >
+        <Trash2 className="h-4 w-4" aria-hidden="true" />
+      </button>
+    </li>
+  )
+}
+
+function FullHistoryModal({
+  records,
+  onClose,
+  onSelect,
+  onDelete,
+  deletingId,
+}: {
+  records: DetectorTestRecord[]
+  onClose: () => void
+  onSelect: (row: DetectorTestRecord) => void
+  onDelete: (id: string) => void
+  deletingId: string | null
+}) {
+  const { t } = useLang()
+  return (
+    <div className="fixed inset-0 z-40 flex flex-col bg-ink-950/95" role="dialog" aria-modal="true">
+      <div className="mx-auto flex h-full w-full max-w-2xl flex-col px-6 pb-8 pt-20 sm:px-8 sm:pt-24">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h2 className="font-display text-web-h2 text-white">{t({ en: 'All tests', th: 'การทดสอบทั้งหมด' })}</h2>
+            <p className="mt-0.5 text-caption text-mist-500">
+              {t({ en: `${records.length} saved`, th: `บันทึกไว้ ${records.length} รายการ` })}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t({ en: 'Close', th: 'ปิด' })}
+            className="flex h-10 w-10 items-center justify-center rounded-full text-mist-300 transition hover:bg-white/10 hover:text-white"
+          >
+            <X className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </div>
+
+        <ul className="mt-4 flex min-h-0 flex-1 flex-col divide-y divide-white/10 overflow-y-auto pr-1 [scrollbar-color:rgba(255,255,255,0.2)_transparent] [scrollbar-width:thin]">
+          {records.map((row) => (
+            <TestRow
+              key={row.id}
+              row={row}
+              onSelect={() => onSelect(row)}
+              onDelete={() => onDelete(row.id)}
+              deleting={deletingId === row.id}
+            />
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+function TestDetailModal({
+  record,
+  onClose,
+  onDelete,
+  deleting,
+}: {
+  record: DetectorTestRecord
+  onClose: () => void
+  onDelete: () => void
+  deleting: boolean
+}) {
+  const { t } = useLang()
+  const realVoice = 100 - record.spoofProb
+  const flagged = record.scamProb >= 50
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <div
+        className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-web-card border border-white/10 bg-surface-800 p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h3 className="text-h2 font-semibold text-white">{t({ en: 'Test detail', th: 'รายละเอียดการทดสอบ' })}</h3>
+            <p className="mt-0.5 text-caption text-mist-500">{formatRelativeTime(record.createdAt)}</p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t({ en: 'Close', th: 'ปิด' })}
+            className="flex h-9 w-9 items-center justify-center rounded-full text-mist-300 transition hover:bg-white/10 hover:text-white"
+          >
+            <X className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </div>
+
+        <div className="mt-5 flex justify-center gap-10">
+          <ScoreRing value={realVoice} size={96} label={t({ en: 'Real voice', th: 'เสียงจริง' })} tone={record.spoofProb > 50 ? 'danger' : 'safe'} />
+          <ScoreRing value={record.scamProb} size={96} label={t({ en: 'Scam risk', th: 'ความเสี่ยงสแกม' })} tone={flagged ? 'danger' : 'safe'} />
+        </div>
+
+        {record.transcript && (
+          <div className="mt-5 rounded-card bg-ink-950/60 p-4">
+            <p className="font-mono text-micro uppercase tracking-wide text-mist-500">{t({ en: 'Transcript (ASR)', th: 'ถอดเสียง (ASR)' })}</p>
+            <p className="mt-1 text-small text-white">“{record.transcript}”</p>
+          </div>
+        )}
+
+        <div className="mt-3 rounded-card bg-ink-950/60 p-4">
+          <p className="font-mono text-micro uppercase tracking-wide text-mist-500">{t({ en: 'Context (LLM)', th: 'บริบท (LLM)' })}</p>
+          <p className="mt-1 text-small text-mist-300">{record.summary}</p>
+          {record.intents.length > 0 && (
+            <div className="mt-2">
+              <IntentPillRow intents={record.intents} />
+            </div>
+          )}
+        </div>
+
+        {record.reasons.length > 0 && (
+          <ul className="mt-3 flex flex-col gap-1.5">
+            {record.reasons.map((reason, i) => (
+              <li key={i} className="flex items-start gap-2 text-small text-mist-300">
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-coral-400" aria-hidden="true" />
+                {reason}
+              </li>
+            ))}
           </ul>
         )}
+
+        <p className="mt-3 text-caption text-mist-500">
+          {t({ en: `Analyzed in ${(record.latencyMs / 1000).toFixed(1)}s.`, th: `วิเคราะห์ใน ${(record.latencyMs / 1000).toFixed(1)} วินาที` })}
+        </p>
+
+        <div className="mt-6 flex justify-end">
+          <Button variant="outline-light" onClick={onDelete} loading={deleting} className="!min-h-0 h-10 px-4 text-danger-500">
+            <Trash2 className="h-4 w-4" aria-hidden="true" />
+            {t({ en: 'Delete', th: 'ลบ' })}
+          </Button>
+        </div>
       </div>
     </div>
   )

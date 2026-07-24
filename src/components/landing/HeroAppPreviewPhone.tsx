@@ -58,7 +58,8 @@ const SAMPLE_DASHBOARD: DashboardResponse = {
  * with the same mouse-tilt movement as the previous hero visual.
  *
  * Strictly *display-only* — the content is `inert` + pointer-events-none, with no
- * bottom tab bar and no hover shortcut, so nothing here is interactive.
+ * bottom tab bar and no hover shortcut, so nothing here is interactive. The link to
+ * the full preview lives in the hero's button row instead.
  */
 export function HeroAppPreviewPhone() {
   const { t } = useLang()
@@ -90,7 +91,7 @@ export function HeroAppPreviewPhone() {
               <QueryClientProvider client={client}>
                 <EmbeddedPreviewProvider value={true}>
                   <StatusBar />
-                  <div className="w-full bg-coral-500 px-3 py-1 text-center text-[10px] font-semibold leading-tight text-white">
+                  <div className="w-full bg-coral-500 px-3 py-1 text-center text-tag font-semibold uppercase tracking-wide text-white">
                     {t({ en: 'PREVIEW · sample data', th: 'พรีวิว · ข้อมูลตัวอย่าง' })}
                   </div>
                   <div ref={contentRef} className="flex flex-1 select-none flex-col overflow-hidden bg-night [pointer-events:none]">
@@ -101,6 +102,7 @@ export function HeroAppPreviewPhone() {
             </PhoneMockup>
           </PreviewThemeProvider>
         </div>
+
       </div>
     </TiltCard>
   )

@@ -6,21 +6,25 @@ import * as settingsMock from './mock/settings.mock'
 import * as demoMock from './mock/demo.mock'
 import * as detectorTestsMock from './mock/detectorTests.mock'
 import * as authReal from './real/auth.real'
-import * as callsReal from './real/calls.real'
 import * as demoReal from './real/demo.real'
-import * as familyReal from './real/family.real'
+import * as detectorReal from './real/detector.real'
 
-// VITE_USE_MOCKS=true (default): everything runs on the in-memory mock layer.
-// VITE_USE_MOCKS=false: the POC groups below (auth, calls, demo, family's guardian
-// alert reads) hit the real backend at VITE_API_URL; groups with no real
-// implementation yet (dashboard, settings, devices, consent, family CRUD) stay
-// mocked so the rest of the app keeps working. Real and mock groups coexist —
-// add a `services/real/*.real.ts` module and swap it in here to promote a group.
+// The backend only powers the genuinely-live web features: real accounts (auth)
+// and the Live Detector Test. Everything in the "phone app" preview zone
+// (dashboard, calls, history, family/Elder Mode, settings, devices, consent) is
+// static preview data served entirely by the in-memory mock layer — it never
+// hits the backend, regardless of VITE_USE_MOCKS.
+//
+// VITE_USE_MOCKS=false only swaps auth + the live detector to the real backend at
+// VITE_API_URL; VITE_USE_MOCKS=true (default) runs those on the mock too.
 const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false'
 
 const auth = USE_MOCKS ? authMock : authReal
-const calls = USE_MOCKS ? callsMock : callsReal
-const familyAlerts = USE_MOCKS ? familyMock : familyReal
+const calls = callsMock // phone preview — always static/mock
+const familyAlerts = familyMock // phone preview — always static/mock
+// Live Detector history is a real, account-tied feature: persisted to the backend
+// when mocks are off, session-local otherwise.
+const detector = USE_MOCKS ? detectorTestsMock : detectorReal
 
 export const api = {
   auth: {
@@ -72,19 +76,22 @@ export const api = {
     ackWardAlert: familyAlerts.ackWardAlert,
   },
   demo: {
-    // Scripted scenarios stay client-side even against a real backend — the public
-    // demo tree is deliberately self-contained. Only the Live Detector Test upload
-    // hits the real ASR/anti-spoof pipeline.
+    // Scripted scenarios stay client-side — the public demo tree is deliberately
+    // self-contained. The Live Detector Test is the ONE genuinely-live surface: it
+    // ALWAYS hits the real ASR / anti-spoof / LLM pipeline, even in full-mock mode,
+    // so the recorded voice gets a real transcript + scores. Everything else
+    // (including the entire phone preview) honors VITE_USE_MOCKS.
     listScenarios: demoMock.listDemoScenarios,
     getScenario: demoMock.getDemoScenario,
     getDebrief: demoMock.getDemoDebrief,
-    submitLiveTest: USE_MOCKS ? demoMock.submitLiveTest : demoReal.submitLiveTest,
+    submitLiveTest: demoReal.submitLiveTest,
   },
-  // Session-local saved detector-test history (migration spec §4/§11). Always mock
-  // for the PoC — no real backend yet — regardless of USE_MOCKS.
+  // Saved Live Detector history — real & account-tied. With mocks off it persists
+  // to the backend (auto-saved on live-test); with mocks on it's session-local.
   detector: {
-    listTests: detectorTestsMock.listDetectorTests,
-    recordTest: detectorTestsMock.recordDetectorTest,
+    listTests: detector.listDetectorTests,
+    recordTest: detector.recordDetectorTest,
+    deleteTest: detector.deleteDetectorTest,
   },
 }
 

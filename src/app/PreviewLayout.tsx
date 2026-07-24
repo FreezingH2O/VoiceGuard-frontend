@@ -3,6 +3,7 @@ import { House, History as HistoryIcon, Users, Settings as SettingsIcon, Chevron
 import { WebNavbar } from '@/components/web/WebNavbar'
 import { PhoneMockup } from '@/components/web/PhoneMockup'
 import { StatusBadge } from '@/components/web/StatusBadge'
+import { SimulateCallControl } from '@/components/web/SimulateCallControl'
 import { AmbientBackground } from '@/components/motion/AmbientBackground'
 import { PreviewPhoneScreen, type PreviewHandle } from '@/app/PreviewPhoneScreen'
 import { PreviewThemeProvider } from '@/app/PreviewTheme'
@@ -92,6 +93,7 @@ export function PreviewLayout() {
                     </span>
                   </NavLink>
                 ))}
+                <SimulateCallControl />
               </nav>
             )}
 

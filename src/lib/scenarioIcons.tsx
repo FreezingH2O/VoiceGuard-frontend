@@ -1,4 +1,14 @@
-import { Landmark, ShieldAlert, HeartHandshake, CircleCheck, Phone, CircleHelp, type LucideIcon } from 'lucide-react'
+import {
+  Landmark,
+  ShieldAlert,
+  HeartHandshake,
+  CircleCheck,
+  Phone,
+  Stethoscope,
+  Users,
+  CircleHelp,
+  type LucideIcon,
+} from 'lucide-react'
 
 const scenarioIconMap: Record<string, LucideIcon> = {
   bank: Landmark,
@@ -6,6 +16,8 @@ const scenarioIconMap: Record<string, LucideIcon> = {
   family: HeartHandshake,
   safe: CircleCheck,
   phone: Phone,
+  hospital: Stethoscope,
+  community: Users,
 }
 
 export function getScenarioIconComponent(slug: string): LucideIcon {

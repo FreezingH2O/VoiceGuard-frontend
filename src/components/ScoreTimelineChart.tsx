@@ -26,7 +26,7 @@ export function ScoreTimelineChart({ data, threshold, height = 120 }: ScoreTimel
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <div className="mt-2 flex items-center gap-4 text-micro text-slate-400">
+      <div className="mt-2 flex items-center gap-4 text-micro text-low">
         <span className="inline-flex items-center gap-1">
           <span className="h-2 w-2 rounded-full bg-blue-600" aria-hidden="true" /> Spoof score
         </span>

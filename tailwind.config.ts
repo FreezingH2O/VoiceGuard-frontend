@@ -77,24 +77,29 @@ export default {
         'web-display': ['56px', { lineHeight: '64px', fontWeight: '700' }],
         'web-h1': ['36px', { lineHeight: '44px', fontWeight: '700' }],
 
-        display: ['40px', { lineHeight: '48px', fontWeight: '700' }],
-        h1: ['26px', { lineHeight: '34px', fontWeight: '700' }],
-        h2: ['20px', { lineHeight: '28px', fontWeight: '600' }],
-        body: ['16px', { lineHeight: '24px', fontWeight: '400' }],
-        'body-medium': ['16px', { lineHeight: '24px', fontWeight: '500' }],
-        small: ['13px', { lineHeight: '20px', fontWeight: '400' }],
-        score: ['32px', { lineHeight: '40px', fontWeight: '700' }],
+        // ── App-preview scale ──
+        // Each step reads from a --fs-*/--lh- pair with the original value as the
+        // fallback, so these classes are unchanged on marketing/web surfaces. Inside
+        // a [data-vg-theme] scope (i.e. any phone) index.css redefines the vars to the
+        // larger, elder-legible scale — one place to tune, every app screen follows.
+        display: ['var(--fs-display, 40px)', { lineHeight: 'var(--lh-display, 48px)', fontWeight: '700' }],
+        h1: ['var(--fs-h1, 26px)', { lineHeight: 'var(--lh-h1, 34px)', fontWeight: '700' }],
+        h2: ['var(--fs-h2, 20px)', { lineHeight: 'var(--lh-h2, 28px)', fontWeight: '600' }],
+        body: ['var(--fs-body, 16px)', { lineHeight: 'var(--lh-body, 24px)', fontWeight: '400' }],
+        'body-medium': ['var(--fs-body, 16px)', { lineHeight: 'var(--lh-body, 24px)', fontWeight: '500' }],
+        small: ['var(--fs-small, 13px)', { lineHeight: 'var(--lh-small, 20px)', fontWeight: '400' }],
+        score: ['var(--fs-score, 32px)', { lineHeight: 'var(--lh-score, 40px)', fontWeight: '700' }],
 
-        'h1-mobile': ['22px', { lineHeight: '28px', fontWeight: '700' }],
-        'alert-title': ['20px', { lineHeight: '26px', fontWeight: '700' }],
-        'screen-header': ['18px', { lineHeight: '24px', fontWeight: '600' }],
-        'body-sm': ['15px', { lineHeight: '20px', fontWeight: '600' }],
-        label: ['14px', { lineHeight: '20px', fontWeight: '600' }],
-        'ring-value': ['16px', { lineHeight: '20px', fontWeight: '700' }],
-        caption: ['12px', { lineHeight: '16px', fontWeight: '500' }],
-        micro: ['11px', { lineHeight: '14px', fontWeight: '500' }],
-        tag: ['10px', { lineHeight: '13px', fontWeight: '600' }],
-        'score-micro': ['9px', { lineHeight: '12px', fontWeight: '600' }],
+        'h1-mobile': ['var(--fs-h1-mobile, 22px)', { lineHeight: 'var(--lh-h1-mobile, 28px)', fontWeight: '700' }],
+        'alert-title': ['var(--fs-alert-title, 20px)', { lineHeight: 'var(--lh-alert-title, 26px)', fontWeight: '700' }],
+        'screen-header': ['var(--fs-screen-header, 18px)', { lineHeight: 'var(--lh-screen-header, 24px)', fontWeight: '600' }],
+        'body-sm': ['var(--fs-body-sm, 15px)', { lineHeight: 'var(--lh-body-sm, 20px)', fontWeight: '600' }],
+        label: ['var(--fs-label, 14px)', { lineHeight: 'var(--lh-label, 20px)', fontWeight: '600' }],
+        'ring-value': ['var(--fs-ring-value, 16px)', { lineHeight: 'var(--lh-ring-value, 20px)', fontWeight: '700' }],
+        caption: ['var(--fs-caption, 12px)', { lineHeight: 'var(--lh-caption, 16px)', fontWeight: '500' }],
+        micro: ['var(--fs-micro, 11px)', { lineHeight: 'var(--lh-micro, 14px)', fontWeight: '500' }],
+        tag: ['var(--fs-tag, 10px)', { lineHeight: 'var(--lh-tag, 13px)', fontWeight: '600' }],
+        'score-micro': ['var(--fs-score-micro, 9px)', { lineHeight: 'var(--lh-score-micro, 12px)', fontWeight: '600' }],
       },
       borderRadius: {
         'web-card': '20px', // web cards (design.md §6)

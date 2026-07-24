@@ -57,7 +57,10 @@ export function Button(props: ButtonProps | AnchorProps) {
   } = props
 
   const classes = cn(
-    'inline-flex items-center justify-center gap-2 rounded-button font-body-sm transition',
+    // `font-body-sm` used to sit here, which is a no-op: font-* resolves fontFamily
+    // and fontWeight, while body-sm is a fontSize token (text-body-sm). Buttons were
+    // shipping with no size class and no horizontal padding at all.
+    'inline-flex items-center justify-center gap-2 rounded-button px-5 text-body-sm font-semibold transition',
     'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
     'disabled:opacity-50 disabled:pointer-events-none',
     elderMode ? 'min-h-tap-elder text-h2' : 'min-h-tap',

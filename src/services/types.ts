@@ -181,3 +181,17 @@ export interface LiveTestResponse {
   reasons: string[]
   latencyMs: number
 }
+
+// A saved Live Detector result in the signed-in user's history. Carries the full
+// analysis so a history line can be viewed in detail (GET /me/detector-tests).
+export interface DetectorTestRecord {
+  id: string
+  spoofProb: number
+  scamProb: number
+  transcript: string
+  summary: string
+  intents: string[]
+  reasons: string[]
+  latencyMs: number
+  createdAt: string
+}

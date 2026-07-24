@@ -3,7 +3,9 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 export type ThemePref = 'light' | 'dark' | 'system'
 type ResolvedTheme = 'light' | 'dark'
 
-const STORAGE_KEY = 'vg-theme-pref'
+// v2: the default flipped from dark to light, so the key is bumped to drop
+// stale 'dark' preferences saved under the old default.
+const STORAGE_KEY = 'vg-theme-pref-v2'
 
 interface PreviewThemeValue {
   pref: ThemePref
@@ -14,9 +16,9 @@ interface PreviewThemeValue {
 const PreviewThemeContext = createContext<PreviewThemeValue | null>(null)
 
 function readStoredPref(): ThemePref {
-  if (typeof localStorage === 'undefined') return 'dark'
+  if (typeof localStorage === 'undefined') return 'light'
   const v = localStorage.getItem(STORAGE_KEY)
-  return v === 'light' || v === 'dark' || v === 'system' ? v : 'dark'
+  return v === 'light' || v === 'dark' || v === 'system' ? v : 'light'
 }
 
 function systemPrefersDark(): boolean {
@@ -26,7 +28,7 @@ function systemPrefersDark(): boolean {
 /**
  * Light/dark theming for the app-preview phone. Renders a `display:contents`
  * wrapper carrying `data-vg-theme`, so the --vg-* CSS variables (index.css) flip
- * for everything inside without adding a layout box. Defaults to dark; the choice
+ * for everything inside without adding a layout box. Defaults to light; the choice
  * persists in localStorage and is shared across every phone host in the session.
  */
 export function PreviewThemeProvider({ children }: { children: ReactNode }) {

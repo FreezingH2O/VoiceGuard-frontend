@@ -57,7 +57,7 @@ export function DemoIncomingCallScreen({
             >
               <Phone className="h-6 w-6" aria-hidden="true" />
             </Button>
-            <span className="text-caption text-slate-400">{t({ en: 'Accept', th: 'รับสาย' })}</span>
+            <span className="text-caption text-low">{t({ en: 'Accept', th: 'รับสาย' })}</span>
           </div>
         </div>
       </div>

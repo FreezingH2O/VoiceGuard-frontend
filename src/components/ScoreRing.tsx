@@ -15,9 +15,19 @@ interface ScoreRingProps {
   label: string // e.g. "FAKE VOICE" | "SCAM RISK" | "REAL VOICE"
   tone: RingTone
   valueTextClassName?: string
+  /** Plain-language reading of the number ("High", "Low"). A percentage alone is
+   *  an abstraction; older users need the word to know whether 72% is bad. */
+  caption?: string
 }
 
-export function ScoreRing({ value, size, label, tone, valueTextClassName = 'text-ring-value' }: ScoreRingProps) {
+const captionByTone: Record<RingTone, string> = {
+  safe: 'text-safe-500',
+  warn: 'text-coral-500',
+  danger: 'text-danger-600',
+  blue: 'text-blue-600',
+}
+
+export function ScoreRing({ value, size, label, tone, valueTextClassName = 'text-h2', caption }: ScoreRingProps) {
   const clamped = Math.max(0, Math.min(100, value))
   const strokeWidth = Math.max(4, Math.round(size * 0.09))
   const radius = (size - strokeWidth) / 2
@@ -50,10 +60,15 @@ export function ScoreRing({ value, size, label, tone, valueTextClassName = 'text
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className={cn('font-bold text-white tabular-nums', valueTextClassName)}>{Math.round(clamped)}%</span>
+          {/* text-fg, not text-white — this ring renders on the phone screen, which is
+              light by default, where a white number is invisible against the panel. */}
+          <span className={cn('font-bold text-fg tabular-nums', valueTextClassName)}>{Math.round(clamped)}%</span>
         </div>
       </div>
-      <span className="text-tag uppercase tracking-wide text-slate-400 text-center">{label}</span>
+      <span className="text-center text-caption font-semibold uppercase tracking-wide text-mid">{label}</span>
+      {caption && (
+        <span className={cn('text-center text-body-sm font-bold', captionByTone[tone])}>{caption}</span>
+      )}
     </div>
   )
 }

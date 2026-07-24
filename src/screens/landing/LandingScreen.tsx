@@ -24,6 +24,8 @@ import { Marquee } from '@/components/motion/Marquee'
 import { ScrollLine } from '@/components/motion/ScrollLine'
 import { SectionPanel, SectionGlow } from '@/components/landing/SectionPanel'
 import { EmbeddedScamDemoPhone } from '@/components/landing/EmbeddedScamDemoPhone'
+import { CinematicCallDemo } from '@/components/landing/CinematicCallDemo'
+import { useAuth } from '@/hooks/useAuth'
 import { HeroAppPreviewPhone } from '@/components/landing/HeroAppPreviewPhone'
 import { PreviewFeaturePhone, PREVIEW_FEATURES, type PhoneScreen } from '@/components/landing/PreviewFeaturePhone'
 import { useLang, type Localized } from '@/i18n/LangProvider'
@@ -83,6 +85,7 @@ function SectionTitle({ children, className, light = false }: { children: ReactN
 
 function Hero() {
   const { t, lang } = useLang()
+  const { isAuthed } = useAuth()
   const headline: { text: string; className?: string }[] =
     lang === 'th'
       ? [
@@ -137,6 +140,13 @@ function Hero() {
               <Button variant="outline-light" className="px-6" onClick={() => scrollToAnchor('how-it-works')}>
                 {t({ en: 'See how it works', th: 'ดูวิธีการทำงาน' })}
               </Button>
+              <Link to={isAuthed ? '/app-preview' : '/signup'}>
+                <Button variant="outline-light" className="px-6" leftIcon={<Smartphone className="h-5 w-5" aria-hidden="true" />}>
+                  {isAuthed
+                    ? t({ en: 'Mobile app preview', th: 'พรีวิวแอปมือถือ' })
+                    : t({ en: 'Log in for app preview', th: 'เข้าสู่ระบบเพื่อดูพรีวิวแอป' })}
+                </Button>
+              </Link>
             </div>
           </HeroFollow>
 
@@ -429,8 +439,9 @@ function HowItWorksSection() {
           </RevealGroup>
         </div>
 
-        <div className="order-1 lg:sticky lg:top-28 lg:order-2">
+        <div className="order-1 flex flex-col gap-4 lg:sticky lg:top-28 lg:order-2">
           <EmbeddedScamDemoPhone />
+          <CinematicCallDemo />
         </div>
       </div>
     </SectionPanel>

@@ -29,7 +29,15 @@ export function PreviewPhoneScreen() {
           {t({ en: 'PREVIEW · sample data — the real app runs on your phone', th: 'พรีวิว · ข้อมูลตัวอย่าง — แอปจริงทำงานบนมือถือของคุณ' })}
         </div>
       )}
-      <main className="flex flex-1 flex-col overflow-y-auto bg-night">
+      {/*
+        A block scroll container, not a flex one. As `flex flex-1 flex-col` this
+        never scrolled: a column flex item defaults to min-height:auto, so main grew
+        to its content instead of shrinking, and PhoneMockup's overflow-hidden clipped
+        the overflow. min-h-0 fixes the shrink; dropping the inner flex context also
+        stops `flex-1` on each screen's root from pinning it to the viewport height.
+        min-h-full on the child keeps short screens filling the device.
+      */}
+      <main className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-night [&>*]:min-h-full">
         <Outlet />
       </main>
       {tabbar && <BottomTabBar active={tabbar} />}
