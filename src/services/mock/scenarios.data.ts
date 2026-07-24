@@ -12,14 +12,16 @@ const STORAGE_KEY = 'vg.lang'
 /** Mirror of LangProvider's language resolution, for use outside of React
  * (the scenario data flows through the plain query/service layer). */
 function currentLang(): 'en' | 'th' {
-  if (typeof window === 'undefined') return 'en'
+  // Thai is the primary audience — default to Thai to match LangProvider, unless a
+  // preference has been explicitly stored.
+  if (typeof window === 'undefined') return 'th'
   try {
     const stored = window.localStorage.getItem(STORAGE_KEY)
     if (stored === 'en' || stored === 'th') return stored
   } catch {
     /* ignore private-mode storage failures */
   }
-  return typeof navigator !== 'undefined' && navigator.language?.toLowerCase().startsWith('th') ? 'th' : 'en'
+  return 'th'
 }
 
 function tr(v: Loc): string {
